@@ -10,8 +10,8 @@ const handleSignUp = (e, history) => {
 const SignUpForm = () => {
 
     return (
-        <div className="h-dvh flex justify-center lg:mx-[500px]">
-          <form className="form lg:px-20 lg:py-14 mx-6 p-10 w-full my-auto" onSubmit={(e) => handleSignUp(e)}>
+        <div className="h-dvh flex justify-center">
+          <form className="form lg:px-20 lg:py-14 mx-6 p-10 w-full max-w-[426px] my-auto" onSubmit={(e) => handleSignUp(e)}>
             <p className='text-2xl'>Sign up</p>
             <div className="group">
               <input required={true} className="main-input" type="text" />

@@ -10,8 +10,8 @@ const handLogin = () => {
 // Login form component
 function LoginForm() {
     return (
-      <div className="h-dvh flex justify-center lg:mx-[500px]">
-          <form className="form lg:px-20 lg:py-14 mx-6 p-10 w-full my-auto " onSubmit={() => handLogin()}>
+      <div className="h-dvh flex justify-center">
+          <form className="form lg:px-20 lg:py-14 mx-6 p-10 w-full lg:max-w-[426px] my-auto " onSubmit={() => handLogin()}>
             <p className='text-2xl'>Login</p>
             <div className="group">
               <input required={true} className="main-input" type="email" />
