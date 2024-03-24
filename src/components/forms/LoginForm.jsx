@@ -11,7 +11,7 @@ function LoginForm() {
     return (
         <div className="h-dvh flex justify-center">
             <form
-                className="form lg:px-20 lg:py-14 mx-6 p-10 w-full lg:max-w-[426px] my-auto "
+                className="form lg:px-20 lg:py-14 m-6 p-10 w-full lg:max-w-[567.6px] my-auto "
                 onSubmit={() => handLogin()}
             >
                 <p className="">
