@@ -14,6 +14,9 @@ Then install the following dependencies.
 
 - Then add the following to your `tailwind.config.js` file
 
+### React Toastify
+`npm install --save react-toastify`
+
 ```js
 /** @type {import('tailwindcss').Config} */
 export default {

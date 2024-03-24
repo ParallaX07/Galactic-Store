@@ -1,13 +1,18 @@
-import { Link } from "react-router-dom";
-
-// Login function
-const handLogin = () => {
-    console.log("submit");
-    // Navigate to home page
-};
+import { Link, useNavigate } from "react-router-dom";
 
 // Login form component
 function LoginForm() {
+    
+    const nagivate = useNavigate();
+    // Login function
+    const handLogin = () => {
+        console.log("submit");
+        // Login toast
+        
+        // Navigate to admin page
+        nagivate("/admin");
+    };
+    
     return (
         <div className="h-dvh flex justify-center">
             <form

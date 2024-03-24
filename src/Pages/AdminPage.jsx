@@ -1,6 +1,8 @@
 const AdminPage = () => {
+
+
     return (
-        <div>
+        <div className="text-white">
             <h1>admin</h1>
         </div>
     );

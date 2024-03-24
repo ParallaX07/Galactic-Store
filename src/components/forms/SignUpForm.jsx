@@ -1,13 +1,23 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useContext } from 'react';
+import { NotifyContext } from "../../utils/NotifyContext";
 
 // Sign up form component
 const SignUpForm = () => {
+    const notify = useContext(NotifyContext);
+  
+    const navigate = useNavigate();
+
     const handleSignUp = (e) => {
         e.preventDefault();
         console.log("submit");
-        // Navigate to home page
-    };
+        //sign up toast 
+        notify("signed up");
 
+        // Navigate to login page
+        navigate('/');
+    };
+    
     return (
         <div className="h-dvh flex justify-center">
             <form
