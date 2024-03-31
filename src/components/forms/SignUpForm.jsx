@@ -73,7 +73,7 @@ const SignUpForm = () => {
                     <label className="label-email">Confirm Password</label>
                 </div>
                 {/* sign up button */}
-                <button className="submit text-white hover:bg-black hover:bg-opacity-40">Create Account</button>
+                <button type="submit" className="submit text-white hover:bg-black hover:bg-opacity-40">Create Account</button>
                 <p>Already have an account yet?</p>
                 <Link to={`/`} className="text-[#1b79ab] font-extrabold">
                     Login now!

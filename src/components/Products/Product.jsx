@@ -2,6 +2,8 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Tag from './Tag';
 
+
+
 const Product = ({ product }) => {
     return (
         <Link to={`/admin/products/${product.id}`}>

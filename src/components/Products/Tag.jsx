@@ -1,19 +1,25 @@
 import PropTyes from "prop-types";
-import { Link } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
-const Tag = ({tag}) => {
+const Tag = ({ tag }) => {
+    const navigate = useNavigate();
+
+    const handleClick = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        navigate(`/admin/tags/${tag}`);
+    };
+
     return (
-        <Link to={`/admin/tags/${tag}`}>
-            <span
-            
-                className="bg-[#62DFE8] bg-opacity-10 text-[#62DFE8] px-2 py-1 rounded-3xl font-medium"
-            >
-                #{tag}
-            </span>
-        </Link>
+        <span
+            onClick={handleClick}
+            className="bg-[#62DFE8] bg-opacity-10 text-[#62DFE8] px-2 py-1 rounded-3xl font-medium"
+            style={{ cursor: "pointer" }}
+        >
+            #{tag}
+        </span>
     );
 };
-
 Tag.propTypes = {
     tag: PropTyes.string.isRequired,
 };
