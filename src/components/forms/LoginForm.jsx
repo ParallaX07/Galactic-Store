@@ -18,15 +18,18 @@ function LoginForm() {
                 className="form lg:px-20 lg:py-14 m-6 p-10 w-full lg:max-w-[567.6px] lg:h-[570.6px] my-auto "
                 onSubmit={() => handLogin()}
             >
-                <p className="">
-                    <span className="text-4xl font-black bg-gradient-to-r from-[#62DFE8] via-[#325B72] to-[#15192D] text-transparent bg-clip-text animate-gradient bg-300%">
-                        Galactic Store
-                    </span>{" "}
-                    <br />
-                    <span className="text-[#acacac] text-sm">
-                        Home to your all your interstellar needs!
-                    </span>
-                </p>
+                <div className="flex justify-between items-center">
+                    <p className="">
+                        <span className="text-xl lg:text-4xl font-black bg-gradient-to-r from-[#62DFE8] via-[#325B72] to-[#15192D] text-transparent bg-clip-text animate-gradient bg-300%">
+                            Galactic Store
+                        </span>{" "}
+                        <br />
+                        <span className="text-[#acacac] text-sm">
+                            Home to your all your interstellar needs!
+                        </span>
+                    </p>
+                    <img src="" alt="" />
+                </div>
                 <p className="text-2xl">Login</p>
                 <div className="group">
                     <input

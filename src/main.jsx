@@ -9,25 +9,36 @@ import AdminPage from "./Pages/AdminPage";
 //import components
 import SignUpForm from "./components/forms/SignUpForm";
 import LoginForm from "./components/forms/LoginForm";
+import Products from "./components/Products/Products";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <LandingPage></LandingPage>,
+        element: <LandingPage/>,
         children: [
             {
                 index: true,
-                element: <LoginForm></LoginForm>,
+                element: <LoginForm/>,
             },
             {
                 path: "/signup",
-                element: <SignUpForm></SignUpForm>,
+                element: <SignUpForm/>,
             },
         ],
     },
     {
         path: "/admin",
-        element: <AdminPage></AdminPage>,
+        element: <AdminPage/>,
+        children: [
+            {
+                index: true,
+                element: <Products/>,
+            },
+            {
+                path: "/admin/products/:id",
+                element: <h1>Product</h1>,
+            }
+        ],
     }
 ]);
 
