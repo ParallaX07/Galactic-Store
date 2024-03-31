@@ -28,7 +28,7 @@ function LoginForm() {
                             Home to your all your interstellar needs!
                         </span>
                     </p>
-                    <img src="" alt="" />
+                    <img className="lg:size-28 size-20 shadow-2xl rounded-full" src="https://i.ibb.co/Wg43jL4/logo.png" alt="" />
                 </div>
                 <p className="text-2xl">Login</p>
                 <div className="group">

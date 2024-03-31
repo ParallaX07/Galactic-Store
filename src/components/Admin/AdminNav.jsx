@@ -1,4 +1,8 @@
+import { useState } from "react";
 import "./AdminNav.css";
+import { Link } from "react-router-dom";
+import AddNewItem from "./AddNewItem";
+import { IoAddOutline } from "react-icons/io5";
 
 const searchBar = (
     <>
@@ -38,20 +42,45 @@ const searchBar = (
     </>
 );
 
+
 const AdminNav = () => {
+    const [isAdd, setIsAdd] = useState(false);
+
+    const handleAddItem = () => {
+        setIsAdd(!isAdd);
+        
+    };
+
+    
+
     return (
         <div className="sticky top-0">
-            <div className="p-3 bg-black bg-opacity-80 shadow-2xl flex items-center justify-between relative">
-                <img
-                    className="size-14"
-                    src="https://i.ibb.co/Wg43jL4/logo.png"
-                    alt=""
-                />
+            <div className="p-3 bg-[#060811] bg-opacity-90 shadow-2xl flex items-center justify-between relative">
+                <Link to="/admin">
+                    <img
+                        className="size-14"
+                        src="https://i.ibb.co/Wg43jL4/logo.png"
+                        alt=""
+                    />
+                </Link>
                 <span className="absolute left-0 right-0 mx-auto text-2xl lg:text-4xl font-black bg-gradient-to-r from-[#62DFE8] via-[#325B72] to-[#15192D] text-transparent bg-clip-text animate-gradient bg-300% w-max">
                     Admin Panel
                 </span>
-                <div>{searchBar}</div>
+                <div className="flex gap-3">
+                    <div>{searchBar}</div>
+                    <div className="group relative ">
+                        <button onClick={handleAddItem} className="bg-[#15192D] rounded-full p-2 flex gap-2 items-center">
+                        <IoAddOutline className="text-2xl" />
+                        </button>
+                        <span className="absolute -bottom-12 left-[50%] -translate-x-[100%] z-20 origin-left scale-0 px-3 rounded-lg border border-[#325B72] bg-[#15192D] py-2 text-sm font-bold shadow-md transition-all duration-300 ease-in-out group-hover:scale-100 min-w-32">
+                            Add new Item <span> </span>
+                        </span>
+                    </div>
+                </div>
             </div>
+                {
+                    isAdd && <AddNewItem isAdd={isAdd} handleAddItem={handleAddItem}/>
+                }
         </div>
     );
 };

@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 
 const Tag = ({tag}) => {
     return (
-        <Link to={`/tags/${tag}`}>
+        <Link to={`/admin/tags/${tag}`}>
             <span
             
-                className="bg-[#62DFE8] bg-opacity-5 text-[#62DFE8] px-2 py-1 rounded-3xl font-medium"
+                className="bg-[#62DFE8] bg-opacity-10 text-[#62DFE8] px-2 py-1 rounded-3xl font-medium"
             >
                 #{tag}
             </span>

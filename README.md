@@ -1,21 +1,43 @@
 # Setting up
 To add the node modules to your project, run the following command:
-`npm install`
+```bash
+npm install
+```
 
 Then install the following dependencies.
 
 ## Dependencies Needed
 **Make sure you are in your project directory**
 ### React Router
-`npm install react-router-dom localforage match-sorter sort-by`
+```bash
+npm install react-router-dom localforage match-sorter sort-by
+```
 ### Tailwind CSS
 - Run the following commands:
-`npm install -D tailwindcss postcss autoprefixer` and `npx tailwindcss init -p`
+```bash 
+npm install -D tailwindcss postcss autoprefixer
+``` 
+and 
+```bash 
+npx tailwindcss init -p
+```
 
 - Then add the following to your `tailwind.config.js` file
 
 ### React Toastify
-`npm install --save react-toastify`
+```bash
+npm install --save react-toastify
+```
+
+### React icons
+```bash
+npm i react-icons
+```
+
+### React Use Animations
+```bash
+npm install -S react-useanimations
+```
 
 ```js
 /** @type {import('tailwindcss').Config} */

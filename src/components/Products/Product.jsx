@@ -5,7 +5,7 @@ import Tag from './Tag';
 const Product = ({ product }) => {
     return (
         <Link to={`/admin/products/${product.id}`}>
-            <div className="shadow-2xl bg-black bg-opacity-80  rounded-2xl p-6 h-full flex flex-col justify-between">
+            <div className="shadow-2xl bg-black bg-opacity-95  rounded-2xl p-6 h-full flex flex-col justify-between">
                 <div className="w-full p-2 rounded-2xl flex justify-center">
                     <img
                         src={product.image}
