@@ -46,16 +46,42 @@ const searchBar = (
 const navItems = (
     <>
         <li>
-            <NavLink>All Products</NavLink>
+            <NavLink
+                to="/admin"
+                end
+                className={({ isActive }) =>
+                    isActive ? `${active}` : `${inactive}`
+                }
+            >
+                All Products
+            </NavLink>
         </li>
         <li>
-            <NavLink>All Orders</NavLink>
+            <NavLink
+                to="/admin/all-orders"
+                className={({ isActive }) =>
+                    isActive ? `${active}` : `${inactive}`
+                }
+            >
+                All Orders
+            </NavLink>
         </li>
         <li>
-            <NavLink>Site Stats</NavLink>
+            <NavLink
+                to="/admin/site-stats"
+                className={({ isActive }) =>
+                    isActive ? `${active}` : `${inactive}`
+                }
+            >
+                Site Stats
+            </NavLink>
         </li>
     </>
 );
+
+const active =
+    "border border-tertiary rounded-lg bg-transparent lg:px-3 lg:py-2 px-2 py-1";
+const inactive = "border border-transparent rounded-lg px-3 py-2";
 
 const AdminNav = () => {
     const [isAdd, setIsAdd] = useState(false);
@@ -82,7 +108,7 @@ const AdminNav = () => {
                         <div
                             className={`${
                                 dropDown ? "flex" : "hidden"
-                            } absolute -bottom-32 rounded-lg bg-primary p-3 min-w-28 bg-opacity-85`}
+                            } absolute -bottom-32 rounded-lg bg-primary p-3 min-w-44 bg-opacity-85`}
                         >
                             <ul className="flex flex-col gap-3 font-medium">
                                 {navItems}
@@ -97,16 +123,21 @@ const AdminNav = () => {
                         />
                     </Link>
                 </div>
-                <div className="flex gap-3">
-                    <div>{searchBar}</div>
-                    <div className="group relative ">
+                <div className="lg:flex hidden">
+                    <ul className="flex gap-3 font-extrabold text-2xl bg-gradient-to-r from-tertiary via-secondary to-primary text-transparent bg-clip-text animate-gradient bg-300%">
+                        {navItems}
+                    </ul>
+                </div>
+                <div className="flex gap-3 relative">
+                    <div className="absolute right-12 lg:right-16">{searchBar}</div>
+                    <div className="add-btn">
                         <button
                             onClick={handleAddItem}
                             className="bg-primary rounded-full p-2 flex gap-2 items-center"
                         >
                             <IoAddOutline className="text-2xl" />
                         </button>
-                        <span className="absolute -bottom-12 left-[50%] -translate-x-[100%] z-20 origin-left scale-0 px-3 rounded-lg border border-secondary bg-primary py-2 text-sm font-bold shadow-md transition-all duration-300 ease-in-out group-hover:scale-100 min-w-32">
+                        <span className="absolute -bottom-12 left-[50%] -translate-x-[100%] z-20 origin-left scale-0 px-3 rounded-lg border border-secondary bg-primary py-2 text-sm font-bold shadow-md transition-all duration-300 ease-in-out add-btn-hover:scale-100 min-w-32">
                             Add new Item <span> </span>
                         </span>
                     </div>

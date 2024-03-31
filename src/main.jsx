@@ -42,6 +42,15 @@ const router = createBrowserRouter([
                 path: "/admin/tags/:tag",
                 element: <h1>Tag</h1>,
             },
+            {
+                path: "/admin/all-orders",
+                element: <h1>All Orders</h1>,
+            },
+            {
+                path: "/admin/site-stats",
+                element: <h1>All Users</h1>,
+            }
+            
         ],
     }
 ]);
