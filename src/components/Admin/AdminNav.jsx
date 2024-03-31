@@ -96,7 +96,7 @@ const AdminNav = () => {
         setDropDown(!dropDown);
     };
 
-    // Close dropdown and add item window when clicked outside
+    // Close dropdown when clicked outside
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (
@@ -105,14 +105,6 @@ const AdminNav = () => {
                 event.target.closest(".hamburger") === null
             ) {
                 setDropDown(false);
-            }
-
-            if (
-                isAdd &&
-                event.target.closest(".add-btn") === null &&
-                event.target.closest(".add-btn-hover") === null
-            ) {
-                setIsAdd(false);
             }
         };
 
@@ -123,7 +115,7 @@ const AdminNav = () => {
             document.removeEventListener("click", handleClickOutside);
 
         };
-    }, [dropDown, isAdd]);
+    }, [dropDown]);
 
     return (
         <div className="sticky top-0">
