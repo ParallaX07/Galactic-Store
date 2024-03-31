@@ -4,7 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 function LoginForm() {
     
     const nagivate = useNavigate();
-    // Login function
+
+
+    // post to database function
     const handLogin = () => {
         console.log("submit");
         
@@ -18,15 +20,18 @@ function LoginForm() {
                 className="form lg:px-20 lg:py-14 m-6 p-10 w-full lg:max-w-[567.6px] lg:h-[570.6px] my-auto "
                 onSubmit={() => handLogin()}
             >
-                <p className="">
-                    <span className="text-4xl font-black bg-gradient-to-r from-[#62DFE8] via-[#325B72] to-[#15192D] text-transparent bg-clip-text animate-gradient bg-300%">
-                        Galactic Store
-                    </span>{" "}
-                    <br />
-                    <span className="text-[#acacac] text-sm">
-                        Home to your all your interstellar needs!
-                    </span>
-                </p>
+                <div className="flex justify-between items-center">
+                    <p className="">
+                        <span className="text-xl lg:text-4xl font-black bg-gradient-to-r from-tertiary via-secondary to-primary text-transparent bg-clip-text animate-gradient bg-300%">
+                            Galactic Store
+                        </span>{" "}
+                        <br />
+                        <span className="text-gray-400 text-sm">
+                            Home to your all your interstellar needs!
+                        </span>
+                    </p>
+                    <img className="lg:size-28 size-20 shadow-2xl rounded-full" src="https://i.ibb.co/Wg43jL4/logo.png" alt="" />
+                </div>
                 <p className="text-2xl">Login</p>
                 <div className="group">
                     <input
@@ -49,9 +54,9 @@ function LoginForm() {
                     </div>
                 </div>
                 {/* Login button */}
-                <button className="submit text-white hover:bg-black hover:bg-opacity-40">Login</button>
+                <button type="submit" className="submit text-white hover:bg-black hover:bg-opacity-40">Login</button>
                 <p>Don&apos;t have an account yet?</p>
-                <Link to={`/signup`} className="text-[#1b79ab] font-extrabold">
+                <Link to={`/signup`} className="text-accent font-extrabold">
                     Create one now!
                 </Link>
             </form>
