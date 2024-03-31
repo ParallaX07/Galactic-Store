@@ -108,9 +108,9 @@ const AdminNav = () => {
                         <div
                             className={`${
                                 dropDown ? "flex" : "hidden"
-                            } absolute -bottom-32 rounded-lg bg-primary p-3 min-w-44 bg-opacity-85`}
+                            } absolute -bottom-40 rounded-lg bg-primary p-3 min-w-48 bg-opacity-85`}
                         >
-                            <ul className="flex flex-col gap-3 font-medium">
+                            <ul className="flex flex-col gap-3 font-medium text-2xl">
                                 {navItems}
                             </ul>
                         </div>
@@ -129,7 +129,9 @@ const AdminNav = () => {
                     </ul>
                 </div>
                 <div className="flex gap-3 relative">
-                    <div className="absolute right-12 lg:right-16">{searchBar}</div>
+                    <div className="absolute right-12 lg:right-16">
+                        {searchBar}
+                    </div>
                     <div className="add-btn">
                         <button
                             onClick={handleAddItem}
