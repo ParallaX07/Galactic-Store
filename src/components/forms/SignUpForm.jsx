@@ -1,13 +1,23 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useContext } from 'react';
+import { NotifyContext } from "../../utils/NotifyContext";
 
 // Sign up form component
 const SignUpForm = () => {
+    const notify = useContext(NotifyContext);
+  
+    const navigate = useNavigate();
+
     const handleSignUp = (e) => {
         e.preventDefault();
         console.log("submit");
-        // Navigate to home page
-    };
+        //sign up toast 
+        notify("signed up");
 
+        // Navigate to login page
+        navigate('/');
+    };
+    
     return (
         <div className="h-dvh flex justify-center">
             <form
@@ -63,7 +73,7 @@ const SignUpForm = () => {
                     <label className="label-email">Confirm Password</label>
                 </div>
                 {/* sign up button */}
-                <button className="submit text-white">Create Account</button>
+                <button className="submit text-white hover:bg-black hover:bg-opacity-40">Create Account</button>
                 <p>Already have an account yet?</p>
                 <Link to={`/`} className="text-[#1b79ab] font-extrabold">
                     Login now!

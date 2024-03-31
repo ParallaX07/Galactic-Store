@@ -1,13 +1,17 @@
-import { Link } from "react-router-dom";
-
-// Login function
-const handLogin = () => {
-    console.log("submit");
-    // Navigate to home page
-};
+import { Link, useNavigate } from "react-router-dom";
 
 // Login form component
 function LoginForm() {
+    
+    const nagivate = useNavigate();
+    // Login function
+    const handLogin = () => {
+        console.log("submit");
+        
+        // Navigate to admin page
+        nagivate("/admin");
+    };
+    
     return (
         <div className="h-dvh flex justify-center">
             <form
@@ -20,7 +24,7 @@ function LoginForm() {
                     </span>{" "}
                     <br />
                     <span className="text-[#acacac] text-sm">
-                        Home to your all your intersellar needs!
+                        Home to your all your interstellar needs!
                     </span>
                 </p>
                 <p className="text-2xl">Login</p>
@@ -45,7 +49,7 @@ function LoginForm() {
                     </div>
                 </div>
                 {/* Login button */}
-                <button className="submit text-white">Login</button>
+                <button className="submit text-white hover:bg-black hover:bg-opacity-40">Login</button>
                 <p>Don&apos;t have an account yet?</p>
                 <Link to={`/signup`} className="text-[#1b79ab] font-extrabold">
                     Create one now!
