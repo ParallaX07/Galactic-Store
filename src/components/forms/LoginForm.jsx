@@ -7,7 +7,6 @@ function LoginForm() {
     // Login function
     const handLogin = () => {
         console.log("submit");
-        // Login toast
         
         // Navigate to admin page
         nagivate("/admin");
@@ -50,7 +49,7 @@ function LoginForm() {
                     </div>
                 </div>
                 {/* Login button */}
-                <button className="submit text-white">Login</button>
+                <button className="submit text-white hover:bg-black hover:bg-opacity-40">Login</button>
                 <p>Don&apos;t have an account yet?</p>
                 <Link to={`/signup`} className="text-[#1b79ab] font-extrabold">
                     Create one now!
