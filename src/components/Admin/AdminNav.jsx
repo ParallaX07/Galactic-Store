@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./AdminNav.css";
 import { Link } from "react-router-dom";
-import AddNewItem from "./AddNewItem";
+import AddNewItem from "../forms/AddNewItem";
 import { IoAddOutline } from "react-icons/io5";
 
 const searchBar = (
