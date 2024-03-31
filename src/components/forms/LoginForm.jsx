@@ -22,11 +22,11 @@ function LoginForm() {
             >
                 <div className="flex justify-between items-center">
                     <p className="">
-                        <span className="text-xl lg:text-4xl font-black bg-gradient-to-r from-[#62DFE8] via-[#325B72] to-[#15192D] text-transparent bg-clip-text animate-gradient bg-300%">
+                        <span className="text-xl lg:text-4xl font-black bg-gradient-to-r from-tertiary via-secondary to-primary text-transparent bg-clip-text animate-gradient bg-300%">
                             Galactic Store
                         </span>{" "}
                         <br />
-                        <span className="text-[#acacac] text-sm">
+                        <span className="text-gray-400 text-sm">
                             Home to your all your interstellar needs!
                         </span>
                     </p>
@@ -56,7 +56,7 @@ function LoginForm() {
                 {/* Login button */}
                 <button type="submit" className="submit text-white hover:bg-black hover:bg-opacity-40">Login</button>
                 <p>Don&apos;t have an account yet?</p>
-                <Link to={`/signup`} className="text-[#1b79ab] font-extrabold">
+                <Link to={`/signup`} className="text-accent font-extrabold">
                     Create one now!
                 </Link>
             </form>

@@ -36,7 +36,7 @@ const AddNewItem = ({ isAdd, handleAddItem }) => {
             <div
                 className={`${showPanel} relative z-10 border flex flex-col gap-4 p-4 lg:p-10 bg-black bg-opacity-95 rounded-2xl shadow-2xl w-full min-h-96 py-3`}
             >
-                <span className="mx-auto text-xl lg:text-4xl font-black bg-gradient-to-r from-[#62DFE8] via-[#325B72] to-[#15192D] text-transparent bg-clip-text animate-gradient bg-300%">
+                <span className="mx-auto text-xl lg:text-4xl font-black bg-gradient-to-r from-tertiary via-secondary to-primary text-transparent bg-clip-text animate-gradient bg-300%">
                     Add New Item
                 </span>
                 <form className=" flex flex-col gap-3" onSubmit={handleSubmit}>
@@ -127,7 +127,7 @@ const AddNewItem = ({ isAdd, handleAddItem }) => {
                     </label>
                     <button
                         type="submit"
-                        className="submit text-white bg-[#15192D] hover:bg-opacity-40 mt-5"
+                        className="submit text-white bg-primary hover:bg-opacity-40 mt-5"
                     >
                         Add item
                     </button>

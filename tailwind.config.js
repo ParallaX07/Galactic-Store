@@ -3,6 +3,7 @@ export default {
     content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
 
     theme: {
+
         extend: {
             keyframes: {
                 animatedgradient: {
@@ -16,6 +17,13 @@ export default {
             },
             animation: {
                 gradient: "animatedgradient 6s ease infinite alternate",
+            },
+            colors: {
+                primary: "#15192D",
+                secondary: "#325B72",
+                tertiary: "#62DFE8",
+                accent: "#1b79ab",
+                blackish: "#060811",
             },
         },
     },

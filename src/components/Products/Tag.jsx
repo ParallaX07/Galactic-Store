@@ -13,7 +13,7 @@ const Tag = ({ tag }) => {
     return (
         <span
             onClick={handleClick}
-            className="bg-[#62DFE8] bg-opacity-10 text-[#62DFE8] px-2 py-1 rounded-3xl font-medium"
+            className="bg-tertiary bg-opacity-10 text-tertiary px-2 py-1 rounded-3xl font-medium"
             style={{ cursor: "pointer" }}
         >
             #{tag}

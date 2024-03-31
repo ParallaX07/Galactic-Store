@@ -22,7 +22,7 @@ const Product = ({ product }) => {
                         ))}
                     </div>
                     <h3 className="text-2xl font-bold">{product.name}</h3>
-                    <p className="text-[#acacac]">$ {product.price}</p>
+                    <p className="text-gray-400">$ {product.price}</p>
                 </div>
             </div>
         </Link>
