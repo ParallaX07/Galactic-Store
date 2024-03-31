@@ -20,8 +20,16 @@ const AddNewItem = ({ isAdd, handleAddItem }) => {
             ...prevState,
             [id]: value,
         }));
-        console.log(formData);
+        
     };
+
+    // post to database with this function
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        console.log(formData);
+        
+    }
 
     return (
         <div className="absolute top-42 lg:left-96 lg:right-96 left-3 right-3">
@@ -31,7 +39,7 @@ const AddNewItem = ({ isAdd, handleAddItem }) => {
                 <span className="mx-auto text-xl lg:text-4xl font-black bg-gradient-to-r from-[#62DFE8] via-[#325B72] to-[#15192D] text-transparent bg-clip-text animate-gradient bg-300%">
                     Add New Item
                 </span>
-                <form className="flex flex-col gap-3">
+                <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
                     <label
                         htmlFor="id"
                         className="relative block overflow-hidden border-b border-gray-200 bg-transparent pt-3 focus-within:border-blue-600"

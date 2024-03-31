@@ -4,7 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 function LoginForm() {
     
     const nagivate = useNavigate();
-    // Login function
+
+
+    // post to database function
     const handLogin = () => {
         console.log("submit");
         

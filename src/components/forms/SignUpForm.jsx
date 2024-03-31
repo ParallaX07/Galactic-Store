@@ -8,6 +8,8 @@ const SignUpForm = () => {
   
     const navigate = useNavigate();
 
+    // post to database function
+
     const handleSignUp = (e) => {
         e.preventDefault();
         console.log("submit");
