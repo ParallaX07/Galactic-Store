@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./AdminNav.css";
 import { Link, NavLink } from "react-router-dom";
 import AddNewItem from "../forms/AddNewItem";
@@ -96,17 +96,46 @@ const AdminNav = () => {
         setDropDown(!dropDown);
     };
 
+    // Close dropdown and add item window when clicked outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                dropDown &&
+                event.target.closest(".dropdown") === null &&
+                event.target.closest(".hamburger") === null
+            ) {
+                setDropDown(false);
+            }
+
+            if (
+                isAdd &&
+                event.target.closest(".add-btn") === null &&
+                event.target.closest(".add-btn-hover") === null
+            ) {
+                setIsAdd(false);
+            }
+        };
+
+        document.addEventListener("click", handleClickOutside);
+
+
+        return () => {
+            document.removeEventListener("click", handleClickOutside);
+
+        };
+    }, [dropDown, isAdd]);
+
     return (
         <div className="sticky top-0">
             <div className="p-3 bg-blackish bg-opacity-90 shadow-2xl flex items-center justify-between relative">
                 <div className="flex gap-2 items-center">
                     <div
-                        className="lg:hidden flex flex-col relative z-10 cursor-pointer"
+                        className="lg:hidden flex flex-col relative z-10 cursor-pointer hamburger"
                         onClick={handleDropDown}
                     >
                         <GiHamburgerMenu className="text-2xl text-secondary" />
                         <div
-                            className={`${
+                            className={`dropdown ${
                                 dropDown ? "flex" : "hidden"
                             } absolute -bottom-40 rounded-lg bg-primary p-3 min-w-48 bg-opacity-85`}
                         >
