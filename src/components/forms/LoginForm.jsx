@@ -24,7 +24,7 @@ function LoginForm() {
                     </span>{" "}
                     <br />
                     <span className="text-[#acacac] text-sm">
-                        Home to your all your intersellar needs!
+                        Home to your all your interstellar needs!
                     </span>
                 </p>
                 <p className="text-2xl">Login</p>
