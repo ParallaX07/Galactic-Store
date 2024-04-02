@@ -127,7 +127,7 @@ const AddNewItem = ({ isAdd, handleAddItem }) => {
                     </label>
                     <button
                         type="submit"
-                        className="submit text-white bg-primary hover:bg-opacity-40 mt-5"
+                        className="submit text-white bg-black hover:bg-opacity-5 mt-5"
                     >
                         Add item
                     </button>

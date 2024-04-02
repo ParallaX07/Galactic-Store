@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./AdminNav.css";
 import { Link, NavLink } from "react-router-dom";
 import AddNewItem from "../forms/AddNewItem";
@@ -80,8 +80,8 @@ const navItems = (
 );
 
 const active =
-    "border border-tertiary rounded-lg bg-transparent lg:px-3 lg:py-2 px-2 py-1";
-const inactive = "border border-transparent rounded-lg px-3 py-2";
+    "border-b-2 border-tertiary bg-transparent lg:px-3 lg:py-2 px-2 py-1 bg-gradient-to-r from-tertiary via-secondary to-primary text-transparent bg-clip-text animate-gradient bg-300%";
+const inactive = "border-b-2 border-transparent px-3 py-2";
 
 const AdminNav = () => {
     const [isAdd, setIsAdd] = useState(false);
@@ -96,17 +96,38 @@ const AdminNav = () => {
         setDropDown(!dropDown);
     };
 
+    // Close dropdown when clicked outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                dropDown &&
+                event.target.closest(".dropdown") === null &&
+                event.target.closest(".hamburger") === null
+            ) {
+                setDropDown(false);
+            }
+        };
+
+        document.addEventListener("click", handleClickOutside);
+
+
+        return () => {
+            document.removeEventListener("click", handleClickOutside);
+
+        };
+    }, [dropDown]);
+
     return (
         <div className="sticky top-0">
             <div className="p-3 bg-blackish bg-opacity-90 shadow-2xl flex items-center justify-between relative">
                 <div className="flex gap-2 items-center">
                     <div
-                        className="lg:hidden flex flex-col relative z-10 cursor-pointer"
+                        className="lg:hidden flex flex-col relative z-10 cursor-pointer hamburger"
                         onClick={handleDropDown}
                     >
                         <GiHamburgerMenu className="text-2xl text-secondary" />
                         <div
-                            className={`${
+                            className={`dropdown ${
                                 dropDown ? "flex" : "hidden"
                             } absolute -bottom-40 rounded-lg bg-primary p-3 min-w-48 bg-opacity-85`}
                         >
@@ -124,7 +145,7 @@ const AdminNav = () => {
                     </Link>
                 </div>
                 <div className="lg:flex hidden">
-                    <ul className="flex gap-3 font-extrabold text-2xl bg-gradient-to-r from-tertiary via-secondary to-primary text-transparent bg-clip-text animate-gradient bg-300%">
+                    <ul className="flex gap-3 font-extrabold text-2xl ">
                         {navItems}
                     </ul>
                 </div>

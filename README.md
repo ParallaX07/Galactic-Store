@@ -34,11 +34,6 @@ npm install --save react-toastify
 npm i react-icons
 ```
 
-### React Use Animations
-```bash
-npm install -S react-useanimations
-```
-
 ```js
 /** @type {import('tailwindcss').Config} */
 export default {
