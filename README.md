@@ -34,6 +34,12 @@ npm install --save react-toastify
 npm i react-icons
 ```
 
+## For Backend
+go to the backend folder and run the following command:
+```bash
+npm install nodemon express cors mysql
+```
+
 ```js
 /** @type {import('tailwindcss').Config} */
 export default {
