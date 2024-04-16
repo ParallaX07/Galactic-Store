@@ -110,10 +110,8 @@ const AdminNav = () => {
 
         document.addEventListener("click", handleClickOutside);
 
-
         return () => {
             document.removeEventListener("click", handleClickOutside);
-
         };
     }, [dropDown]);
 
