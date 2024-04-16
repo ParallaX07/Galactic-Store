@@ -35,7 +35,7 @@ app.get("/users", (req, res) => {
     });
 });
 
-app.post("/adduser", (req, res) => {
+app.post("/users", (req, res) => {
     const { fname, lname, email, pass } = req.body;
     /**
      * SQL query for inserting user data into the database.
@@ -47,6 +47,7 @@ app.post("/adduser", (req, res) => {
         return res.json(result);
     });
 });
+
 
 /**
  * Starts the server and establishes the database connection.

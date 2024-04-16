@@ -1,10 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useContext } from 'react';
-import { NotifyContext } from "../../utils/NotifyContext";
 
 // Sign up form component
 const SignUpForm = () => {
-    const notify = useContext(NotifyContext);
   
     const navigate = useNavigate();
 
@@ -14,7 +11,6 @@ const SignUpForm = () => {
         e.preventDefault();
         console.log("submit");
         //sign up toast 
-        notify("signed up");
 
         // Navigate to login page
         navigate('/');
