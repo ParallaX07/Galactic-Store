@@ -47,7 +47,7 @@ export default {
 4. **React Toastify**: Install React Toastify:
 
 ```bash
-npm install --save react-toastify
+npm install react-hot-toast
 ```
 
 5. **React Icons**: Install React Icons:

@@ -1,47 +1,52 @@
 import { Outlet } from "react-router-dom";
 import "./LandingPage.css";
-
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { Bounce } from "react-toastify";
-
-import { NotifyContext } from "../../utils/NotifyContext"; // import NotifyContext
+import { createContext } from "react";
+import toast, { Toaster } from "react-hot-toast";
+const NotifyContext = createContext();
 
 const LandingPage = () => {
-    const notify = (message) =>
-        toast.success(`You have succesfully ${message}`, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-            transition: Bounce,
+    const notifySuccess = (message) => {
+        toast.success(message, {
+            style: {
+                border: "1px solid #10B981",
+                padding: "16px",
+                color: "#10B981",
+            },
+            iconTheme: {
+                primary: "#10B981",
+                secondary: "#FFFAEE",
+            },
         });
-        
-        return (
-            // toast notify context provider
-            <NotifyContext.Provider value={notify}>
-                <Outlet />
+    };
 
-                {/* add toast div */}
-                <ToastContainer
-                    position="top-right"
-                    autoClose={5000}
-                    hideProgressBar={false}
-                    newestOnTop={false}
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                    theme="dark"
-                    transition={Bounce}
-                />
-            </NotifyContext.Provider>
-        );
+    const notifyError = (message) => {
+        toast.error(message, {
+            style: {
+                border: "1px solid #EF4444 ",
+                padding: "16px",
+                color: "#EF4444 ",
+            },
+            iconTheme: {
+                primary: "#EF4444 ",
+                secondary: "#FFFAEE",
+            },
+        });
+    };
+
+    const messageInfo = {
+        notifySuccess,
+        notifyError,
+    };
+
+    return (
+        // toast notify context provider
+        <NotifyContext.Provider value={messageInfo}>
+            <Outlet />
+
+            {/* add toast div */}
+            <Toaster position="top-right" reverseOrder={false} />
+        </NotifyContext.Provider>
+    );
 };
 
 export default LandingPage;
