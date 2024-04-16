@@ -9,6 +9,7 @@ const cors = require("cors");
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 
 // Create connection to database
 const db = mysql.createConnection({
@@ -29,6 +30,19 @@ const db = mysql.createConnection({
 app.get("/users", (req, res) => {
     const sql = "SELECT * FROM users";
     db.query(sql, (err, result) => {
+        if (err) throw err;
+        return res.json(result);
+    });
+});
+
+app.post("/adduser", (req, res) => {
+    const { fname, lname, email, pass } = req.body;
+    /**
+     * SQL query for inserting user data into the database.
+     * @type {string}
+     */
+    const sql = "INSERT INTO users (fname, lname, email, pass) VALUES (?, ?, ?, ?)";
+    db.query(sql, [fname, lname, email, pass], (err, result) => {
         if (err) throw err;
         return res.json(result);
     });
