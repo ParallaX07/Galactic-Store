@@ -1,43 +1,69 @@
-const express = require('express');
-const mysql = require('mysql');
-const cors = require('cors');
+/**
+ * Express server for Galactic Store backend.
+ * @module server
+ */
+
+const express = require("express");
+const mysql = require("mysql");
+const cors = require("cors");
 
 const app = express();
 app.use(cors());
 
 // Create connection to database
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'galactic_store',
-}); 
-
-app.get('/', (req, res) => {
-    return res.json("Hello World");
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "galactic_store",
 });
 
-app.get('/users', (req, res) => {
-    const sql = 'SELECT * FROM users';
+/**
+ * Route for retrieving all users from the database.
+ * @name GET /users
+ * @function
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Object} - JSON response with the list of users.
+ */
+app.get("/users", (req, res) => {
+    const sql = "SELECT * FROM users";
     db.query(sql, (err, result) => {
         if (err) throw err;
         return res.json(result);
     });
 });
 
+/**
+ * Starts the server and establishes the database connection.
+ * @name listen
+ * @function
+ * @param {number} port - The port number to listen on.
+ * @param {Function} callback - The callback function to execute when the server starts.
+ */
 app.listen(8801, () => {
-    console.log('Server is running on port 3001');
+    console.log("Server is running on port 8801\nConnection established");
 });
 
+/**
+ * Ends the database connection.
+ * @name endConnection
+ * @function
+ */
 const endConnection = () => {
-    db.end(
-        console.log('Connection ended')
-    );
-} 
+    db.end(console.log("Connection ended"));
+};
 
-
-
-app.get('/endConnection', (req, res) => {
+/**
+ * Route for ending the database connection.
+ * @name GET /endConnection
+ * @function
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {string} - Response with "Connection ended" message.
+ */
+app.get("/endConnection", (req, res) => {
     endConnection();
-    res.send('Connection ended');
+    res.send("Connection ended");
 });
+
