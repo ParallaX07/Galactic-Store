@@ -1,19 +1,38 @@
 import { Link, NavLink } from "react-router-dom";
-import { FaUserAstronaut } from "react-icons/fa6";
+import { FaPlus, FaUserAstronaut } from "react-icons/fa6";
 import { AuthContext } from "../Auth/AuthProvider";
 import { useContext, useEffect, useState } from "react";
 import { Tooltip } from "react-tooltip";
 import { IoMdLogOut } from "react-icons/io";
 import { TiThMenu } from "react-icons/ti";
 import { MessageContext } from "../Pages/Root";
+import useAxiosSecure from "../hooks/useAxiosSecure";
 
 const Navbar = () => {
-    const active = "bg-gradient-to-r from-tertiary via-secondary to-primary text-transparent bg-clip-text animate-gradient bg-300% border-secondary border-b-2";
+    const active =
+        "bg-gradient-to-r from-tertiary via-secondary to-primary text-transparent bg-clip-text animate-gradient bg-300% border-secondary border-b-2";
     const inactive = "hover:text-gray-400 border-transparent border-b-2";
-    const { user, logout, loading, userType } = useContext(AuthContext);
+    const { user, logout, loading } = useContext(AuthContext);
     const { notifySuccess, notifyError } = useContext(MessageContext);
+    const [userType, setUserType] = useState(null);
+    const axiosSecure = useAxiosSecure();
 
-    console.log(userType);
+    useEffect(() => {
+        if (user) {
+            console.log("user", user);
+            axiosSecure
+                .get(`/users?email=${user?.email}&value=${"User_Type"}`)
+                .then((res) => {
+                    setUserType(res.data[0].User_Type);
+                    console.log(userType);
+                    console.log(res.data[0].User_Type);
+                })
+                .catch((error) => {
+                    notifyError(error.message);
+                });
+        }
+    }, [user]);
+
     const customerNavItems = (
         <>
             <li>
@@ -41,18 +60,9 @@ const Navbar = () => {
 
     const adminNavItems = (
         <>
-
             <li>
-                <NavLink to="/add-products"
-                    className={({ isActive }) =>
-                        isActive ? `${active}` : `${inactive}`
-                    }
-                >
-                    Add Products
-                </NavLink>
-            </li>
-            <li>
-                <NavLink to="/manage-products"
+                <NavLink
+                    to="/manage-products"
                     className={({ isActive }) =>
                         isActive ? `${active}` : `${inactive}`
                     }
@@ -61,7 +71,8 @@ const Navbar = () => {
                 </NavLink>
             </li>
             <li>
-                <NavLink to="/manage-orders"
+                <NavLink
+                    to="/manage-orders"
                     className={({ isActive }) =>
                         isActive ? `${active}` : `${inactive}`
                     }
@@ -69,7 +80,6 @@ const Navbar = () => {
                     Manage Orders
                 </NavLink>
             </li>
-
         </>
     );
 
@@ -121,7 +131,10 @@ const Navbar = () => {
                 <a className="profileImage">
                     <img
                         className="size-12 rounded-full"
-                        src={user?.photoURL}
+                        src={
+                            user?.photoURL ||
+                            "https://i.ibb.co/hYbbGyR/6596121-modified.png"
+                        }
                         alt=""
                     />
                 </a>
@@ -181,7 +194,7 @@ const Navbar = () => {
     return (
         <>
             <div className=" fixed w-full top-0 z-50 text-white bg-opacity-85 bg-primary">
-                <nav className="lg:px-5 px-3 py-2 flex justify-between text-sm items-center lg:text-lg font-extrabold">
+                <nav className="lg:px-5 px-3 py-2 flex justify-between text-sm items-center lg:text-xl font-medium">
                     <Link to="/" className="flex items-center gap-2">
                         <img
                             className="lg:size-16 size-14"
@@ -211,10 +224,25 @@ const Navbar = () => {
                             </NavLink>
                         </li>
 
-                        {user && (userType === "Admin" ? adminNavItems : customerNavItems) }
+                        {user &&
+                            !loading &&
+                            (userType === "Admin"
+                                ? adminNavItems
+                                : customerNavItems)}
                     </ul>
                     {/* small screen nav items */}
-                    <div className="flex items-center gap-3 relative">
+                    <div className="flex gap-3 relative items-center">
+                        {userType === "Admin" && (
+                            <NavLink
+                                to="/a/add-product"
+                                className={({ isActive }) =>
+                                    isActive ? `text-xl p-1 border-2 rounded-full font-bold text-secondary border-secondary` : `text-xl p-1 border-2 border-white rounded-full font-bold`
+                                }
+                                title={`Add Product`}
+                            >
+                                <FaPlus />
+                            </NavLink>
+                        )}
                         {loading
                             ? loadingSkeleton
                             : user
@@ -243,7 +271,11 @@ const Navbar = () => {
                                         Home
                                     </NavLink>
                                 </li>
-                                {}
+                                {user &&
+                                    !loading &&
+                                    (userType === "Admin"
+                                        ? adminNavItems
+                                        : customerNavItems)}
                                 {user ? (
                                     <li
                                         onClick={handleLogout}
@@ -288,10 +320,8 @@ const Navbar = () => {
                     anchorSelect=".profileImage"
                     place="top"
                     style={{
-                        backgroundColor: "rgba(255, 169, 32, 0.9)",
+                        backgroundColor: "#325B72",
                         color: "rgb(255, 255, 255)",
-                        borderColor: "rgb(255, 169, 32)",
-                        borderWidth: "2px",
                         fontWeight: "700",
                     }}
                 >

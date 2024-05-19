@@ -52,7 +52,6 @@ app.get("/users", (req, res) => {
 // Handle POST requests to /users
 app.post('/users', (req, res) => {
     const user = req.body;
-
     const query = 'INSERT INTO user (Email_ID, User_Type, F_Name, L_Name, Contact_Cell) VALUES (?, ?, ?, ?, ?)';
     const values = [user.Email_ID, user.User_Type, user.F_Name, user.L_Name, user.Contact_Cell];
 
@@ -65,6 +64,23 @@ app.post('/users', (req, res) => {
         }
     });
 });
+
+// add product to db
+app.post('/products', (req, res) => {
+    const product = req.body;
+    const query = 'INSERT INTO product (Name, Price, Planet_source, Galaxy_source, Quantity_inStock, Image_Url, Description) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    const values = [product.Name, product.Price, product.Planet, product.Galaxy, product.Quantity_Stock, product.Image, product.Description];
+
+    db.query(query, values, (err, result) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send('Server error');
+        } else {
+            res.status(200).send('Product added successfully');
+        }
+    });
+})
+
 
 /**
  * Starts the server and establishes the database connection.

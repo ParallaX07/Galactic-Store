@@ -9,7 +9,7 @@ import useAxiosSecure from './../../hooks/useAxiosSecure';
 function LoginForm() {
 
     const { notifyError, notifySuccess } = useContext(MessageContext);
-    const { login, user, setUserType, userType } = useContext(AuthContext);
+    const { login, user } = useContext(AuthContext);
 
     const navigate = useNavigate();
     const axiosSecure = useAxiosSecure();
@@ -23,14 +23,12 @@ function LoginForm() {
         const email = formData.get("email");
         const password = formData.get("password");  
         axiosSecure.get(`/users?email=${email}&value=${"User_Type"}`)
-            .then((res) => {
-                setUserType(res.data[0].User_Type);
+            .then(() => {
                 
             })
             .catch((error) => {
                 notifyError(error.message);
             });
-            console.log(userType);
         login(email, password)
             .then(() => {
                 notifySuccess("Login successful");

@@ -10,7 +10,7 @@ const SignUpForm = () => {
     const navigate = useNavigate();
     const axiosSecure = useAxiosSecure();
     const {notifyError, notifySuccess} = useContext(MessageContext);    
-    const { createUser, logout, user } = useContext(AuthContext);
+    const { createUser, logout, user, updateUserProfile } = useContext(AuthContext);
 
     // post to database function
 
@@ -34,6 +34,7 @@ const SignUpForm = () => {
         createUser(email, password)
             .then(() => {
                 notifySuccess("Account created successfully");
+                updateUserProfile(user, `${first_name} ${last_name}`, "");
                 logout();
                 navigate("/login");
             })
@@ -52,10 +53,6 @@ const SignUpForm = () => {
         }).catch((error) => {
             notifyError(error.message);
         });
-
-
-
-
     };
     
     return (
