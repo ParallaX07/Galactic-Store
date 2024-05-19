@@ -6,10 +6,12 @@
 const express = require("express");
 const mysql = require("mysql");
 const cors = require("cors");
+const bodyParser = require('body-parser');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(bodyParser.json());
 
 // Create connection to database
 const db = mysql.createConnection({
@@ -44,6 +46,24 @@ app.get("/users", (req, res) => {
             }
         }
     );
+});
+
+// create new user
+// Handle POST requests to /users
+app.post('/users', (req, res) => {
+    const user = req.body;
+
+    const query = 'INSERT INTO user (Email_ID, User_Type, F_Name, L_Name, Contact_Cell) VALUES (?, ?, ?, ?, ?)';
+    const values = [user.Email_ID, user.User_Type, user.F_Name, user.L_Name, user.Contact_Cell];
+
+    db.query(query, values, (err, result) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send('Server error');
+        } else {
+            res.status(200).send('User added successfully');
+        }
+    });
 });
 
 /**

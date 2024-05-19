@@ -10,9 +10,13 @@ const SignUpForm = () => {
     const navigate = useNavigate();
     const axiosSecure = useAxiosSecure();
     const {notifyError, notifySuccess} = useContext(MessageContext);    
-    const { createUser, user, setUserType, userType } = useContext(AuthContext);
+    const { createUser, logout, user } = useContext(AuthContext);
 
     // post to database function
+
+    if (user) {
+        navigate("/");
+    }
 
     const handleSignUp = (e) => {
         e.preventDefault();
@@ -22,13 +26,34 @@ const SignUpForm = () => {
         const email = formData.get("email");
         const password = formData.get("password");
         const confirm_password = formData.get("confirm_password");
+        const phone = formData.get("contactNo");
         if (password !== confirm_password) {
             notifyError("Passwords do not match");
             return;
         }
-        // TODO: Add a post request to the database
-        // TODO: add api endpoint
-        // TODO: firebase sign up
+        createUser(email, password)
+            .then(() => {
+                notifySuccess("Account created successfully");
+                logout();
+                navigate("/login");
+            })
+            .catch((error) => {
+                notifyError(error.message);
+            });
+
+        axiosSecure.post("/users", {
+            Email_ID: email,
+            User_Type: "Customer",
+            F_Name: first_name,
+            L_Name: last_name,
+            Contact_Cell: phone,
+        }).then((res) => {
+            console.log(res);
+        }).catch((error) => {
+            notifyError(error.message);
+        });
+
+
 
 
     };
@@ -91,6 +116,17 @@ const SignUpForm = () => {
                     />
                     <span className="highlight-span"></span>
                     <label className="label-email">Confirm Password</label>
+                </div>
+                {/* phone number input */}
+                <div className="group">
+                    <input
+                        required={true}
+                        className="main-input"
+                        type="tel"
+                        name="contactNo"
+                    />
+                    <span className="highlight-span"></span>
+                    <label className="label-email">Phone Number</label>
                 </div>
                 {/* sign up button */}
                 <button type="submit" className="submit text-white hover:bg-black hover:bg-opacity-40">Create Account</button>
