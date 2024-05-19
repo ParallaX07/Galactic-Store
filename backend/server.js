@@ -48,6 +48,20 @@ app.get("/users", (req, res) => {
     );
 });
 
+//get all products
+app.get("/products", (req, res) => {
+    db.query(
+        `SELECT * FROM product`,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.send(result);
+            }
+        }
+    );
+});
+
 // create new user
 // Handle POST requests to /users
 app.post('/users', (req, res) => {

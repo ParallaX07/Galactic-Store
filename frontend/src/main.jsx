@@ -9,12 +9,14 @@ import AuthProvider from "./Auth/AuthProvider";
 import Root from './Pages/Root';
 import AddProduct from "./components/Admin/AddProduct";
 import PrivateRoute from './Auth/PrivateRoute';
+import Home from './Pages/Home';
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <Root />,
-        children: [      
+        children: [   
+            { path: "/", element: <Home />},   
             { path: "/signup", element: <SignUpForm /> },
             { path: "/login", element: <LoginForm /> },
             {
