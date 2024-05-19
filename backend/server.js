@@ -13,41 +13,38 @@ app.use(express.json());
 
 // Create connection to database
 const db = mysql.createConnection({
-    host: "localhost",
+    host: "galacticstore.apollo.appboxes.co",
     user: "root",
-    password: "",
-    database: "galactic_store",
+    password: "CSE311",
+    database: "GalacticStore",
+    port: 11766
 });
 
-/**
- * Route for retrieving all users from the database.
- * @name GET /users
- * @function
- * @param {Object} req - Express request object.
- * @param {Object} res - Express response object.
- * @returns {Object} - JSON response with the list of users.
- */
+app.get("/", (req, res) => {
+    res.send("Hello from the Galactic Store backend!");
+});
+
+//get user type from axiosSecure.get(`/users?email=${email}`)
+
 app.get("/users", (req, res) => {
-    const sql = "SELECT * FROM users";
-    db.query(sql, (err, result) => {
-        if (err) throw err;
-        return res.json(result);
-    });
-});
-
-app.post("/users", (req, res) => {
-    const { fname, lname, email, pass } = req.body;
     /**
-     * SQL query for inserting user data into the database.
+     * The email address obtained from the request query.
      * @type {string}
+     * value can be * for all attributes of user or specific attribute like UserType
      */
-    const sql = "INSERT INTO users (fname, lname, email, pass) VALUES (?, ?, ?, ?)";
-    db.query(sql, [fname, lname, email, pass], (err, result) => {
-        if (err) throw err;
-        return res.json(result);
-    });
+    const email = req.query.email;
+    const value = req.query.value;
+    db.query(
+        `SELECT ${value} FROM user WHERE Email_ID = "${email}"`,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.send(result);
+            }
+        }
+    );
 });
-
 
 /**
  * Starts the server and establishes the database connection.
@@ -81,4 +78,3 @@ app.get("/endConnection", (req, res) => {
     endConnection();
     res.send("Connection ended");
 });
-

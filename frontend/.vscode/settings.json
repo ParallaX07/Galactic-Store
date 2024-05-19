@@ -1,0 +1,17 @@
+{
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "galacticstore.apollo.appboxes.co",
+            "port": 11766,
+            "driver": "MySQL",
+            "name": "GalacticStore",
+            "database": "GalacticStore",
+            "username": "root"
+        }
+    ]
+}
