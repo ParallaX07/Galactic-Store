@@ -14,7 +14,6 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 
-
 // Create connection to database
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
@@ -99,6 +98,20 @@ app.post('/products', (req, res) => {
         }
     });
 })
+
+//delete product by id
+app.delete('/products/:id', (req, res) => {
+    const id = req.params.id;
+    const query = 'DELETE FROM product WHERE Product_ID = ?';
+    db.query(query, id, (err, result) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send('Server error');
+        } else {
+            res.status(200).send('Product deleted successfully');
+        }
+    });
+});
 
 
 /**

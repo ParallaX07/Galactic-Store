@@ -4,6 +4,7 @@ import Loader from './../../components/FunctionalComponents/Loader';
 import "./ManageProducts.css";
 import { FaEdit } from "react-icons/fa";
 import { ImBin } from "react-icons/im";
+import Swal from "sweetalert2";
 
 const ManageProducts = () => {
     const [products, setProducts] = useState([]);
@@ -12,7 +13,7 @@ const ManageProducts = () => {
     const axiosSecure = useAxiosSecure();
     useEffect(() => {
         setLoading(true);
-        axiosSecure.get("/products?attributes=Product_ID,Name,Price,Galaxy_source,Planet_source,Quantity_inStock,Image_Url")
+        axiosSecure.get("/products?attributes=Product_ID,Name,Price,Galaxy_source,Planet_source,Quantity_inStock,Image_Url,Description")
             .then((response) => {
                 setProducts(response.data);
                 setLoading(false);
@@ -25,6 +26,36 @@ const ManageProducts = () => {
             });
     }, []);
 
+    const handleEdit = (productId) => {
+        console.log(productId);
+        //open modal
+        
+    };
+
+
+    const handleDelete = (productId) => {
+        console.log(productId);
+        Swal.fire({
+            title: `Do you want to delete the item?`,
+            showDenyButton: true,
+            confirmButtonText: "Yes, delete it",
+            denyButtonText: `No, don't delete`,
+            icon: "question",
+            confirmButtonColor: '#0b090a', 
+            background: '#0b090a',
+            denyButtonColor: '#d33',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                setLoading(true);
+                axiosSecure.delete(`/products/${productId}`).then(() => {
+                    const newProducts = products.filter(
+                        (product) => product.Product_ID !== productId
+                    );
+                    setProducts(newProducts);
+                }).finally(() => setLoading(false));
+            }
+        }); 
+    };
 
     if (loading) {
         return <Loader />;
@@ -100,8 +131,8 @@ const ManageProducts = () => {
                                     className="p-2 lg:table-cell relative lg:static block"
                                     data-label="Actions"
                                 >
-                                    <button className="mr-3 glass rounded-xl py-2 px-3"><FaEdit/></button>
-                                    <button className=" py-2 px-3 rounded-xl bg-red-500"><ImBin/></button>
+                                    <button className="mr-3 glass rounded-xl py-2 px-3" onClick={()=> handleEdit(product?.Product_ID)}><FaEdit/></button>
+                                    <button className=" py-2 px-3 rounded-xl bg-red-500" onClick={()=>handleDelete(product?.Product_ID)}><ImBin/></button>
                                 </td>
                             </tr>
                         ))}
