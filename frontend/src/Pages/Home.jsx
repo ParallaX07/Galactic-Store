@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import AllProductCard from '../components/shared/AllProductCard';
 import LoadingCard from '../components/shared/LoadingCard';
+import Loader from "../components/shared/Loader";
 
 const Home = () => {
     const [allProducts, setAllProducts] = useState([]);
@@ -21,6 +22,10 @@ const Home = () => {
                 setLoading(false);
             });
     }, []);
+
+    if (loading) {
+        return <Loader />;
+    }
 
 
     return (
