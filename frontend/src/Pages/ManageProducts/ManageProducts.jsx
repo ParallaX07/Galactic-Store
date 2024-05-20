@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import Loader from './../../components/FunctionalComponents/Loader';
 import "./ManageProducts.css";
@@ -6,12 +6,15 @@ import { FaEdit } from "react-icons/fa";
 import { ImBin } from "react-icons/im";
 import Swal from "sweetalert2";
 import EditProductModal from "../../components/EditProductModal";
+import { MessageContext } from "../Root";
 
 const ManageProducts = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentProduct, setCurrentProduct] = useState(null);
+
+    const { notifyError, notifySuccess } = useContext(MessageContext);
 
     const axiosSecure = useAxiosSecure();
 
@@ -35,22 +38,6 @@ const ManageProducts = () => {
         setIsModalOpen(true);
         console.table(product);
     };
-
-    // app.put('/products/:id', (req, res) => {
-    //     const id = req.params.id;
-    //     const product = req.body;
-    //     const query = 'UPDATE product SET Name = ?, Price = ?, Planet_source = ?, Galaxy_source = ?, Quantity_inStock = ?, Image_Url = ?, Description = ? WHERE Product_ID = ?';
-    //     const values = [product.Name, product.Price, product.Planet, product.Galaxy, product.Quantity_Stock, product.Image, product.Description, id];
-    
-    //     db.query(query, values, (err, result) => {
-    //         if (err) {
-    //             console.error(err);
-    //             res.status(500).send('Server error');
-    //         } else {
-    //             res.status(200).send('Product updated successfully');
-    //         }
-    //     });
-    // });
     
     const handleSave = (updatedProduct) => {
         console.table(updatedProduct);
@@ -63,7 +50,12 @@ const ManageProducts = () => {
                 return product;
             });
             setProducts(newProducts);
-        }).finally(() => {
+            notifySuccess("Product updated successfully");
+        })
+        .catch((error) => {
+            notifyError(error.message);
+        })
+        .finally(() => {
             setLoading(false);
             setIsModalOpen(false);
         });
@@ -87,7 +79,11 @@ const ManageProducts = () => {
                         (product) => product.Product_ID !== productId
                     );
                     setProducts(newProducts);
-                }).finally(() => setLoading(false));
+                    notifySuccess("Product deleted successfully");
+                }).catch((error) => {
+                    notifyError(error.message);
+                })
+                .finally(() => setLoading(false));
             }
         });
     };

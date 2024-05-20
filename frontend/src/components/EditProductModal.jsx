@@ -24,6 +24,7 @@ const EditProductModal = ({ product, isOpen, onClose, onSave }) => {
         const Planet_source = formData.get('Planet_source');
         const Quantity_inStock = formData.get('Quantity_inStock');
         const Description = formData.get('Description');
+        const Image_Url = formData.get('Image_Url');
 
         const updatedProduct = {
             Name,
@@ -32,6 +33,7 @@ const EditProductModal = ({ product, isOpen, onClose, onSave }) => {
             Planet_source,
             Quantity_inStock,
             Description,
+            Image_Url,
             Product_ID: product.Product_ID,
         };
 
@@ -48,45 +50,49 @@ const EditProductModal = ({ product, isOpen, onClose, onSave }) => {
                 </button>
                 <h2 className="text-2xl mb-4 text-white">Edit Product</h2>
                 <form onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-300">Name</label>
-                        <input
-                            type="text"
-                            name="Name"
-                            value={formData?.Name || ''}
-                            onChange={handleChange}
-                            className="mt-1 p-2 block w-full border rounded"
-                        />
+                    <div className="flex gap-4">
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-300">Name</label>
+                            <input
+                                type="text"
+                                name="Name"
+                                value={formData?.Name || ''}
+                                onChange={handleChange}
+                                className="mt-1 p-2 block w-full border rounded"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-300">Price</label>
+                            <input
+                                type="number"
+                                name="Price"
+                                value={formData?.Price || ''}
+                                onChange={handleChange}
+                                className="mt-1 p-2 block w-full border rounded"
+                            />
+                        </div>
                     </div>
-                    <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-300">Price</label>
-                        <input
-                            type="number"
-                            name="Price"
-                            value={formData?.Price || ''}
-                            onChange={handleChange}
-                            className="mt-1 p-2 block w-full border rounded"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-300">Galaxy</label>
-                        <input
-                            type="text"
-                            name="Galaxy_source"
-                            value={formData?.Galaxy_source || ''}
-                            onChange={handleChange}
-                            className="mt-1 p-2 block w-full border rounded"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-300">Planet</label>
-                        <input
-                            type="text"
-                            name="Planet_source"
-                            value={formData?.Planet_source || ''}
-                            onChange={handleChange}
-                            className="mt-1 p-2 block w-full border rounded"
-                        />
+                    <div className='flex gap-4'>
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-300">Galaxy</label>
+                            <input
+                                type="text"
+                                name="Galaxy_source"
+                                value={formData?.Galaxy_source || ''}
+                                onChange={handleChange}
+                                className="mt-1 p-2 block w-full border rounded"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-300">Planet</label>
+                            <input
+                                type="text"
+                                name="Planet_source"
+                                value={formData?.Planet_source || ''}
+                                onChange={handleChange}
+                                className="mt-1 p-2 block w-full border rounded"
+                            />
+                        </div>
                     </div>
                     <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-300">Quantity in Stock</label>
@@ -99,7 +105,17 @@ const EditProductModal = ({ product, isOpen, onClose, onSave }) => {
                         />
                     </div>
                     <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-300">Quantity in Stock</label>
+                        <label className="block text-sm font-medium text-gray-300">Image URL</label>
+                        <input
+                            type="text"
+                            name="Image_Url"
+                            value={formData?.Image_Url || ''}
+                            onChange={handleChange}
+                            className="mt-1 p-2 block w-full border rounded"
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-300">Description</label>
                         <textarea
                             type="text"
                             name="Description"
