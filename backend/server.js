@@ -50,6 +50,21 @@ app.get("/users", (req, res) => {
     );
 });
 
+// get product by id
+app.get("/products/:id", (req, res) => {
+    const id = req.params.id;
+    db.query(
+        `SELECT * FROM product WHERE Product_ID = "${id}"`,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.send(result);
+            }
+        }
+    );
+});
+
 //get products by attributes exaxmple axiosSecure.get(`/products?attributes=Name,Price,Image_Url,Description`)
 app.get("/products", (req, res) => {
     const attributes = req.query.attributes;
@@ -104,7 +119,7 @@ app.put('/products/:id', (req, res) => {
     const product = req.body;
     const query = 'UPDATE product SET Name = ?, Price = ?, Planet_source = ?, Galaxy_source = ?, Quantity_inStock = ?, Image_Url = ?, Description = ? WHERE Product_ID = ?';
     const values = [product.Name, product.Price, product.Planet_source, product.Galaxy_source, product.Quantity_inStock, product.Image_Url, product.Description, id];
-    
+
     db.query(query, values, (err, result) => {
         if (err) {
             console.error(err);
