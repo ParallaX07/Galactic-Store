@@ -15,17 +15,17 @@ const Navbar = () => {
     const { user, logout, loading } = useContext(AuthContext);
     const { notifySuccess, notifyError } = useContext(MessageContext);
     const [userType, setUserType] = useState(null);
+    const [userName, setUserName] = useState(null);
     const axiosSecure = useAxiosSecure();
 
     useEffect(() => {
         if (user) {
             console.log("user", user);
             axiosSecure
-                .get(`/users?email=${user?.email}&value=${"User_Type"}`)
+                .get(`/users?email=${user?.email}&value=${"User_Type, CONCAT(F_Name, ' ', L_Name) as Name"}`)
                 .then((res) => {
                     setUserType(res.data[0].User_Type);
-                    console.log(userType);
-                    console.log(res.data[0].User_Type);
+                    setUserName(res.data[0].Name);
                 })
                 .catch((error) => {
                     notifyError(error.message);
@@ -143,7 +143,7 @@ const Navbar = () => {
                     onClick={handleLogout}
                     className="lg:py-2 lg:px-3 rounded-full  text-white bg-primarybg-opacity-20 border-primary border-2 hidden lg:flex items-center gap-2"
                 >
-                    <IoMdLogOut className="size-6" /> Logout
+                    <IoMdLogOut className="size-6" />
                 </button>
             </div>
         </>
@@ -202,7 +202,7 @@ const Navbar = () => {
                             alt=""
                         />
                         <div>
-                            <h1 className=" text-lg lg:text-2xl font-extrabold flex lg:flex-row flex-col lg:gap-2 bg-gradient-to-r from-tertiary via-secondary to-primary text-transparent bg-clip-text animate-gradient bg-300%">
+                            <h1 className=" text-lg lg:text-2xl font-extrabold flex gap-2 bg-gradient-to-r from-tertiary via-secondary to-primary text-transparent bg-clip-text animate-gradient bg-300%">
                                 Galactic{" "}
                                 <span className="text-white">Store</span>
                             </h1>
@@ -325,7 +325,7 @@ const Navbar = () => {
                         fontWeight: "700",
                     }}
                 >
-                    {user?.displayName}
+                    {userName }
                 </Tooltip>
             </div>
         </>

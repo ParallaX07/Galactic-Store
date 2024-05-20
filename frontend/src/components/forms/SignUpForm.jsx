@@ -56,7 +56,7 @@ const SignUpForm = () => {
     };
     
     return (
-        <div className="h-dvh flex justify-center mt-10">
+        <div className="flex justify-center mt-28 mb-10">
             <form
                 className="form lg:px-20 lg:py-14 m-6 p-10 w-full max-w-fit my-auto"
                 onSubmit={(e) => handleSignUp(e)}
