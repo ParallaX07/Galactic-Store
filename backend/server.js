@@ -7,20 +7,24 @@ const express = require("express");
 const mysql = require("mysql");
 const cors = require("cors");
 const bodyParser = require('body-parser');
+require("dotenv").config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 
+
 // Create connection to database
 const db = mysql.createConnection({
-    host: "galacticstore.apollo.appboxes.co",
-    user: "root",
-    password: "CSE311",
-    database: "GalacticStore",
-    port: 11766
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT
 });
+
+const port = process.env.PORT || 8801;
 
 app.get("/", (req, res) => {
     res.send("Hello from the Galactic Store backend!");
@@ -103,8 +107,8 @@ app.post('/products', (req, res) => {
  * @param {number} port - The port number to listen on.
  * @param {Function} callback - The callback function to execute when the server starts.
  */
-app.listen(8801, () => {
-    console.log("Server is running on port 8801\nConnection established");
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}\nConnection established`);
 });
 
 /**
