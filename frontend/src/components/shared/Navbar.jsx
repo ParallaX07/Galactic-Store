@@ -1,12 +1,12 @@
 import { Link, NavLink } from "react-router-dom";
 import { FaPlus, FaUserAstronaut } from "react-icons/fa6";
-import { AuthContext } from "../Auth/AuthProvider";
+import { AuthContext } from "../../Auth/AuthProvider";
 import { useContext, useEffect, useState } from "react";
 import { Tooltip } from "react-tooltip";
 import { IoMdLogOut } from "react-icons/io";
 import { TiThMenu } from "react-icons/ti";
-import { MessageContext } from "../Pages/Root";
-import useAxiosSecure from "../hooks/useAxiosSecure";
+import { MessageContext } from "../../Pages/Root";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const Navbar = () => {
     const active =

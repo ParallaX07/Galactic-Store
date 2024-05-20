@@ -1,8 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useAxiosSecure from "../hooks/useAxiosSecure";
 import { useContext } from "react";
-import { MessageContext } from "../../Pages/Root";
-import { AuthContext } from "../../Auth/AuthProvider";
+import { MessageContext } from "./Root";
+import { AuthContext } from "../Auth/AuthProvider";
 
 // Sign up form component
 const SignUpForm = () => {

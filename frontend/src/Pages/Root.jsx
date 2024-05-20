@@ -3,7 +3,7 @@ import { createContext, useEffect, useState, useCallback } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { IoIosArrowUp } from "react-icons/io";
 import 'animate.css';
-import Navbar from './../components/Navbar';
+import Navbar from '../components/shared/Navbar';
 
 const MessageContext = createContext();
 

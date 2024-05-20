@@ -3,8 +3,8 @@ import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 //import components
-import SignUpForm from "./components/forms/SignUpForm";
-import LoginForm from "./components/forms/LoginForm";
+import SignUpForm from "./Pages/SignUpForm";
+import LoginForm from "./Pages/LoginForm";
 import AuthProvider from "./Auth/AuthProvider";
 import Root from "./Pages/Root";
 import AddProduct from "./components/Admin/AddProduct";
