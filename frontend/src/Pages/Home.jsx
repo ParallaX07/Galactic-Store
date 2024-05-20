@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import useAxiosSecure from "../hooks/useAxiosSecure";
-import AllProductCard from './../components/AllProductCard';
-import LoadingCard from './../components/LoadingCard';
+import AllProductCard from '../components/shared/AllProductCard';
+import LoadingCard from '../components/shared/LoadingCard';
 
 const Home = () => {
     const [allProducts, setAllProducts] = useState([]);

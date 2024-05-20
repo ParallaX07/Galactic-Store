@@ -30,7 +30,6 @@ app.get("/", (req, res) => {
 });
 
 //get user type from axiosSecure.get(`/users?email=${email}`)
-
 app.get("/users", (req, res) => {
     /**
      * The email address obtained from the request query.
@@ -151,14 +150,7 @@ const endConnection = () => {
     db.end(console.log("Connection ended"));
 };
 
-/**
- * Route for ending the database connection.
- * @name GET /endConnection
- * @function
- * @param {Object} req - Express request object.
- * @param {Object} res - Express response object.
- * @returns {string} - Response with "Connection ended" message.
- */
+//end connection
 app.get("/endConnection", (req, res) => {
     endConnection();
     res.send("Connection ended");

@@ -1,9 +1,9 @@
 
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../../Auth/AuthProvider";
+import { AuthContext } from "../Auth/AuthProvider";
 import { useContext } from "react";
-import { MessageContext } from "../../Pages/Root";
-import useAxiosSecure from './../../hooks/useAxiosSecure';
+import { MessageContext } from "./Root";
+import useAxiosSecure from '../hooks/useAxiosSecure';
 
 // Login form component
 function LoginForm() {

@@ -45,7 +45,7 @@ const EditProductModal = ({ product, isOpen, onClose, onSave }) => {
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
             <div className="glass  p-6 rounded-lg shadow-lg w-full max-w-md mx-auto">
-                <button className="absolute top-2 right-2 text-red-600" onClick={onClose}>
+                <button className="absolute top-2 right-2 text-2xl text-red-600" onClick={onClose}>
                     <FaTimes />
                 </button>
                 <h2 className="text-2xl mb-4 text-white">Edit Product</h2>

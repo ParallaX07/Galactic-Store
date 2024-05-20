@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { MessageContext } from "../../Pages/Root";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import Loader from "../FunctionalComponents/Loader";
+import Loader from "../shared/Loader";
 
 const AddProduct = () => {
     const { notifyError, notifySuccess } = useContext(MessageContext);

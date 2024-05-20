@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import Loader from './../../components/FunctionalComponents/Loader';
+import Loader from '../../components/shared/Loader';
 import "./ManageProducts.css";
 import { FaEdit } from "react-icons/fa";
 import { ImBin } from "react-icons/im";
 import Swal from "sweetalert2";
-import EditProductModal from "../../components/EditProductModal";
+import EditProductModal from "../../components/Admin/EditProductModal";
 import { MessageContext } from "../Root";
 
 const ManageProducts = () => {
