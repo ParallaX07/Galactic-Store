@@ -1,24 +1,51 @@
+
 import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../Auth/AuthProvider";
+import { useContext } from "react";
+import { MessageContext } from "../../Pages/Root";
+import useAxiosSecure from './../../hooks/useAxiosSecure';
 
 // Login form component
 function LoginForm() {
-    
-    const nagivate = useNavigate();
 
+    const { notifyError, notifySuccess } = useContext(MessageContext);
+    const { login, user } = useContext(AuthContext);
 
+    const navigate = useNavigate();
+    const axiosSecure = useAxiosSecure();
+    if (user) {
+        navigate("/");
+    }
     // post to database function
-    const handLogin = () => {
-        console.log("submit");
-        
-        // Navigate to admin page
-        nagivate("/admin");
+    const handleLogin = (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const email = formData.get("email");
+        const password = formData.get("password");  
+        axiosSecure.get(`/users?email=${email}&value=${"User_Type"}`)
+            .then(() => {
+                
+            })
+            .catch((error) => {
+                notifyError(error.message);
+            });
+        login(email, password)
+            .then(() => {
+                notifySuccess("Login successful");
+                navigate("/");
+            })
+            .catch((error) => {
+                notifyError(error.message);
+            });
+
+
     };
-    
+
     return (
-        <div className="h-dvh flex justify-center">
+        <div className="h-dvh flex justify-center mt-10">
             <form
                 className="form lg:px-20 lg:py-14 m-6 p-10 w-full lg:max-w-[567.6px] lg:h-[570.6px] my-auto "
-                onSubmit={() => handLogin()}
+                onSubmit={handleLogin}
             >
                 <div className="flex justify-between items-center">
                     <p className="">
@@ -37,6 +64,7 @@ function LoginForm() {
                     <input
                         required={true}
                         className="main-input"
+                        name="email"
                         type="email"
                     />
                     <span className="highlight-span"></span>
@@ -48,6 +76,7 @@ function LoginForm() {
                             required={true}
                             className="main-input"
                             type="password"
+                            name="password"
                         />
                         <span className="highlight-span"></span>
                         <label className="label-email">Password</label>
