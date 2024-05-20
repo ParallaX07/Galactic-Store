@@ -114,13 +114,13 @@ const ManageProducts = () => {
 
     return (
         <section className=" lg:mx-auto lg:max-w-6xl mx-3 py-20 transition duration-300">
-            <h2 className="text-3xl font-semibold text-center dark:text-gray-100 mt-4 underline underline-offset-4">
+            <h2 className="text-3xl font-semibold text-center text-gray-100 mt-4 underline underline-offset-4">
                 Manage Products
             </h2>
             <div className="overflow-x-auto ">
-                <table className="table-auto glass w-full mt-8  rounded-lg border-2 border-primary dark:border-gray-100 ">
+                <table className="table-auto glass w-full mt-8  rounded-lg border-2 border-gray-100 ">
                     <thead className="hidden lg:table-header-group  rounded-lg">
-                        <tr className="text-base font-semibold text-left border-b-2 border-primary dark:border-gray-100 dark:text-gray-100">
+                        <tr className="text-base font-semibold text-left border-b-2 border-gray-100 text-gray-100">
                             <th className="p-2">Image</th>
                             <th className="p-2">Name</th>
                             <th className="p-2">Price</th>
@@ -134,7 +134,7 @@ const ManageProducts = () => {
                         {products.map((product) => (
                             <tr
                                 key={product?.Product_ID}
-                                className="block lg:table-row border-b-2 border-primary dark:border-gray-100 dark:text-gray-100 py-4"
+                                className="block lg:table-row border-b-2 border-gray-100 text-gray-100 py-4"
                             >
                                 <td
                                     className="p-2 block lg:table-cell relative lg:static"
