@@ -62,7 +62,7 @@ const Navbar = () => {
         <>
             <li>
                 <NavLink
-                    to="/manage-products"
+                    to="/a/manage-products"
                     className={({ isActive }) =>
                         isActive ? `${active}` : `${inactive}`
                     }
@@ -72,7 +72,7 @@ const Navbar = () => {
             </li>
             <li>
                 <NavLink
-                    to="/manage-orders"
+                    to="/a/manage-orders"
                     className={({ isActive }) =>
                         isActive ? `${active}` : `${inactive}`
                     }

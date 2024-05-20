@@ -52,10 +52,11 @@ app.get("/users", (req, res) => {
     );
 });
 
-//get all products
+//get products by attributes exaxmple axiosSecure.get(`/products?attributes=Name,Price,Image_Url,Description`)
 app.get("/products", (req, res) => {
+    const attributes = req.query.attributes;
     db.query(
-        `SELECT * FROM product`,
+        `SELECT ${attributes} FROM product`,
         (err, result) => {
             if (err) {
                 console.log(err);

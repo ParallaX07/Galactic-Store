@@ -9,7 +9,7 @@ const Home = () => {
     const [loading, setLoading] = useState(false);
     useEffect(() => {
         setLoading(true);
-        axiosSecure.get("/products")
+        axiosSecure.get("/products?attributes=Product_ID,Name,Price,Galaxy_source,Planet_source,Quantity_inStock,Image_Url")
             .then((response) => {
                 setAllProducts(response.data);
                 setLoading(false);
@@ -33,7 +33,7 @@ const Home = () => {
                     <LoadingCard />
                 </div>
             }
-            {!loading && <div className="grid grid-cols-3 gap-4">
+            {!loading && <div className="grid lg:grid-cols-3 grid-cols-1 gap-4">
                 {allProducts.map((product) => (
                     <AllProductCard key={product.Product_ID} product={product} />
                 ))}

@@ -25,11 +25,11 @@ const AllProductCard = ({product}) => {
             src={product.Image_Url}
             alt=""
         />
-        <div className="my-3">
+        <div className="lg:my-3">
             <h2 className="text-2xl font-semibold hover:text-gray-400">
                 {product.Name}
             </h2>
-            <div className="flex lg:flex-row flex-col gap-5 items-center mt-4">
+            <div className="flex lg:flex-row flex-col lg:gap-5 lg:items-center mt-4">
                 <p className="flex gap-2 items-center text-primary font-bold">
                     <FaCoins className="lg:text-xl text-[#dbb42c]" title="Price"/>
                     {product.Price} <span className="font-medium">Galactic Credits</span>
