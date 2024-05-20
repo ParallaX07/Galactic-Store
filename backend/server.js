@@ -14,7 +14,6 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 
-
 // Create connection to database
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
@@ -52,10 +51,11 @@ app.get("/users", (req, res) => {
     );
 });
 
-//get all products
+//get products by attributes exaxmple axiosSecure.get(`/products?attributes=Name,Price,Image_Url,Description`)
 app.get("/products", (req, res) => {
+    const attributes = req.query.attributes;
     db.query(
-        `SELECT * FROM product`,
+        `SELECT ${attributes} FROM product`,
         (err, result) => {
             if (err) {
                 console.log(err);
@@ -97,7 +97,38 @@ app.post('/products', (req, res) => {
             res.status(200).send('Product added successfully');
         }
     });
-})
+});
+
+//update product by id
+app.put('/products/:id', (req, res) => {
+    const id = req.params.id;
+    const product = req.body;
+    const query = 'UPDATE product SET Name = ?, Price = ?, Planet_source = ?, Galaxy_source = ?, Quantity_inStock = ?, Image_Url = ?, Description = ? WHERE Product_ID = ?';
+    const values = [product.Name, product.Price, product.Planet_source, product.Galaxy_source, product.Quantity_inStock, product.Image_Url, product.Description, id];
+
+    db.query(query, values, (err, result) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send('Server error');
+        } else {
+            res.status(200).send('Product updated successfully');
+        }
+    });
+});
+
+//delete product by id
+app.delete('/products/:id', (req, res) => {
+    const id = req.params.id;
+    const query = 'DELETE FROM product WHERE Product_ID = ?';
+    db.query(query, id, (err, result) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send('Server error');
+        } else {
+            res.status(200).send('Product deleted successfully');
+        }
+    });
+});
 
 
 /**
