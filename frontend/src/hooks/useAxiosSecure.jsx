@@ -5,7 +5,8 @@ import { AuthContext } from "../Auth/AuthProvider";
 
 
 const axiosSecure = axios.create({
-    baseURL: 'http://localhost:8801',
+    // baseURL: 'http://localhost:8801',
+    baseURL: 'https://backend-navy-delta.vercel.app',
 });
 
 const useAxiosSecure = () => {

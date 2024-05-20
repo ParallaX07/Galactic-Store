@@ -11,6 +11,7 @@ import AddProduct from "./components/Admin/AddProduct";
 import PrivateRoute from "./Auth/PrivateRoute";
 import Home from "./Pages/Home";
 import ManageProducts from "./Pages/ManageProducts/ManageProducts";
+import ProductDetails from "./components/shared/ProductDetails";
 
 const router = createBrowserRouter([
     {
@@ -32,7 +33,7 @@ const router = createBrowserRouter([
                 path: "/p/:id",
                 element: (
                     <PrivateRoute>
-                        <h1>Product</h1>
+                        <ProductDetails />
                     </PrivateRoute>
                 ),
             },

@@ -50,6 +50,21 @@ app.get("/users", (req, res) => {
     );
 });
 
+// get product by id
+app.get("/products/:id", (req, res) => {
+    const id = req.params.id;
+    db.query(
+        `SELECT * FROM product WHERE Product_ID = "${id}"`,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.send(result);
+            }
+        }
+    );
+});
+
 //get products by attributes exaxmple axiosSecure.get(`/products?attributes=Name,Price,Image_Url,Description`)
 app.get("/products", (req, res) => {
     const attributes = req.query.attributes;
