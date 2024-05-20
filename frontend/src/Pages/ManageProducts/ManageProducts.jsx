@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import Loader from '../../components/shared/Loader';
+import Loader from "../../components/shared/Loader";
 import "./ManageProducts.css";
 import { FaEdit } from "react-icons/fa";
 import { ImBin } from "react-icons/im";
@@ -14,13 +14,28 @@ const ManageProducts = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentProduct, setCurrentProduct] = useState(null);
 
+    const [isImageOpen, setIsImageOpen] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null);
+
+    const openImage = (imageUrl) => {
+        setSelectedImage(imageUrl);
+        setIsImageOpen(true);
+    };
+
+    const closeImage = () => {
+        setIsImageOpen(false);
+    };
+
     const { notifyError, notifySuccess } = useContext(MessageContext);
 
     const axiosSecure = useAxiosSecure();
 
     useEffect(() => {
         setLoading(true);
-        axiosSecure.get("/products?attributes=Product_ID,Name,Price,Galaxy_source,Planet_source,Quantity_inStock,Image_Url,Description")
+        axiosSecure
+            .get(
+                "/products?attributes=Product_ID,Name,Price,Galaxy_source,Planet_source,Quantity_inStock,Image_Url,Description"
+            )
             .then((response) => {
                 setProducts(response.data);
                 setLoading(false);
@@ -38,27 +53,29 @@ const ManageProducts = () => {
         setIsModalOpen(true);
         console.table(product);
     };
-    
+
     const handleSave = (updatedProduct) => {
         console.table(updatedProduct);
         setLoading(true);
-        axiosSecure.put(`/products/${updatedProduct.Product_ID}`, updatedProduct).then(() => {
-            const newProducts = products.map((product) => {
-                if (product.Product_ID === updatedProduct.Product_ID) {
-                    return updatedProduct;
-                }
-                return product;
+        axiosSecure
+            .put(`/products/${updatedProduct.Product_ID}`, updatedProduct)
+            .then(() => {
+                const newProducts = products.map((product) => {
+                    if (product.Product_ID === updatedProduct.Product_ID) {
+                        return updatedProduct;
+                    }
+                    return product;
+                });
+                setProducts(newProducts);
+                notifySuccess("Product updated successfully");
+            })
+            .catch((error) => {
+                notifyError(error.message);
+            })
+            .finally(() => {
+                setLoading(false);
+                setIsModalOpen(false);
             });
-            setProducts(newProducts);
-            notifySuccess("Product updated successfully");
-        })
-        .catch((error) => {
-            notifyError(error.message);
-        })
-        .finally(() => {
-            setLoading(false);
-            setIsModalOpen(false);
-        });
     };
 
     const handleDelete = (productId) => {
@@ -68,22 +85,25 @@ const ManageProducts = () => {
             confirmButtonText: "Yes, delete it",
             denyButtonText: `No, don't delete`,
             icon: "question",
-            confirmButtonColor: '#0b090a',
-            background: '#0b090a',
-            denyButtonColor: '#d33',
+            confirmButtonColor: "#0b090a",
+            background: "#0b090a",
+            denyButtonColor: "#d33",
         }).then((result) => {
             if (result.isConfirmed) {
                 setLoading(true);
-                axiosSecure.delete(`/products/${productId}`).then(() => {
-                    const newProducts = products.filter(
-                        (product) => product.Product_ID !== productId
-                    );
-                    setProducts(newProducts);
-                    notifySuccess("Product deleted successfully");
-                }).catch((error) => {
-                    notifyError(error.message);
-                })
-                .finally(() => setLoading(false));
+                axiosSecure
+                    .delete(`/products/${productId}`)
+                    .then(() => {
+                        const newProducts = products.filter(
+                            (product) => product.Product_ID !== productId
+                        );
+                        setProducts(newProducts);
+                        notifySuccess("Product deleted successfully");
+                    })
+                    .catch((error) => {
+                        notifyError(error.message);
+                    })
+                    .finally(() => setLoading(false));
             }
         });
     };
@@ -123,9 +143,13 @@ const ManageProducts = () => {
                                     <img
                                         src={product?.Image_Url}
                                         alt={product?.Name}
-                                        className="lg:w-20 lg:h-20 object-cover rounded-lg"
+                                        className="lg:w-20 lg:h-20 object-cover rounded-lg cursor-pointer"
+                                        onClick={() =>
+                                            openImage(product?.Image_Url)
+                                        }
                                     />
                                 </td>
+
                                 <td
                                     className="p-2 block lg:table-cell relative lg:static"
                                     data-label="Name"
@@ -160,8 +184,20 @@ const ManageProducts = () => {
                                     className="p-2 lg:table-cell relative lg:static block"
                                     data-label="Actions"
                                 >
-                                    <button className="mr-3 glass rounded-xl py-2 px-3" onClick={() => handleEdit(product)}><FaEdit /></button>
-                                    <button className=" py-2 px-3 rounded-xl bg-red-500" onClick={() => handleDelete(product?.Product_ID)}><ImBin /></button>
+                                    <button
+                                        className="mr-3 glass rounded-xl py-2 px-3"
+                                        onClick={() => handleEdit(product)}
+                                    >
+                                        <FaEdit />
+                                    </button>
+                                    <button
+                                        className=" py-2 px-3 rounded-xl bg-red-500"
+                                        onClick={() =>
+                                            handleDelete(product?.Product_ID)
+                                        }
+                                    >
+                                        <ImBin />
+                                    </button>
                                 </td>
                             </tr>
                         ))}
@@ -174,6 +210,21 @@ const ManageProducts = () => {
                 onSave={handleSave}
                 product={currentProduct}
             />
+            {isImageOpen && (
+                <div
+                    className="fixed top-0 left-0 w-dvw h-dvh flex items-center justify-center z-50"
+                    style={{
+                        background: "rgba(0, 0, 0, 0.8)",
+                    }}
+                    onClick={closeImage}
+                >
+                    <img
+                        src={selectedImage}
+                        alt="Full screen"
+                        className="max-h-full max-w-full"
+                    />
+                </div>
+            )}
         </section>
     );
 };

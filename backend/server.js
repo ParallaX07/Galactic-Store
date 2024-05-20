@@ -104,7 +104,7 @@ app.put('/products/:id', (req, res) => {
     const product = req.body;
     const query = 'UPDATE product SET Name = ?, Price = ?, Planet_source = ?, Galaxy_source = ?, Quantity_inStock = ?, Image_Url = ?, Description = ? WHERE Product_ID = ?';
     const values = [product.Name, product.Price, product.Planet_source, product.Galaxy_source, product.Quantity_inStock, product.Image_Url, product.Description, id];
-
+    
     db.query(query, values, (err, result) => {
         if (err) {
             console.error(err);
