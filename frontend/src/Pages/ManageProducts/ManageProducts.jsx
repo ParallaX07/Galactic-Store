@@ -5,12 +5,16 @@ import "./ManageProducts.css";
 import { FaEdit } from "react-icons/fa";
 import { ImBin } from "react-icons/im";
 import Swal from "sweetalert2";
+import EditProductModal from "../../components/EditProductModal";
 
 const ManageProducts = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [currentProduct, setCurrentProduct] = useState(null);
 
     const axiosSecure = useAxiosSecure();
+
     useEffect(() => {
         setLoading(true);
         axiosSecure.get("/products?attributes=Product_ID,Name,Price,Galaxy_source,Planet_source,Quantity_inStock,Image_Url,Description")
@@ -26,22 +30,53 @@ const ManageProducts = () => {
             });
     }, []);
 
-    const handleEdit = (productId) => {
-        console.log(productId);
-        //open modal
-        
+    const handleEdit = (product) => {
+        setCurrentProduct(product);
+        setIsModalOpen(true);
+        console.table(product);
     };
 
+    // app.put('/products/:id', (req, res) => {
+    //     const id = req.params.id;
+    //     const product = req.body;
+    //     const query = 'UPDATE product SET Name = ?, Price = ?, Planet_source = ?, Galaxy_source = ?, Quantity_inStock = ?, Image_Url = ?, Description = ? WHERE Product_ID = ?';
+    //     const values = [product.Name, product.Price, product.Planet, product.Galaxy, product.Quantity_Stock, product.Image, product.Description, id];
+    
+    //     db.query(query, values, (err, result) => {
+    //         if (err) {
+    //             console.error(err);
+    //             res.status(500).send('Server error');
+    //         } else {
+    //             res.status(200).send('Product updated successfully');
+    //         }
+    //     });
+    // });
+    
+    const handleSave = (updatedProduct) => {
+        console.table(updatedProduct);
+        setLoading(true);
+        axiosSecure.put(`/products/${updatedProduct.Product_ID}`, updatedProduct).then(() => {
+            const newProducts = products.map((product) => {
+                if (product.Product_ID === updatedProduct.Product_ID) {
+                    return updatedProduct;
+                }
+                return product;
+            });
+            setProducts(newProducts);
+        }).finally(() => {
+            setLoading(false);
+            setIsModalOpen(false);
+        });
+    };
 
     const handleDelete = (productId) => {
-        console.log(productId);
         Swal.fire({
             title: `Do you want to delete the item?`,
             showDenyButton: true,
             confirmButtonText: "Yes, delete it",
             denyButtonText: `No, don't delete`,
             icon: "question",
-            confirmButtonColor: '#0b090a', 
+            confirmButtonColor: '#0b090a',
             background: '#0b090a',
             denyButtonColor: '#d33',
         }).then((result) => {
@@ -54,19 +89,18 @@ const ManageProducts = () => {
                     setProducts(newProducts);
                 }).finally(() => setLoading(false));
             }
-        }); 
+        });
     };
 
     if (loading) {
         return <Loader />;
     }
-    
+
     return (
         <section className=" lg:mx-auto lg:max-w-6xl mx-3 py-20 transition duration-300">
             <h2 className="text-3xl font-semibold text-center dark:text-gray-100 mt-4 underline underline-offset-4">
                 Manage Products
             </h2>
-            {/* table */}
             <div className="overflow-x-auto ">
                 <table className="table-auto glass w-full mt-8  rounded-lg border-2 border-primary dark:border-gray-100 ">
                     <thead className="hidden lg:table-header-group  rounded-lg">
@@ -78,7 +112,6 @@ const ManageProducts = () => {
                             <th className="p-2">Planet</th>
                             <th className="p-2">Quantity in Stock</th>
                             <th className="p-2">Actions</th>
-
                         </tr>
                     </thead>
                     <tbody>
@@ -131,14 +164,20 @@ const ManageProducts = () => {
                                     className="p-2 lg:table-cell relative lg:static block"
                                     data-label="Actions"
                                 >
-                                    <button className="mr-3 glass rounded-xl py-2 px-3" onClick={()=> handleEdit(product?.Product_ID)}><FaEdit/></button>
-                                    <button className=" py-2 px-3 rounded-xl bg-red-500" onClick={()=>handleDelete(product?.Product_ID)}><ImBin/></button>
+                                    <button className="mr-3 glass rounded-xl py-2 px-3" onClick={() => handleEdit(product)}><FaEdit /></button>
+                                    <button className=" py-2 px-3 rounded-xl bg-red-500" onClick={() => handleDelete(product?.Product_ID)}><ImBin /></button>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
+            <EditProductModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onSave={handleSave}
+                product={currentProduct}
+            />
         </section>
     );
 };
