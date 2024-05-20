@@ -1,9 +1,11 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { MessageContext } from "../../Pages/Root";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import Loader from "../FunctionalComponents/Loader";
 
 const AddProduct = () => {
     const { notifyError, notifySuccess } = useContext(MessageContext);
+    const [loading, setLoading] = useState(false);
     const axiosSecure = useAxiosSecure();
 
     const handleAddProduct = (e) => {
@@ -17,6 +19,7 @@ const AddProduct = () => {
         const image = formData.get("image");
         const description = formData.get("description");
 
+        setLoading(true);
         axiosSecure.post("/products", {
             Name: name,
             Price: price,
@@ -27,10 +30,17 @@ const AddProduct = () => {
             Description: description,
         }).then(() => {
             notifySuccess("Product added successfully");
+            setLoading(false);
             e.target.reset();
         }).catch((error) => {
             notifyError(error.message);
+        }).finally(() => {
+            setLoading(false);
         });
+    }
+
+    if (loading) {
+        return <Loader/>;
     }
 
     return (

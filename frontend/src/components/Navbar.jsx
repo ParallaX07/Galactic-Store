@@ -193,7 +193,7 @@ const Navbar = () => {
 
     return (
         <>
-            <div className=" fixed w-full top-0 z-50 text-white bg-opacity-85 bg-primary">
+            <div className=" fixed w-full top-0 z-50 text-white glass">
                 <nav className="lg:px-5 px-3 py-2 flex justify-between text-sm items-center lg:text-xl font-medium">
                     <Link to="/" className="flex items-center gap-2">
                         <img

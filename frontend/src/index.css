@@ -41,6 +41,13 @@ body {
     position: relative;
 }
 
+.glass{
+    background: rgba(0, 0, 0, 0.45);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+}
+
 .form p {
     padding-bottom: 20px;
     font-weight: bold;

@@ -10,7 +10,7 @@ import Root from "./Pages/Root";
 import AddProduct from "./components/Admin/AddProduct";
 import PrivateRoute from "./Auth/PrivateRoute";
 import Home from "./Pages/Home";
-import ManageProducts from "./Pages/ManageProducts";
+import ManageProducts from "./Pages/ManageProducts/ManageProducts";
 
 const router = createBrowserRouter([
     {
