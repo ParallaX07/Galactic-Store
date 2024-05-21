@@ -26,7 +26,7 @@ const UpdateProfile = () => {
                     setLoading(false);
                 });
         
-    }, []);
+    }, [user?.email]);
 
 
     const handleUpdate = (e) => {
@@ -68,7 +68,8 @@ const UpdateProfile = () => {
                         <div className="lg:w-72 mb-6 object-contain">
                             <img
                                 className="rounded-xl "
-                                src={userDetails?.Profile_image}
+                                src={userDetails.Profile_image ||
+                                    "https://i.ibb.co/hYbbGyR/6596121-modified.png"}
                                 alt=""
                             />
                         </div>

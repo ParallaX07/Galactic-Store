@@ -54,13 +54,13 @@ const Home = () => {
     }, [sortOption, allProducts]);
 
     return (
-        <div className="mt-24 mx-3 lg:mx-32 text-white">
-            <div className="flex justify-center items-center mb-4">
+        <div className="mt-24 mx-3 lg:mx-auto text-white lg:max-w-7xl">
+            <div className="flex justify-center items-center mb-4 lg:flex-row flex-col gap-4">
                 <SearchBar
                     setAllProducts={setAllProducts}
                     setLoading={setLoading}
                 />
-                <div className="ml-4 ">
+                <div>
                     <label htmlFor="sort" className="mr-2">
                         Sort by:
                     </label>

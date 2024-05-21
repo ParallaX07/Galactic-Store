@@ -1,1 +1,1 @@
-ALTER TABLE user ADD COLUMN `Profile_image` VARCHAR(255) NULL;
+ALTER TABLE `order` DROP COLUMN `Planet`;
