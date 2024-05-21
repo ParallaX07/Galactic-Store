@@ -1,8 +1,11 @@
-import { useEffect, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import useAxiosSecure from "../hooks/useAxiosSecure";
-import AllProductCard from "../components/shared/AllProductCard";
-import LoadingCard from "../components/shared/LoadingCard";
+const AllProductCard = lazy(() =>
+    import("../components/shared/AllProductCard")
+);
+const LoadingCard = lazy(() => import("../components/shared/LoadingCard"));
 import SearchBar from "../components/shared/SearchBar";
+import Loader from "../components/shared/Loader";
 
 const Home = () => {
     const [allProducts, setAllProducts] = useState([]);
@@ -77,18 +80,17 @@ const Home = () => {
             </div>
             {loading && (
                 <div className="grid lg:grid-cols-3 grid-cols-1 gap-4">
-                    <LoadingCard />
-                    <LoadingCard />
-                    <LoadingCard />
+                    <Suspense fallback={<Loader/>}>
+                        <LoadingCard />
+                        <LoadingCard />
+                        <LoadingCard />
+                    </Suspense>
                 </div>
             )}
             {!loading && (
                 <div className="grid lg:grid-cols-3 grid-cols-1 gap-4">
                     {sortedProducts.map((product) => (
-                        <AllProductCard
-                            key={product.Product_ID}
-                            product={product}
-                        />
+                            <AllProductCard product={product} key={product.Product_ID} />
                     ))}
                 </div>
             )}

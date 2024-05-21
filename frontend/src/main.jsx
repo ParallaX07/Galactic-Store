@@ -1,33 +1,58 @@
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import AuthProvider from "./Auth/AuthProvider";
+import PrivateRoute from "./Auth/PrivateRoute";
+import { lazy, Suspense } from "react";
+import Loader from "./components/shared/Loader";
 
 //import components
-import SignUpForm from "./Pages/SignUpForm";
-import LoginForm from "./Pages/LoginForm";
-import AuthProvider from "./Auth/AuthProvider";
-import Root from "./Pages/Root";
-import AddProduct from "./components/Admin/AddProduct";
-import PrivateRoute from "./Auth/PrivateRoute";
-import Home from "./Pages/Home";
-import ManageProducts from "./Pages/ManageProducts/ManageProducts";
-import ProductDetails from "./components/shared/ProductDetails";
-import Error404 from "./components/shared/Error404";
+const SignUpForm = lazy(() => import("./Pages/SignUpForm"));
+const LoginForm = lazy(() => import("./Pages/LoginForm"));
+const AddProduct = lazy(() => import("./components/Admin/AddProduct"));
+const ManageProducts = lazy(() => import("./components/Admin/ManageProducts/ManageProducts"));
+const ProductDetails = lazy(() => import("./components/shared/ProductDetails"));
+const Home = lazy(() => import("./Pages/Home"));
+const Error404 = lazy(() => import("./components/shared/Error404"));
+
+const Root = lazy(() => import("./Pages/Root"));
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <Root />,
-        errorElement: <Error404 />,
+        element: <Suspense fallback={<Loader/>}>
+            <Root />
+        </Suspense>,
+        errorElement: <Suspense fallback={<Loader/>}>
+            <Error404 />
+        </Suspense>,
         children: [
-            { path: "/", element: <Home /> },
-            { path: "/signup", element: <SignUpForm /> },
-            { path: "/login", element: <LoginForm /> },
+            { path: "/", element: <Suspense fallback={<Loader/>}>
+                <Home />
+            </Suspense> },
+            {
+                path: "/signup",
+                element: (
+                    <Suspense fallback={<Loader />}>
+                        <SignUpForm />
+                    </Suspense>
+                ),
+            },
+            {
+                path: "/login",
+                element: (
+                    <Suspense fallback={<Loader />}>
+                        <LoginForm />
+                    </Suspense>
+                ),
+            },
             {
                 path: "/a/add-product",
                 element: (
                     <PrivateRoute>
-                        <AddProduct />
+                        <Suspense fallback={<Loader />}>
+                            <AddProduct />
+                        </Suspense>
                     </PrivateRoute>
                 ),
             },
@@ -35,7 +60,9 @@ const router = createBrowserRouter([
                 path: "/p/:id",
                 element: (
                     <PrivateRoute>
-                        <ProductDetails />
+                        <Suspense fallback={<Loader />}>
+                            <ProductDetails />
+                        </Suspense>
                     </PrivateRoute>
                 ),
             },
@@ -43,7 +70,9 @@ const router = createBrowserRouter([
                 path: "/a/manage-products",
                 element: (
                     <PrivateRoute>
-                        <ManageProducts />
+                        <Suspense fallback={<Loader />}>
+                            <ManageProducts />
+                        </Suspense>
                     </PrivateRoute>
                 ),
             },

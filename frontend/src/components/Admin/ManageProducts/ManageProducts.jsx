@@ -1,12 +1,12 @@
-import { useContext, useEffect, useState } from "react";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
-import Loader from "../../components/shared/Loader";
+import { Suspense, lazy, useContext, useEffect, useState } from "react";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import Loader from "../../shared/Loader";
 import "./ManageProducts.css";
 import { FaEdit } from "react-icons/fa";
 import { ImBin } from "react-icons/im";
 import Swal from "sweetalert2";
-import EditProductModal from "../../components/Admin/EditProductModal";
-import { MessageContext } from "../Root";
+const EditProductModal = lazy(() => import('../EditProductModal'));
+import { MessageContext } from "../../../Pages/Root";
 
 const ManageProducts = () => {
     const [products, setProducts] = useState([]);
@@ -267,12 +267,14 @@ const ManageProducts = () => {
                     </tbody>
                 </table>
             </div>
-            <EditProductModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                onSave={handleSave}
-                product={currentProduct}
-            />
+            <Suspense fallback={<Loader/>}>
+                <EditProductModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    onSave={handleSave}
+                    product={currentProduct}
+                />
+            </Suspense>
             {isImageOpen && (
                 <div
                     className="fixed top-0 left-0 w-dvw h-dvh flex items-center justify-center z-50"
