@@ -14,12 +14,17 @@ const UpdateProfile = () => {
 
     useEffect(() => {
         setLoading(true);
-        axiosSecure
-            .get(`/user/${user?.email}`)
-            .then((res) => {
-                setUserDetails(res.data[0]);
-            })
-            .finally(() => setLoading(false));
+            setLoading(true);
+            axiosSecure
+                .get(`/users?email=${user?.email}&value=${"F_name, L_name, Profile_image, Contact_Cell, Email_ID"}`)
+                .then((res) => {
+                    setUserDetails(res.data[0]);
+                })
+                .catch((error) => {
+                    notifyError(error.message);
+                }).finally(() => {
+                    setLoading(false);
+                });
         
     }, []);
 

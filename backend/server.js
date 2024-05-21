@@ -50,21 +50,6 @@ app.get("/users", (req, res) => {
     );
 });
 
-//get user by email
-app.get("/user/:email", (req, res) => {
-    const email = req.params.email;
-    db.query(
-        `SELECT Profile_image, F_name, L_name, Contact_Cell, Email_ID FROM user WHERE Email_ID = "${email}"`,
-        (err, result) => {
-            if (err) {
-                console.log(err);
-            } else {
-                res.send(result);
-            }
-        }
-    );
-});
-
 // get product by id
 app.get("/product/:id", (req, res) => {
     const id = req.params.id;
