@@ -1,2 +1,2 @@
-INSERT INTO user VALUES ("ferdous89001@gmail.com", "Admin", "Zannatul", "Ferdous", "01712345678")
+SELECT * FROM product WHERE Name LIKE '%Galactic%' OR Planet_source LIKE '%Galactic%' OR Galaxy_source LIKE '%Galactic%'
 

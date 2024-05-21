@@ -51,7 +51,7 @@ app.get("/users", (req, res) => {
 });
 
 // get product by id
-app.get("/products/:id", (req, res) => {
+app.get("/product/:id", (req, res) => {
     const id = req.params.id;
     db.query(
         `SELECT * FROM product WHERE Product_ID = "${id}"`,
@@ -70,6 +70,23 @@ app.get("/products", (req, res) => {
     const attributes = req.query.attributes;
     db.query(
         `SELECT ${attributes} FROM product`,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.send(result);
+            }
+        }
+    );
+});
+
+//get products through serach query example: axiosSecure.get(`/products/search?param=${searchParam}`)
+app.get("/products/search", (req, res) => {
+    const search = req.query.param;
+    const likeSearch = "%" + search + "%";
+    db.query(
+        "SELECT * FROM product WHERE Name LIKE ? OR Planet_source LIKE ? OR Galaxy_source LIKE ?",
+        [likeSearch, likeSearch, likeSearch],
         (err, result) => {
             if (err) {
                 console.log(err);

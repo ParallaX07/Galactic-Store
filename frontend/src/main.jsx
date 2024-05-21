@@ -12,11 +12,13 @@ import PrivateRoute from "./Auth/PrivateRoute";
 import Home from "./Pages/Home";
 import ManageProducts from "./Pages/ManageProducts/ManageProducts";
 import ProductDetails from "./components/shared/ProductDetails";
+import Error404 from "./components/shared/Error404";
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <Root />,
+        errorElement: <Error404 />,
         children: [
             { path: "/", element: <Home /> },
             { path: "/signup", element: <SignUpForm /> },

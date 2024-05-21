@@ -18,7 +18,7 @@ const ProductDetails = () => {
     useEffect(() => {
         setLoading(true);
         axiosSecure
-            .get(`/products/${id}`)
+            .get(`/product/${id}`)
             .then((response) => {
                 setProduct(response.data[0]);
                 console.table(response.data[0]);
