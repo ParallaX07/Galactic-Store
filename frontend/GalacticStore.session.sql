@@ -1,2 +1,1 @@
-SELECT * FROM product WHERE Name LIKE '%Galactic%' OR Planet_source LIKE '%Galactic%' OR Galaxy_source LIKE '%Galactic%'
-
+ALTER TABLE user ADD COLUMN `Profile_image` VARCHAR(255) NULL;

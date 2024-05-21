@@ -14,7 +14,7 @@ const ManageProducts = lazy(() => import("./components/Admin/ManageProducts/Mana
 const ProductDetails = lazy(() => import("./components/shared/ProductDetails"));
 const Home = lazy(() => import("./Pages/Home"));
 const Error404 = lazy(() => import("./components/shared/Error404"));
-
+const UpdateProfile = lazy(() => import("./Pages/UpdateProfile"));
 const Root = lazy(() => import("./Pages/Root"));
 
 const router = createBrowserRouter([
@@ -44,6 +44,16 @@ const router = createBrowserRouter([
                     <Suspense fallback={<Loader />}>
                         <LoginForm />
                     </Suspense>
+                ),
+            },
+            {
+                path: "/profile",
+                element: (
+                    <PrivateRoute>
+                        <Suspense fallback={<Loader />}>
+                            <UpdateProfile />
+                        </Suspense>
+                    </PrivateRoute>
                 ),
             },
             {

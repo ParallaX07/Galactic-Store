@@ -14,8 +14,7 @@ const Navbar = () => {
     const inactive = "hover:text-gray-400 border-transparent border-b-2";
     const { user, logout, loading, setLoading } = useContext(AuthContext);
     const { notifySuccess, notifyError } = useContext(MessageContext);
-    const [userType, setUserType] = useState(null);
-    const [userName, setUserName] = useState(null);
+    const [userDetails, setUserDetails] = useState({});
     const axiosSecure = useAxiosSecure();
 
     useEffect(() => {
@@ -23,10 +22,9 @@ const Navbar = () => {
             console.log("user", user);
             setLoading(true);
             axiosSecure
-                .get(`/users?email=${user?.email}&value=${"User_Type, CONCAT(F_Name, ' ', L_Name) as Name"}`)
+                .get(`/users?email=${user?.email}&value=${"User_Type, CONCAT(F_Name, ' ', L_Name) as Name, Profile_image"}`)
                 .then((res) => {
-                    setUserType(res.data[0].User_Type);
-                    setUserName(res.data[0].Name);
+                    setUserDetails(res.data[0]);
                 })
                 .catch((error) => {
                     notifyError(error.message);
@@ -131,16 +129,16 @@ const Navbar = () => {
     const loggedInState = (
         <>
             <div className="flex gap-2 items-center">
-                <a className="profileImage">
+                <Link to="/profile" className="profileImage">
                     <img
                         className="size-12 rounded-full"
                         src={
-                            user?.photoURL ||
+                            userDetails.Profile_image ||
                             "https://i.ibb.co/hYbbGyR/6596121-modified.png"
                         }
                         alt=""
                     />
-                </a>
+                </Link>
 
                 <button
                     onClick={handleLogout}
@@ -229,13 +227,13 @@ const Navbar = () => {
 
                         {user &&
                             !loading &&
-                            (userType === "Admin"
+                            (userDetails.User_Type === "Admin"
                                 ? adminNavItems
                                 : customerNavItems)}
                     </ul>
                     {/* small screen nav items */}
                     <div className="flex gap-3 relative items-center">
-                        {userType === "Admin" && (
+                        {userDetails.User_Type === "Admin" && (
                             <NavLink
                                 to="/a/add-product"
                                 className={({ isActive }) =>
@@ -276,7 +274,7 @@ const Navbar = () => {
                                 </li>
                                 {user &&
                                     !loading &&
-                                    (userType === "Admin"
+                                    (userDetails.User_Type === "Admin"
                                         ? adminNavItems
                                         : customerNavItems)}
                                 {user ? (
@@ -328,7 +326,7 @@ const Navbar = () => {
                         fontWeight: "700",
                     }}
                 >
-                    {userName }
+                    {userDetails.Name }
                 </Tooltip>
             </div>
         </>

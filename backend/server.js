@@ -50,6 +50,21 @@ app.get("/users", (req, res) => {
     );
 });
 
+//get user by email
+app.get("/user/:email", (req, res) => {
+    const email = req.params.email;
+    db.query(
+        `SELECT Profile_image, F_name, L_name, Contact_Cell, Email_ID FROM user WHERE Email_ID = "${email}"`,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.send(result);
+            }
+        }
+    );
+});
+
 // get product by id
 app.get("/product/:id", (req, res) => {
     const id = req.params.id;
@@ -126,6 +141,23 @@ app.post('/products', (req, res) => {
             res.status(500).send('Server error');
         } else {
             res.status(200).send('Product added successfully');
+        }
+    });
+});
+
+//update user by email
+app.put('/user/:email', (req, res) => {
+    const email = req.params.email;
+    const user = req.body;
+    const query = 'UPDATE user SET Profile_image = ?, F_name = ?, L_name = ?, Contact_cell = ? WHERE Email_ID = ?';
+    const values = [user.Profile_image, user.F_name, user.L_name, user.Contact_cell, email];
+
+    db.query(query, values, (err, result) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send('Server error');
+        } else {
+            res.status(200).send('User updated successfully');
         }
     });
 });
