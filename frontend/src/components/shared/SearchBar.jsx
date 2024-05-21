@@ -15,7 +15,6 @@ const SearchBar = ({setAllProducts, setLoading}) => {
             axiosSecure.get("/products?attributes=Product_ID,Name,Price,Galaxy_source,Planet_source,Quantity_inStock,Image_Url")
             .then((response) => {
                 setAllProducts(response.data);
-                setLoading(false);
             })
             .catch((error) => {
                 console.error(error);
@@ -29,10 +28,8 @@ const SearchBar = ({setAllProducts, setLoading}) => {
         axiosSecure.get(`/products/search?param=${searchParam}`).then((res) => {
             setAllProducts(res.data);
             console.log(res.data);
-            setLoading(false);
         }).catch((error) => {
             console.error(error);
-            setLoading(false);
         }).finally(() => {
             setLoading(false);
         });
@@ -46,7 +43,7 @@ const SearchBar = ({setAllProducts, setLoading}) => {
 
     return (
         <div
-            className="flex justify-center lg:flex-row  items-center gap-4 mb-5 relative"
+            className="flex justify-center lg:flex-row  items-center gap-4 relative"
             ref={searchRef}
         >
             <input
