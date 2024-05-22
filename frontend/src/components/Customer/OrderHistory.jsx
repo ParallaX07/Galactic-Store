@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { AuthContext } from "../../Auth/AuthProvider";
 import OrderTable from "../shared/OrderTable/OrderTable";
+import Loader from "../shared/Loader";
 
 const OrderHistory = () => {
     const { loading, setLoading, user, userType } = useContext(AuthContext);
@@ -22,6 +23,10 @@ const OrderHistory = () => {
                 setLoading(false);
             });
     }, [user]);
+
+    if (loading) {
+        return <Loader />;
+    }
         
     return (
         <div className="mt-32">

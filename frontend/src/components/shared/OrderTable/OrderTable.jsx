@@ -1,11 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./OrderTable.css";
 import PropType from "prop-types";
 import { Link } from "react-router-dom";
 
-const OrderTable = ({ orders, userType }) => {
+const OrderTable = ({ orders: initialOrders, userType, onStatusChange }) => {
     const [isImageOpen, setIsImageOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
+
+    const [orders, setOrders] = useState(initialOrders);
+
+    useEffect(() => {
+        setOrders(initialOrders);
+    }, [initialOrders]);
+
+    const handleStatusChange = (e, order) => {
+        const newStatus = e.target.value;
+        onStatusChange(newStatus, order.Product_ID, order.OrderID);
+
+        // Update the status in the orders state
+        const updatedOrders = orders.map((o) => {
+            if (o.Product_ID === order.Product_ID && o.OrderID === order.OrderID) {
+                return { ...o, Status: newStatus };
+            }
+            return o;
+        });
+        setOrders(updatedOrders);
+    };
 
     const openImage = (imageUrl) => {
         setSelectedImage(imageUrl);
@@ -31,6 +51,12 @@ const OrderTable = ({ orders, userType }) => {
                             <th className="p-2">Unit Price</th>
                             <th className="p-2">Quantity Ordered</th>
                             <th className="p-2">Total Price</th>
+                            {userType === "Admin" && (
+                                <th className="p-2">Customer Name</th>
+                            )}
+                            {userType === "Admin" && (
+                                <th className="p-2">Customer Email</th>
+                            )}
                             <th className="p-2">Status</th>
                         </tr>
                     </thead>
@@ -89,9 +115,25 @@ const OrderTable = ({ orders, userType }) => {
                                     >
                                         {order?.ProductTotal}
                                     </td>
+                                    {userType === "Admin" && (
+                                        <>
+                                            <td
+                                                className="p-2 block lg:table-cell relative lg:static"
+                                                data-label="Customer Name"
+                                            >
+                                                {order?.CustomerName}
+                                            </td>
+                                            <td
+                                                className="p-2 block lg:table-cell relative lg:static"
+                                                data-label="Customer Email"
+                                            >
+                                                {order?.Email}
+                                            </td>
+                                        </>
+                                    )}
 
-                                    {
-                                        userType === 'Customer' && <td
+                                    {userType === "Customer" && (
+                                        <td
                                             className="p-2 lg:table-cell relative lg:static block"
                                             data-label="Status"
                                         >
@@ -101,7 +143,31 @@ const OrderTable = ({ orders, userType }) => {
                                                 {order?.Status}
                                             </span>
                                         </td>
-                                    }
+                                    )}
+                                    {userType === "Admin" && (
+                                        <td
+                                            className="p-2 lg:table-cell relative lg:static block"
+                                            data-label="Status"
+                                        >
+                                            <select
+                                                className={`px-5 capitalize py-3 rounded-full bg-opacity-25 border-2 ${result}`}
+                                                onChange={(e) =>
+                                                    handleStatusChange(e, order)
+                                                }
+                                                value={order?.Status}
+                                            >
+                                                <option value="pending">
+                                                    Pending
+                                                </option>
+                                                <option value="shipped">
+                                                    Shipped
+                                                </option>
+                                                <option value="delivered">
+                                                    Delivered
+                                                </option>
+                                            </select>
+                                        </td>
+                                    )}
                                 </tr>
                             );
                         })}
@@ -128,8 +194,9 @@ const OrderTable = ({ orders, userType }) => {
 };
 
 OrderTable.propTypes = {
-    orders: PropType.object.isRequired,
+    orders: PropType.array.isRequired,
     userType: PropType.string.isRequired,
+    onStatusChange: PropType.func,
 };
 
 export default OrderTable;

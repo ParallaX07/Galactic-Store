@@ -19,6 +19,7 @@ const UpdateProfile = lazy(() => import("./Pages/UpdateProfile"));
 const Root = lazy(() => import("./Pages/Root"));
 const Cart = lazy(() => import("./components/Customer/Cart/Cart"));
 const OrderHistory = lazy(() => import("./components/Customer/OrderHistory"));
+const ManageOrders = lazy(() => import("./components/Admin/ManageOrders"));
 
 const router = createBrowserRouter([
     {
@@ -105,6 +106,16 @@ const router = createBrowserRouter([
                     <PrivateRoute>
                         <Suspense fallback={<Loader />}>
                             <OrderHistory />
+                        </Suspense>
+                    </PrivateRoute>
+                ),
+            },
+            {
+                path: "/a/manage-orders",
+                element: (
+                    <PrivateRoute>
+                        <Suspense fallback={<Loader />}>
+                            <ManageOrders />
                         </Suspense>
                     </PrivateRoute>
                 ),

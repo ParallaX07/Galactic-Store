@@ -127,6 +127,28 @@ app.get("/orderHistory", (req, res) => {
     );
 });
 
+//get all orderHistory example axiosSecure.get(`/allOrderHistory`)
+app.get("/allOrderHistory", (req, res) => {
+    db.query(
+        `SELECT p.Product_ID, p.Image_Url, p.Name, p.Price, od.Quantity, od.Quantity * p.Price AS ProductTotal, od.Status, c.Email, CONCAT(u.F_Name, ' ', u.L_Name) AS CustomerName, od.OrderID
+        FROM OrderDetails od JOIN product p ON od.ProductID = p.Product_ID JOIN Cart c ON od.OrderID = c.OrderID JOIN user u on u.Email_ID = c.Email 
+        WHERE c.Status = 'closed' ORDER BY
+            CASE 
+                WHEN od.Status = 'Pending' THEN 1 
+                WHEN od.Status = 'Shipped' THEN 2 
+                WHEN od.Status = 'Delivered' THEN 3 
+                ELSE 4 
+            END`,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.send(result);
+            }
+        }
+    );
+});
+
 // create new user
 // Handle POST requests to /users
 app.post("/users", (req, res) => {
@@ -336,6 +358,25 @@ app.put("/cart", (req, res) => {
             res.status(500).send("Server error");
         } else {
             res.status(200).send("Cart updated successfully");
+        }
+    });
+});
+
+app.put("/allOrderDetails", (req, res) => {
+    const orderID = req.body.orderID;
+    const productID = req.body.productID;
+    const newStatus = req.body.newStatus;
+    console.log(orderID, productID, newStatus);
+    const query = `UPDATE OrderDetails
+    SET Status = ?
+    WHERE OrderID = ? AND ProductID = ?`;
+
+    db.query(query, [newStatus, orderID, productID], (err, result) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send("Server error");
+        } else {
+            res.status(200).send("OrderDetails updated successfully");
         }
     });
 });
