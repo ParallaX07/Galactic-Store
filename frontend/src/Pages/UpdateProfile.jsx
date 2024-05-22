@@ -15,8 +15,6 @@ const UpdateProfile = () => {
     const [loading, setLoading] = useState(false);
     const [phone, setPhone] = useState("");
 
-    console.log(phone);
-
     useEffect(() => {
         setLoading(true);
         setLoading(true);
@@ -140,6 +138,7 @@ const UpdateProfile = () => {
                                     <div className="mt-2 text-black">
                                         <PhoneInput
                                             country="BD"
+                                            placeholder="Enter phone number"
                                             value={phone}
                                             onChange={(value) =>
                                                 setPhone(value)

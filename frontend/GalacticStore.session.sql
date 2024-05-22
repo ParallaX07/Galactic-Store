@@ -1,1 +1,1 @@
-ALTER TABLE `order` DROP COLUMN `Planet`;
+DESCRIBE user

@@ -4,13 +4,15 @@ import { useContext } from "react";
 import { MessageContext } from "./Root";
 import { AuthContext } from "../Auth/AuthProvider";
 
+
 // Sign up form component
 const SignUpForm = () => {
-  
     const navigate = useNavigate();
     const axiosSecure = useAxiosSecure();
-    const {notifyError, notifySuccess} = useContext(MessageContext);    
-    const { createUser, logout, user, updateUserProfile } = useContext(AuthContext);
+    const { notifyError, notifySuccess } = useContext(MessageContext);
+    const { createUser, logout, user, updateUserProfile } =
+        useContext(AuthContext);
+
 
     // post to database function
 
@@ -26,7 +28,6 @@ const SignUpForm = () => {
         const email = formData.get("email");
         const password = formData.get("password");
         const confirm_password = formData.get("confirm_password");
-        const phone = formData.get("contactNo");
         if (password !== confirm_password) {
             notifyError("Passwords do not match");
             return;
@@ -42,19 +43,22 @@ const SignUpForm = () => {
                 notifyError(error.message);
             });
 
-        axiosSecure.post("/users", {
-            Email_ID: email,
-            User_Type: "Customer",
-            F_Name: first_name,
-            L_Name: last_name,
-            Contact_Cell: phone,
-        }).then((res) => {
-            console.log(res);
-        }).catch((error) => {
-            notifyError(error.message);
-        });
+        axiosSecure
+            .post("/users", {
+                Email_ID: email,
+                User_Type: "Customer",
+                F_Name: first_name,
+                L_Name: last_name,
+                Contact_Cell: "",
+            })
+            .then((res) => {
+                console.log(res);
+            })
+            .catch((error) => {
+                notifyError(error.message);
+            });
     };
-    
+
     return (
         <div className="flex justify-center mt-28 mb-10">
             <form
@@ -114,19 +118,13 @@ const SignUpForm = () => {
                     <span className="highlight-span"></span>
                     <label className="label-email">Confirm Password</label>
                 </div>
-                {/* phone number input */}
-                <div className="group">
-                    <input
-                        required={true}
-                        className="main-input"
-                        type="tel"
-                        name="contactNo"
-                    />
-                    <span className="highlight-span"></span>
-                    <label className="label-email">Phone Number</label>
-                </div>
                 {/* sign up button */}
-                <button type="submit" className="submit text-white hover:bg-black hover:bg-opacity-40">Create Account</button>
+                <button
+                    type="submit"
+                    className="submit text-white hover:bg-black hover:bg-opacity-40"
+                >
+                    Create Account
+                </button>
                 <p>Already have an account yet?</p>
                 <Link to={`/login`} className="text-accent font-extrabold">
                     Login now!
