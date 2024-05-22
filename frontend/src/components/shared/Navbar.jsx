@@ -1,18 +1,20 @@
 import { Link, NavLink } from "react-router-dom";
 import { FaPlus, FaUserAstronaut } from "react-icons/fa6";
 import { AuthContext } from "../../Auth/AuthProvider";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Tooltip } from "react-tooltip";
 import { IoMdLogOut } from "react-icons/io";
 import { TiThMenu } from "react-icons/ti";
 import { MessageContext } from "../../Pages/Root";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 
 const Navbar = () => {
     const active =
         "bg-gradient-to-r from-tertiary via-secondary to-primary text-transparent bg-clip-text animate-gradient bg-300% border-secondary border-b-2";
     const inactive = "hover:text-gray-400 border-transparent border-b-2";
-    const { user, logout, loading, setLoading, setUserName, setUserType } = useContext(AuthContext);
+    const { user, logout, loading, setLoading, setUserName, setUserType } =
+        useContext(AuthContext);
     const { notifySuccess, notifyError } = useContext(MessageContext);
     const [userDetails, setUserDetails] = useState({});
     const axiosSecure = useAxiosSecure();
@@ -21,7 +23,11 @@ const Navbar = () => {
         if (user) {
             setLoading(true);
             axiosSecure
-                .get(`/users?email=${user?.email}&value=${"User_Type, CONCAT(F_Name, ' ', L_Name) as Name, Profile_image"}`)
+                .get(
+                    `/users?email=${
+                        user?.email
+                    }&value=${"User_Type, CONCAT(F_Name, ' ', L_Name) as Name, Profile_image"}`
+                )
                 .then((res) => {
                     setUserDetails(res.data[0]);
                     setUserName(res.data[0].Name);
@@ -29,7 +35,8 @@ const Navbar = () => {
                 })
                 .catch((error) => {
                     notifyError(error.message);
-                }).finally(() => {
+                })
+                .finally(() => {
                     setLoading(false);
                 });
         }
@@ -60,29 +67,66 @@ const Navbar = () => {
         </>
     );
 
+    const [dropdownVisible, setDropdownVisible] = useState(false);
+    const dropdownRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target)
+            ) {
+                setDropdownVisible(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    const toggleDropdown = () => {
+        setDropdownVisible(!dropdownVisible);
+    };
+
     const adminNavItems = (
-        <>
-            <li>
-                <NavLink
-                    to="/a/manage-products"
-                    className={({ isActive }) =>
-                        isActive ? `${active}` : `${inactive}`
-                    }
-                >
-                    Manage Products
-                </NavLink>
-            </li>
-            <li>
-                <NavLink
-                    to="/a/manage-orders"
-                    className={({ isActive }) =>
-                        isActive ? `${active}` : `${inactive}`
-                    }
-                >
-                    Manage Orders
-                </NavLink>
-            </li>
-        </>
+        <li>
+            <button
+                onClick={toggleDropdown}
+                className="transition duration-300 focus:outline-none text-gray-100 hover:text-gray-400 flex items-center gap-2"
+            >
+                Dashboard
+                <MdOutlineKeyboardArrowDown className="font-medium text-2xl" />
+            </button>
+            <div className="relative min-w-full">
+                {/* Dashboard dropdown */}
+                {dropdownVisible && (
+                    <ul className="transition duration-300 absolute top-full -left-20 bg-primary border-gray-100 border shadow-lg py-2 px-3 rounded-md z-10 min-w-fit">
+                        <li>
+                            <NavLink
+                                to="/a/manage-products"
+                                className={({ isActive }) =>
+                                    isActive ? `${active}` : `${inactive}`
+                                }
+                            >
+                                Manage Products
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink
+                                to="/a/manage-orders"
+                                className={({ isActive }) =>
+                                    isActive ? `${active}` : `${inactive}`
+                                }
+                            >
+                                Manage Orders
+                            </NavLink>
+                        </li>
+                    </ul>
+                )}
+            </div>
+        </li>
     );
 
     const handleLogout = async () => {
@@ -248,7 +292,9 @@ const Navbar = () => {
                             <NavLink
                                 to="/a/add-product"
                                 className={({ isActive }) =>
-                                    isActive ? `text-xl p-1 border-2 rounded-full font-bold text-secondary border-secondary` : `text-xl p-1 border-2 border-white rounded-full font-bold`
+                                    isActive
+                                        ? `text-xl p-1 border-2 rounded-full font-bold text-secondary border-secondary`
+                                        : `text-xl p-1 border-2 border-white rounded-full font-bold`
                                 }
                                 title={`Add Product`}
                             >
@@ -337,7 +383,7 @@ const Navbar = () => {
                         fontWeight: "700",
                     }}
                 >
-                    {userDetails.Name }
+                    {userDetails.Name}
                 </Tooltip>
             </div>
         </>

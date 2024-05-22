@@ -5,9 +5,10 @@ import OrderTable from "../shared/OrderTable/OrderTable";
 import Loader from "../shared/Loader";
 
 const OrderHistory = () => {
-    const { loading, setLoading, user, userType } = useContext(AuthContext);
+    const { user, userType } = useContext(AuthContext);
     const [orderHistory, setOrderHistory] = useState([]);
     const axiosSecure = useAxiosSecure();
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         setLoading(true);

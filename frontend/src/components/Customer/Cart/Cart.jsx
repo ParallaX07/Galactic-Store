@@ -9,8 +9,8 @@ import { MessageContext } from "../../../Pages/Root";
 import "./Cart.css";
 
 const Cart = () => {
-    const { userName, user, loading, setLoading } = useContext(AuthContext);
-
+    const { userName, user } = useContext(AuthContext);
+    const [loading, setLoading] = useState(false);
     const [isImageOpen, setIsImageOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [inCart, setInCart] = useState([]);

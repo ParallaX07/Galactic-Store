@@ -6,9 +6,10 @@ import OrderTable from "../shared/OrderTable/OrderTable";
 import { MessageContext } from "../../Pages/Root";
 
 const ManageOrders = () => {
-    const { loading, setLoading, user, userType } = useContext(AuthContext);
+    const { user, userType } = useContext(AuthContext);
     const [orderHistory, setOrderHistory] = useState([]);
     const { notifySuccess, notifyError } = useContext(MessageContext);
+    const [loading, setLoading] = useState(false);
 
     const axiosSecure = useAxiosSecure();
 

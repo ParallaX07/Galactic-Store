@@ -53,21 +53,6 @@ const AllProducts = () => {
         }
     }, [sortOption, allProducts]);
 
-    if (loading) {
-        return (
-            <div className="mt-24 mx-3 lg:mx-auto text-white lg:max-w-7xl">
-                <div className="grid lg:grid-cols-3 grid-cols-1 gap-4">
-                    <Suspense fallback={<Loader/>}>
-                        <LoadingCard />
-                        <LoadingCard />
-                        <LoadingCard />
-                    </Suspense>
-                </div>
-            </div>
-        );
-
-    }
-
     return (
         <div className="mt-24 mx-3 lg:mx-auto text-white lg:max-w-7xl">
             <div className="flex justify-center items-center mb-4 lg:flex-row flex-col gap-4">
@@ -93,13 +78,19 @@ const AllProducts = () => {
                     </select>
                 </div>
             </div>
-            {!loading && (
-                <div className="grid lg:grid-cols-3 grid-cols-1 gap-4">
+            {loading ? (<div className="grid lg:grid-cols-3 grid-cols-1 gap-4">
+                    <Suspense fallback={<Loader/>}>
+                        <LoadingCard />
+                        <LoadingCard />
+                        <LoadingCard />
+                    </Suspense>
+                </div>) : 
+                (<div className="grid lg:grid-cols-3 grid-cols-1 gap-4">
                     {sortedProducts.map((product) => (
                             <AllProductCard product={product} key={product.Product_ID} />
                     ))}
-                </div>
-            )}
+                </div>)
+            }
             {allProducts.length === 0 && !loading && (
                 <div className="flex justify-center items-center h-[70vh]">
                     <h1 className="text-3xl text-white bg-black px-3 py-2 rounded-lg">
