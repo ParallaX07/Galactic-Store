@@ -341,8 +341,15 @@ app.delete("/cart", (req, res) => {
       )
       WHERE Product_ID = ?;
 
+      
       DELETE FROM OrderDetails
       WHERE OrderID = @order_id AND ProductID = ?;
+
+      -- Delete cart if no products are left in it
+        DELETE FROM Cart
+        WHERE OrderID = @order_id AND NOT EXISTS (
+            SELECT 1 FROM OrderDetails WHERE OrderID = @order_id
+        );
 
     `;
 
