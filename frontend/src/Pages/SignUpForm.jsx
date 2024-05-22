@@ -4,15 +4,13 @@ import { useContext } from "react";
 import { MessageContext } from "./Root";
 import { AuthContext } from "../Auth/AuthProvider";
 
-
 // Sign up form component
 const SignUpForm = () => {
     const navigate = useNavigate();
     const axiosSecure = useAxiosSecure();
     const { notifyError, notifySuccess } = useContext(MessageContext);
-    const { createUser, logout, user, updateUserProfile } =
+    const { createUser, logout, user, updateUserProfile, setLoading } =
         useContext(AuthContext);
-
 
     // post to database function
 
@@ -28,10 +26,34 @@ const SignUpForm = () => {
         const email = formData.get("email");
         const password = formData.get("password");
         const confirm_password = formData.get("confirm_password");
+
         if (password !== confirm_password) {
             notifyError("Passwords do not match");
             return;
         }
+
+        //password validation
+        if (password.length < 6) {
+            notifyError("Password must be at least 6 characters long");
+            return;
+        }
+        if (!/[a-z]/.test(password)) {
+            notifyError("Password must contain at least one lowercase letter");
+            return;
+        }
+        if (!/[A-Z]/.test(password)) {
+            notifyError("Password must contain at least one uppercase letter");
+            return;
+        }
+        if (!/\d/.test(password)) {
+            notifyError("Password must contain at least one digit");
+            return;
+        }
+        if (!/[@$!%*?&]/.test(password)) {
+            notifyError("Password must contain at least one special character");
+            return;
+        }
+
         createUser(email, password)
             .then(() => {
                 notifySuccess("Account created successfully");
@@ -41,6 +63,8 @@ const SignUpForm = () => {
             })
             .catch((error) => {
                 notifyError(error.message);
+            }).finally(() => {
+                setLoading(false);
             });
 
         axiosSecure

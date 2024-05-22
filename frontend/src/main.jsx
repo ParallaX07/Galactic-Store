@@ -6,6 +6,7 @@ import PrivateRoute from "./Auth/PrivateRoute";
 import { lazy, Suspense } from "react";
 import Loader from "./components/shared/Loader";
 
+
 //import components
 const SignUpForm = lazy(() => import("./Pages/SignUpForm"));
 const LoginForm = lazy(() => import("./Pages/LoginForm"));
@@ -16,7 +17,8 @@ const Home = lazy(() => import("./Pages/Home"));
 const Error404 = lazy(() => import("./components/shared/Error404"));
 const UpdateProfile = lazy(() => import("./Pages/UpdateProfile"));
 const Root = lazy(() => import("./Pages/Root"));
-const Cart = lazy(() => import("./components/Customer/Cart"));
+const Cart = lazy(() => import("./components/Customer/Cart/Cart"));
+const OrderHistory = lazy(() => import("./components/Customer/OrderHistory"));
 
 const router = createBrowserRouter([
     {
@@ -93,6 +95,16 @@ const router = createBrowserRouter([
                     <PrivateRoute>
                         <Suspense fallback={<Loader />}>
                             <Cart/>
+                        </Suspense>
+                    </PrivateRoute>
+                ),
+            },
+            {
+                path: "/c/order-history",
+                element: (
+                    <PrivateRoute>
+                        <Suspense fallback={<Loader />}>
+                            <OrderHistory />
                         </Suspense>
                     </PrivateRoute>
                 ),

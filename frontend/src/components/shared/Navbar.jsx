@@ -12,7 +12,7 @@ const Navbar = () => {
     const active =
         "bg-gradient-to-r from-tertiary via-secondary to-primary text-transparent bg-clip-text animate-gradient bg-300% border-secondary border-b-2";
     const inactive = "hover:text-gray-400 border-transparent border-b-2";
-    const { user, logout, loading, setLoading, setUserName } = useContext(AuthContext);
+    const { user, logout, loading, setLoading, setUserName, setUserType } = useContext(AuthContext);
     const { notifySuccess, notifyError } = useContext(MessageContext);
     const [userDetails, setUserDetails] = useState({});
     const axiosSecure = useAxiosSecure();
@@ -25,6 +25,7 @@ const Navbar = () => {
                 .then((res) => {
                     setUserDetails(res.data[0]);
                     setUserName(res.data[0].Name);
+                    setUserType(res.data[0].User_Type);
                 })
                 .catch((error) => {
                     notifyError(error.message);
@@ -48,7 +49,7 @@ const Navbar = () => {
             </li>
             <li>
                 <NavLink
-                    to="/history"
+                    to="/c/order-history"
                     className={({ isActive }) =>
                         isActive ? `${active}` : `${inactive}`
                     }

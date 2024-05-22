@@ -111,6 +111,22 @@ app.get("/cart", (req, res) => {
     );
 });
 
+//get order history example axiosSecure.get(`/orderHistory?email=${email}`)
+app.get("/orderHistory", (req, res) => {
+    const email = req.query.email;
+    db.query(
+        `SELECT p.Product_ID, p.Image_Url, p.Name, p.Price, od.Quantity, od.Quantity * p.Price AS ProductTotal, od.Status
+        FROM OrderDetails od JOIN product p ON od.ProductID = p.Product_ID JOIN Cart c ON od.OrderID = c.OrderID WHERE c.Status = 'closed' AND c.Email = "${email}"`,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.send(result);
+            }
+        }
+    );
+});
+
 // create new user
 // Handle POST requests to /users
 app.post("/users", (req, res) => {

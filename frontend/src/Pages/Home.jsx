@@ -53,6 +53,21 @@ const Home = () => {
         }
     }, [sortOption, allProducts]);
 
+    if (loading) {
+        return (
+            <div className="mt-24 mx-3 lg:mx-auto text-white lg:max-w-7xl">
+                <div className="grid lg:grid-cols-3 grid-cols-1 gap-4">
+                    <Suspense fallback={<Loader/>}>
+                        <LoadingCard />
+                        <LoadingCard />
+                        <LoadingCard />
+                    </Suspense>
+                </div>
+            </div>
+        );
+
+    }
+
     return (
         <div className="mt-24 mx-3 lg:mx-auto text-white lg:max-w-7xl">
             <div className="flex justify-center items-center mb-4 lg:flex-row flex-col gap-4">
@@ -78,15 +93,6 @@ const Home = () => {
                     </select>
                 </div>
             </div>
-            {loading && (
-                <div className="grid lg:grid-cols-3 grid-cols-1 gap-4">
-                    <Suspense fallback={<Loader/>}>
-                        <LoadingCard />
-                        <LoadingCard />
-                        <LoadingCard />
-                    </Suspense>
-                </div>
-            )}
             {!loading && (
                 <div className="grid lg:grid-cols-3 grid-cols-1 gap-4">
                     {sortedProducts.map((product) => (

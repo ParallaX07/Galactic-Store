@@ -16,6 +16,7 @@ const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [userName, setUserName] = useState("");
+    const [userType, setUserType] = useState("");
 
 
     // Function to create a new user
@@ -70,6 +71,8 @@ const AuthProvider = ({ children }) => {
         setLoading,
         userName,
         setUserName,
+        userType,
+        setUserType,
     };
 
     return (

@@ -1,0 +1,8 @@
+@media (max-width: 1024px) {
+    td[data-label]:before {
+        content: attr(data-label);
+        font-weight: bold;
+        display: block;
+        margin-top: 8px;
+    }
+}

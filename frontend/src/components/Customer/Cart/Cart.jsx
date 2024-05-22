@@ -1,19 +1,19 @@
 import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../Auth/AuthProvider";
+import { AuthContext } from "../../../Auth/AuthProvider";
 import { ImBin } from "react-icons/im";
 import Swal from "sweetalert2";
-import Loader from "../shared/Loader";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
+import Loader from "../../shared/Loader";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { Link } from "react-router-dom";
-import { MessageContext } from "../../Pages/Root";
+import { MessageContext } from "../../../Pages/Root";
+import "./Cart.css";
 
 const Cart = () => {
-    const { userName, user } = useContext(AuthContext);
+    const { userName, user, loading, setLoading } = useContext(AuthContext);
 
     const [isImageOpen, setIsImageOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [inCart, setInCart] = useState([]);
-    const [loading, setLoading] = useState(false);
     const axiosSecure = useAxiosSecure();
     const { notifySuccess, notifyError } = useContext(MessageContext);
 
@@ -41,6 +41,11 @@ const Cart = () => {
             });
     }, []);
 
+    if (loading) {
+        <Loader />;
+    }
+
+
     if (inCart.length === 0 && !loading) {
         return (
             <section className="lg:mx-auto lg:max-w-6xl mx-3 py-20 transition duration-300">
@@ -53,6 +58,9 @@ const Cart = () => {
                 <h2 className="text-4xl font-semibold text-center text-gray-100 mt-8">
                     Your cart is empty
                 </h2>
+                <button className="submit text-white bg-black/80 hover:bg-black/80 flex justify-center mx-auto mt-2">
+                    <Link to="/">Shop Now</Link>
+                </button>
             </section>
         );
     }
@@ -137,10 +145,7 @@ const Cart = () => {
         });
     };
 
-    if (loading) {
-        <Loader />;
-    }
-
+   
     return (
         <section className=" lg:mx-auto lg:max-w-6xl mx-3 py-20 transition duration-300">
             <h2 className="text-3xl font-semibold text-gray-100 mt-4 underline underline-offset-4">
@@ -149,7 +154,7 @@ const Cart = () => {
                 </span>{" "}
                 Cart
             </h2>
-            <div className="overflow-x-auto ">
+           {!loading && <div className="overflow-x-auto ">
                 <table className="table-auto glass w-full mt-8  rounded-lg border-2 border-gray-100 ">
                     <thead className="hidden lg:table-header-group  rounded-lg">
                         <tr className="text-base font-semibold text-left border-b-2 border-gray-100 text-gray-100">
@@ -247,7 +252,7 @@ const Cart = () => {
                         Confirm Purchase
                     </button>
                 </div>
-            </div>
+            </div>}
             {isImageOpen && (
                 <div
                     className="fixed top-0 left-0 w-dvw h-dvh flex items-center justify-center z-50"

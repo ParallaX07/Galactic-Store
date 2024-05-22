@@ -54,6 +54,11 @@ const ProductDetails = () => {
         const OrderQuantity = orderQuantity;
         const Email_ID = user?.email;
 
+        if (orderQuantity > product?.Quantity_inStock) {
+            notifyError("Quantity exceeds the available stock");
+            return;
+        }
+
         setLoading(true);
         axiosSecure.post(`/cart?productID=${Product_ID}&quantity=${OrderQuantity}&email=${Email_ID}`)
             .then(() => {
