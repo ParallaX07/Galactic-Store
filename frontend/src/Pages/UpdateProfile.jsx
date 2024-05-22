@@ -3,6 +3,8 @@ import useAxiosSecure from "../hooks/useAxiosSecure";
 import { AuthContext } from "../Auth/AuthProvider";
 import { MessageContext } from "./Root";
 import Loader from "../components/shared/Loader";
+import "react-phone-number-input/style.css";
+import PhoneInput from "react-phone-number-input";
 
 const UpdateProfile = () => {
     const axiosSecure = useAxiosSecure();
@@ -11,23 +13,29 @@ const UpdateProfile = () => {
     const { notifySuccess, notifyError } = useContext(MessageContext);
     const [userDetails, setUserDetails] = useState({});
     const [loading, setLoading] = useState(false);
+    const [phone, setPhone] = useState("");
+
+    console.log(phone);
 
     useEffect(() => {
         setLoading(true);
-            setLoading(true);
-            axiosSecure
-                .get(`/users?email=${user?.email}&value=${"F_name, L_name, Profile_image, Contact_Cell, Email_ID"}`)
-                .then((res) => {
-                    setUserDetails(res.data[0]);
-                })
-                .catch((error) => {
-                    notifyError(error.message);
-                }).finally(() => {
-                    setLoading(false);
-                });
-        
+        setLoading(true);
+        axiosSecure
+            .get(
+                `/users?email=${
+                    user?.email
+                }&value=${"F_name, L_name, Profile_image, Contact_Cell, Email_ID"}`
+            )
+            .then((res) => {
+                setUserDetails(res.data[0]);
+            })
+            .catch((error) => {
+                notifyError(error.message);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     }, [user?.email]);
-
 
     const handleUpdate = (e) => {
         e.preventDefault();
@@ -36,7 +44,7 @@ const UpdateProfile = () => {
         const fname = data.get("fname") || userDetails?.F_name;
         const lname = data.get("lname") || userDetails?.L_name;
         const url = data.get("url") || userDetails?.Profile_image;
-        const contact = data.get("contact") || userDetails?.Contact_Cell;
+        const contact = phone || userDetails?.Contact_Cell;
         const body = {
             F_name: fname,
             L_name: lname,
@@ -68,8 +76,10 @@ const UpdateProfile = () => {
                         <div className="lg:w-72 mb-6 object-contain">
                             <img
                                 className="rounded-xl "
-                                src={userDetails.Profile_image ||
-                                    "https://i.ibb.co/hYbbGyR/6596121-modified.png"}
+                                src={
+                                    userDetails.Profile_image ||
+                                    "https://i.ibb.co/hYbbGyR/6596121-modified.png"
+                                }
                                 alt=""
                             />
                         </div>
@@ -127,14 +137,13 @@ const UpdateProfile = () => {
                                     <label className="text-base font-medium text-gray-300">
                                         Update Contact Cell
                                     </label>
-                                    <div className="mt-2">
-                                        <input
-                                            placeholder={
-                                                userDetails?.Contact_Cell
+                                    <div className="mt-2 text-black">
+                                        <PhoneInput
+                                            country="BD"
+                                            value={phone}
+                                            onChange={(value) =>
+                                                setPhone(value)
                                             }
-                                            type="text"
-                                            name="contact"
-                                            className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-200 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                                         />
                                     </div>
                                 </div>

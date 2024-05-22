@@ -12,19 +12,19 @@ const Navbar = () => {
     const active =
         "bg-gradient-to-r from-tertiary via-secondary to-primary text-transparent bg-clip-text animate-gradient bg-300% border-secondary border-b-2";
     const inactive = "hover:text-gray-400 border-transparent border-b-2";
-    const { user, logout, loading, setLoading } = useContext(AuthContext);
+    const { user, logout, loading, setLoading, setUserName } = useContext(AuthContext);
     const { notifySuccess, notifyError } = useContext(MessageContext);
     const [userDetails, setUserDetails] = useState({});
     const axiosSecure = useAxiosSecure();
 
     useEffect(() => {
         if (user) {
-            console.log("user", user);
             setLoading(true);
             axiosSecure
                 .get(`/users?email=${user?.email}&value=${"User_Type, CONCAT(F_Name, ' ', L_Name) as Name, Profile_image"}`)
                 .then((res) => {
                     setUserDetails(res.data[0]);
+                    setUserName(res.data[0].Name);
                 })
                 .catch((error) => {
                     notifyError(error.message);
@@ -38,7 +38,7 @@ const Navbar = () => {
         <>
             <li>
                 <NavLink
-                    to="/cart"
+                    to="/c/cart"
                     className={({ isActive }) =>
                         isActive ? `${active}` : `${inactive}`
                     }

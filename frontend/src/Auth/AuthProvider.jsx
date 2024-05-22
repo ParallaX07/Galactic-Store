@@ -15,6 +15,7 @@ const AuthProvider = ({ children }) => {
     // State to keep track of the current user
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [userName, setUserName] = useState("");
 
 
     // Function to create a new user
@@ -67,6 +68,8 @@ const AuthProvider = ({ children }) => {
         login,
         updateUserProfile,
         setLoading,
+        userName,
+        setUserName,
     };
 
     return (

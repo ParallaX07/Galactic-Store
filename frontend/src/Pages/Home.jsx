@@ -11,7 +11,7 @@ const Home = () => {
     const [allProducts, setAllProducts] = useState([]);
     const [sortedProducts, setSortedProducts] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [sortOption, setSortOption] = useState("name");
+    const [sortOption, setSortOption] = useState("");
     const axiosSecure = useAxiosSecure();
 
     useEffect(() => {
