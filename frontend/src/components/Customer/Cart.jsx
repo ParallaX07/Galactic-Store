@@ -1,16 +1,18 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../Auth/AuthProvider";
 import { ImBin } from "react-icons/im";
 import Swal from "sweetalert2";
 import Loader from "../shared/Loader";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const Cart = () => {
-    const { userName } = useContext(AuthContext);
+    const { userName, user } = useContext(AuthContext);
 
     const [isImageOpen, setIsImageOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [inCart, setInCart] = useState([]);
     const [loading, setLoading] = useState(false);
+    const axiosSecure = useAxiosSecure();
 
     const openImage = (imageUrl) => {
         setSelectedImage(imageUrl);
@@ -21,11 +23,29 @@ const Cart = () => {
         setIsImageOpen(false);
     };
 
+    useEffect(() => {
+        setLoading(true);
+        axiosSecure
+            .get(`/cart?email=${user?.email}`)
+            .then((response) => {
+                setInCart(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }, []);
+
     if (inCart.length === 0) {
         return (
             <section className="lg:mx-auto lg:max-w-6xl mx-3 py-20 transition duration-300">
                 <h2 className="text-3xl font-semibold text-gray-100 mt-4 underline underline-offset-4">
-                    <span className="bg-gradient-to-r from-tertiary via-secondary to-primary text-transparent bg-clip-text animate-gradient bg-300%">{userName}&apos;s</span> Cart
+                    <span className="bg-gradient-to-r from-tertiary via-secondary to-primary text-transparent bg-clip-text animate-gradient bg-300%">
+                        {userName}&apos;s
+                    </span>{" "}
+                    Cart
                 </h2>
                 <h2 className="text-4xl font-semibold text-center text-gray-100 mt-8">
                     Your cart is empty
@@ -54,44 +74,27 @@ const Cart = () => {
         });
     };
 
-    if(loading){
-        <Loader/>
+    if (loading) {
+        <Loader />;
     }
 
     return (
         <section className=" lg:mx-auto lg:max-w-6xl mx-3 py-20 transition duration-300">
             <h2 className="text-3xl font-semibold text-gray-100 mt-4 underline underline-offset-4">
-                <span className="bg-gradient-to-r from-tertiary via-secondary to-primary text-transparent bg-clip-text animate-gradient bg-300%">{userName}&apos;s</span> Cart
+                <span className="bg-gradient-to-r from-tertiary via-secondary to-primary text-transparent bg-clip-text animate-gradient bg-300%">
+                    {userName}&apos;s
+                </span>{" "}
+                Cart
             </h2>
             <div className="overflow-x-auto ">
                 <table className="table-auto glass w-full mt-8  rounded-lg border-2 border-gray-100 ">
                     <thead className="hidden lg:table-header-group  rounded-lg">
                         <tr className="text-base font-semibold text-left border-b-2 border-gray-100 text-gray-100">
-                            <th
-                                className="p-2"
-                            >
-                                Image
-                            </th>
-                            <th
-                                className="p-2"
-                            >
-                                Name
-                            </th>
-                            <th
-                                className="p-2"
-                            >
-                                Unit Price
-                            </th>
-                            <th
-                                className="p-2"
-                            >
-                                Quantity Ordered
-                            </th>
-                            <th
-                                className="p-2"
-                            >
-                                Total Price
-                            </th>
+                            <th className="p-2">Image</th>
+                            <th className="p-2">Name</th>
+                            <th className="p-2">Unit Price</th>
+                            <th className="p-2">Quantity Ordered</th>
+                            <th className="p-2">Total Price</th>
                             <th className="p-2">Actions</th>
                         </tr>
                     </thead>
@@ -129,22 +132,17 @@ const Cart = () => {
                                 </td>
                                 <td
                                     className="p-2 block lg:table-cell relative lg:static"
-                                    data-label="Galaxy"
+                                    data-label="Quantity"
                                 >
-                                    {product?.Galaxy_source}
+                                    {product?.Quantity}
                                 </td>
                                 <td
                                     className="p-2 block lg:table-cell relative lg:static"
-                                    data-label="Planet"
+                                    data-label="Total Price"
                                 >
-                                    {product?.Planet_source}
+                                    {product?.ProductTotal}
                                 </td>
-                                <td
-                                    className="p-2 block lg:table-cell relative lg:static"
-                                    data-label="Stock"
-                                >
-                                    {product?.Quantity_inStock}
-                                </td>
+
                                 <td
                                     className="p-2 lg:table-cell relative lg:static block"
                                     data-label="Actions"
@@ -160,6 +158,21 @@ const Cart = () => {
                                 </td>
                             </tr>
                         ))}
+                        <tr>
+                            <td
+                                colSpan="6"
+                                className="p-2 block lg:table-cell relative lg:static"
+                            >
+                                <h2 className="text-xl text-right font-semibold text-gray-100 mt-4">
+                                    Total Price:{" "}
+                                    {inCart.reduce(
+                                        (acc, curr) =>
+                                            acc + curr.ProductTotal,
+                                        0
+                                    )}
+                                </h2>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

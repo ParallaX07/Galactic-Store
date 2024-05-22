@@ -5,7 +5,6 @@ import AuthProvider from "./Auth/AuthProvider";
 import PrivateRoute from "./Auth/PrivateRoute";
 import { lazy, Suspense } from "react";
 import Loader from "./components/shared/Loader";
-import Cart from "./components/Customer/Cart";
 
 //import components
 const SignUpForm = lazy(() => import("./Pages/SignUpForm"));
@@ -17,6 +16,7 @@ const Home = lazy(() => import("./Pages/Home"));
 const Error404 = lazy(() => import("./components/shared/Error404"));
 const UpdateProfile = lazy(() => import("./Pages/UpdateProfile"));
 const Root = lazy(() => import("./Pages/Root"));
+const Cart = lazy(() => import("./components/Customer/Cart"));
 
 const router = createBrowserRouter([
     {

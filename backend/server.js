@@ -95,6 +95,23 @@ app.get("/products/search", (req, res) => {
     );
 });
 
+//get products in cart example axiosSecure.get(`/cart?email=${email}`)
+
+app.get("/cart", (req, res) => {
+    const email = req.query.email;
+    db.query(
+        `SELECT p.Image_Url, p.Name, p.Price, od.Quantity, od.Quantity * p.Price AS ProductTotal, (SELECT SUM(od2.Quantity * p2.Price) FROM OrderDetails od2 JOIN product p2 ON od2.ProductID = p2.Product_ID WHERE od2.OrderID = od.OrderID) AS CartTotal FROM OrderDetails od JOIN product p ON od.ProductID = p.Product_ID JOIN Cart c ON od.OrderID = c.OrderID WHERE c.Status = 'open' AND c.Email = "${email}"`,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.send(result);
+            }
+        }
+    );
+});
+
+
 // create new user
 // Handle POST requests to /users
 app.post("/users", (req, res) => {
@@ -297,6 +314,8 @@ app.delete("/products/:id", (req, res) => {
         }
     });
 });
+
+
 
 /**
  * Starts the server and establishes the database connection.
