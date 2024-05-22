@@ -54,7 +54,14 @@ const UpdateProfile = () => {
             .then(() => {
                 notifySuccess("Profile updated successfully");
                 setLoading(false);
-                window.location.reload();
+                // update user details with new data
+                setUserDetails({
+                    ...userDetails,
+                    F_name: fname,
+                    L_name: lname,
+                    Profile_image: url,
+                    Contact_Cell: contact,
+                });
             })
             .catch(() => {
                 notifyError("Error updating profile");

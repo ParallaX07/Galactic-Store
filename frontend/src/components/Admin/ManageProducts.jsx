@@ -1,12 +1,11 @@
 import { Suspense, lazy, useContext, useEffect, useState } from "react";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
-import Loader from "../../shared/Loader";
-import "./ManageProducts.css";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
+import Loader from "../shared/Loader";
 import { FaEdit } from "react-icons/fa";
 import { ImBin } from "react-icons/im";
 import Swal from "sweetalert2";
-const EditProductModal = lazy(() => import('../EditProductModal'));
-import { MessageContext } from "../../../Pages/Root";
+const EditProductModal = lazy(() => import('./EditProductModal'));
+import { MessageContext } from "../../Pages/Root";
 import { Link } from "react-router-dom";
 
 const ManageProducts = () => {
@@ -138,11 +137,11 @@ const ManageProducts = () => {
     }
 
     return (
-        <section className=" lg:mx-auto lg:max-w-6xl mx-3 py-20 transition duration-300">
+        <section className=" px-3 py-20 transition duration-300 glass min-h-dvh">
             <h2 className="text-3xl font-semibold text-center text-gray-100 mt-4 underline underline-offset-4">
                 Manage Products
             </h2>
-            <div className="overflow-x-auto ">
+            <div className="overflow-x-auto  lg:mx-auto lg:max-w-6xl ">
                 <table className="table-auto glass w-full mt-8  rounded-lg border-2 border-gray-100 ">
                     <thead className="hidden lg:table-header-group  rounded-lg">
                         <tr className="text-base font-semibold text-left border-b-2 border-gray-100 text-gray-100">

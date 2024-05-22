@@ -149,6 +149,17 @@ app.get("/allOrderHistory", (req, res) => {
     );
 });
 
+//get all users example axiosSecure.get(`/allUsers`)
+app.get("/allUsers", (req, res) => {
+    db.query(`SELECT * FROM user ORDER BY User_Type DESC`, (err, result) => {
+        if (err) {
+            console.log(err);
+        } else {
+            res.send(result);
+        }
+    });
+});
+
 //get 3 of the most sold products example axiosSecure.get(`/bestSellers`)
 app.get("/bestSellers", (req, res) => {
     db.query(

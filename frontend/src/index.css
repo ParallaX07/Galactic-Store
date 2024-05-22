@@ -135,3 +135,12 @@ input[type="number"]::-webkit-outer-spin-button {
     -webkit-backdrop-filter: blur(6px);
     border-radius: 10px;
 }
+
+@media (max-width: 1024px) {
+    td[data-label]:before {
+        content: attr(data-label);
+        font-weight: bold;
+        display: block;
+        margin-top: 8px;
+    }
+}

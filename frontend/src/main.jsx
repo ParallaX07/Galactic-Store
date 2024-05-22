@@ -10,16 +10,17 @@ import Loader from "./components/shared/Loader";
 const SignUpForm = lazy(() => import("./Pages/SignUpForm"));
 const LoginForm = lazy(() => import("./Pages/LoginForm"));
 const AddProduct = lazy(() => import("./components/Admin/AddProduct"));
-const ManageProducts = lazy(() => import("./components/Admin/ManageProducts/ManageProducts"));
+const ManageProducts = lazy(() => import("./components/Admin/ManageProducts"));
 const ProductDetails = lazy(() => import("./components/shared/ProductDetails"));
 const Home = lazy(() => import("./Pages/Home"));
 const Error404 = lazy(() => import("./components/shared/Error404"));
 const UpdateProfile = lazy(() => import("./Pages/UpdateProfile"));
 const Root = lazy(() => import("./Pages/Root"));
-const Cart = lazy(() => import("./components/Customer/Cart/Cart"));
+const Cart = lazy(() => import("./components/Customer/Cart"));
 const OrderHistory = lazy(() => import("./components/Customer/OrderHistory"));
 const ManageOrders = lazy(() => import("./components/Admin/ManageOrders"));
 const AllProducts = lazy(() => import("./Pages/AllProducts"));
+const AllUsers = lazy(() => import("./components/Admin/AllUsers"));
 
 const router = createBrowserRouter([
     {
@@ -48,6 +49,16 @@ const router = createBrowserRouter([
                     <AllProducts />
                 </Suspense>,
 
+            },
+            {
+                path: "/a/allusers",
+                element: (
+                    <PrivateRoute>
+                        <Suspense fallback={<Loader />}>
+                            <AllUsers />
+                        </Suspense>
+                    </PrivateRoute>
+                ),
             },
             {
                 path: "/login",

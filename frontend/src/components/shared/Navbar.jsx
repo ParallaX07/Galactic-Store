@@ -102,7 +102,7 @@ const Navbar = () => {
             <div className="relative min-w-full">
                 {/* Dashboard dropdown */}
                 {dropdownVisible && (
-                    <ul className="transition duration-300 absolute top-full -left-20 bg-primary border-gray-100 border shadow-lg py-2 px-3 rounded-md z-10 min-w-fit">
+                    <ul className="transition duration-300 absolute top-full -left-20 bg-primary border-gray-100 border shadow-lg py-2 px-3 rounded-md z-10 min-w-fit text-lg">
                         <li>
                             <NavLink
                                 to="/a/manage-products"
@@ -121,6 +121,16 @@ const Navbar = () => {
                                 }
                             >
                                 Manage Orders
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink
+                                to="/a/allUsers"
+                                className={({ isActive }) =>
+                                    isActive ? `${active}` : `${inactive}`
+                                }
+                            >
+                                View User Information
                             </NavLink>
                         </li>
                     </ul>

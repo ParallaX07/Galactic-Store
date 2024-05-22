@@ -54,7 +54,7 @@ const AllProducts = () => {
     }, [sortOption, allProducts]);
 
     return (
-        <div className="mt-24 mx-3 lg:mx-auto text-white lg:max-w-7xl">
+        <div className="pt-24 px-3  text-white glass pb-10 min-h-dvh">
             <div className="flex justify-center items-center mb-4 lg:flex-row flex-col gap-4">
                 <SearchBar
                     setAllProducts={setAllProducts}
@@ -78,14 +78,14 @@ const AllProducts = () => {
                     </select>
                 </div>
             </div>
-            {loading ? (<div className="grid lg:grid-cols-3 grid-cols-1 gap-4">
+            {loading ? (<div className="grid lg:grid-cols-3 grid-cols-1 gap-4 lg:max-w-7xl mx-auto">
                     <Suspense fallback={<Loader/>}>
                         <LoadingCard />
                         <LoadingCard />
                         <LoadingCard />
                     </Suspense>
                 </div>) : 
-                (<div className="grid lg:grid-cols-3 grid-cols-1 gap-4">
+                (<div className="grid lg:grid-cols-3 grid-cols-1 gap-4 lg:max-w-7xl mx-auto">
                     {sortedProducts.map((product) => (
                             <AllProductCard product={product} key={product.Product_ID} />
                     ))}

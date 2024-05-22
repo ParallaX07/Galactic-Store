@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import "./OrderTable.css";
 import PropType from "prop-types";
 import { Link } from "react-router-dom";
 
@@ -138,7 +137,7 @@ const OrderTable = ({ orders: initialOrders, userType, onStatusChange }) => {
                                             data-label="Status"
                                         >
                                             <span
-                                                className={`px-5 capitalize py-3 rounded-full bg-opacity-25 border-2 ${result}`}
+                                                className={`px-5 capitalize lg:py-3 py-2  rounded-full bg-opacity-25 border-2 ${result}`}
                                             >
                                                 {order?.Status}
                                             </span>
@@ -150,7 +149,7 @@ const OrderTable = ({ orders: initialOrders, userType, onStatusChange }) => {
                                             data-label="Status"
                                         >
                                             <select
-                                                className={`px-5 capitalize py-3 rounded-full bg-opacity-25 border-2 ${result}`}
+                                                className={`px-5 capitalize lg:py-3 py-2 mt-2 lg:mt-0 rounded-full bg-opacity-25 border-2 ${result}`}
                                                 onChange={(e) =>
                                                     handleStatusChange(e, order)
                                                 }

@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { AuthContext } from "../../Auth/AuthProvider";
 import Loader from "../shared/Loader";
-import OrderTable from "../shared/OrderTable/OrderTable";
+import OrderTable from "../shared/OrderTable";
 import { MessageContext } from "../../Pages/Root";
 
 const ManageOrders = () => {
@@ -50,7 +50,7 @@ const ManageOrders = () => {
     }
 
     return (
-        <div className="mt-32">
+        <div className="pt-32 pb-10 glass min-h-dvh">
             <h1 className="text-3xl text-center font-bold text-white">
                 Manage Orders
             </h1>
