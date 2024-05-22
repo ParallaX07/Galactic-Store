@@ -307,6 +307,23 @@ app.put("/products/:id", (req, res) => {
     });
 });
 
+//update cart status example axiosSecure.put(`/cart?email=${email}`)
+app.put("/cart", (req, res) => {
+    const email = req.query.email;
+    const query = `UPDATE Cart
+    SET Status = 'closed'
+    WHERE Email = ? AND Status = 'open'`;
+
+    db.query(query, email, (err, result) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send("Server error");
+        } else {
+            res.status(200).send("Cart updated successfully");
+        }
+    });
+});
+
 //delete product by id
 app.delete("/products/:id", (req, res) => {
     const id = req.params.id;

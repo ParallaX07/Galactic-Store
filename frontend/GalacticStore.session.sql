@@ -1,2 +1,2 @@
-delete from `Cart` where email="john.doe@gmail.com"
-
+ALTER TABLE `user`
+MODIFY User_Type ENUM('Customer', 'Admin') NOT NULL DEFAULT 'Customer';

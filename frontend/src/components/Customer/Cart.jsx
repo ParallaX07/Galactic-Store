@@ -70,10 +70,15 @@ const Cart = () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 setLoading(true);
-                axiosSecure.delete(`/cart?productID=${productId}&email=${user?.email}`)
+                axiosSecure
+                    .delete(`/cart?productID=${productId}&email=${user?.email}`)
                     .then(() => {
                         notifySuccess("Item removed from cart successfully");
-                        setInCart(inCart.filter((product) => product.Product_ID !== productId));
+                        setInCart(
+                            inCart.filter(
+                                (product) => product.Product_ID !== productId
+                            )
+                        );
                     })
                     .catch((error) => {
                         console.error(error);
@@ -82,6 +87,52 @@ const Cart = () => {
                     .finally(() => {
                         setLoading(false);
                     });
+            }
+        });
+    };
+
+    const handlePurchase = () => {
+        Swal.fire({
+            title: `Do you want to confirm purchase?`,
+            html: `<div class="text-start ml-4  text-white border-b-2 p-3">
+            Your order summary: <br />
+            <p class="mt-2 space-y-3">
+                ${
+                    inCart
+                        .map(
+                            (product) =>
+                                `${product.Name} x ${product.Quantity} = ${product.ProductTotal}`
+                        )
+                        .join("<br /><br/>") || ""
+                }
+            </p><br/> 
+        </div>
+        <p class=" w-full mt-3 text-end text-white">Total: ${
+            inCart[0]?.CartTotal
+        }</p>`,
+            showDenyButton: true,
+            confirmButtonText: "Yes, confirm purchase",
+            denyButtonText: `No, don't confirm`,
+            icon: "question",
+            confirmButtonColor: "#0b090a",
+            background: "#0b090a",
+            denyButtonColor: "#d33",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                console.log("clicked");
+                setLoading(true);
+                axiosSecure.put(`/cart?email=${user?.email}`).then(() => {
+                    notifySuccess("Purchase successful");
+                    setInCart([]);
+                })
+                .catch((error) => {
+                    console.error(error);
+                    notifyError("Failed to purchase");
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
+
             }
         });
     };
@@ -134,7 +185,9 @@ const Cart = () => {
                                     className="p-2 block lg:table-cell relative lg:static"
                                     data-label="Name"
                                 >
-                                    <Link to={`/p/${product?.Product_ID}`}>{product?.Name}</Link>
+                                    <Link to={`/p/${product?.Product_ID}`}>
+                                        {product?.Name}
+                                    </Link>
                                 </td>
                                 <td
                                     className="p-2 block lg:table-cell relative lg:static"
@@ -177,12 +230,23 @@ const Cart = () => {
                             >
                                 <h2 className="text-xl text-right font-semibold text-gray-100 mt-4">
                                     Total Price:{" "}
-                                    <span className="mx-3">{inCart[0]?.CartTotal}</span>
+                                    <span className="mx-3">
+                                        {inCart[0]?.CartTotal}
+                                    </span>
                                 </h2>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+                {/* purchase button */}
+                <div className="flex justify-end">
+                    <button
+                        className="submit text-white bg-black/80 hover:bg-black/80  mt-2"
+                        onClick={handlePurchase}
+                    >
+                        Confirm Purchase
+                    </button>
+                </div>
             </div>
             {isImageOpen && (
                 <div
