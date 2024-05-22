@@ -6,7 +6,6 @@ import PrivateRoute from "./Auth/PrivateRoute";
 import { lazy, Suspense } from "react";
 import Loader from "./components/shared/Loader";
 
-
 //import components
 const SignUpForm = lazy(() => import("./Pages/SignUpForm"));
 const LoginForm = lazy(() => import("./Pages/LoginForm"));
@@ -20,6 +19,7 @@ const Root = lazy(() => import("./Pages/Root"));
 const Cart = lazy(() => import("./components/Customer/Cart/Cart"));
 const OrderHistory = lazy(() => import("./components/Customer/OrderHistory"));
 const ManageOrders = lazy(() => import("./components/Admin/ManageOrders"));
+const AllProducts = lazy(() => import("./Pages/AllProducts"));
 
 const router = createBrowserRouter([
     {
@@ -41,6 +41,13 @@ const router = createBrowserRouter([
                         <SignUpForm />
                     </Suspense>
                 ),
+            },
+            {
+                path: "/products",
+                element: <Suspense fallback={<Loader/>}>
+                    <AllProducts />
+                </Suspense>,
+
             },
             {
                 path: "/login",

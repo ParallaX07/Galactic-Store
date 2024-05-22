@@ -149,6 +149,25 @@ app.get("/allOrderHistory", (req, res) => {
     );
 });
 
+//get 3 of the most sold products example axiosSecure.get(`/bestSellers`)
+app.get("/bestSellers", (req, res) => {
+    db.query(
+        `SELECT p.Product_ID, p.Image_Url, p.Name, p.Price, p.Quantity_inStock, p.Galaxy_source, p.Galaxy_source, p.Planet_source, SUM(od.Quantity) AS TotalSold
+        FROM OrderDetails od JOIN product p ON od.ProductID = p.Product_ID JOIN Cart c ON od.OrderID = c.OrderID
+        WHERE c.Status = 'closed'
+        GROUP BY od.ProductID
+        ORDER BY TotalSold DESC
+        LIMIT 5`,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.send(result);
+            }
+        }
+    );
+});
+
 // create new user
 // Handle POST requests to /users
 app.post("/users", (req, res) => {

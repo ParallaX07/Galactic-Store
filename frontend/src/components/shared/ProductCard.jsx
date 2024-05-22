@@ -4,10 +4,10 @@ import { GiGalaxy } from "react-icons/gi";
 import { IoPlanet } from "react-icons/io5";
 import { Link } from "react-router-dom";
 
-const AllProductCard = ({product}) => {
+const ProductCard = ({product}) => {
 
     return (
-        <div className="form p-4 rounded-3xl custom-shadow flex flex-col flex-grow justify-around lg:min-h-full relative border border-gray-100">
+        <div className="form p-4 rounded-3xl custom-shadow flex flex-col flex-grow justify-around lg:min-h-full relative border border-gray-100 max-w-sm">
         <img
             className="rounded-2xl h-[300px] object-cover hover:scale-105 transition-transform duration-500 ease-in-out"
             src={product.Image_Url}
@@ -46,8 +46,8 @@ const AllProductCard = ({product}) => {
     );
 };
 
-AllProductCard.propTypes = {
+ProductCard.propTypes = {
     product: PropTypes.object.isRequired,
 };
 
-export default AllProductCard;
+export default ProductCard;

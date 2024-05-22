@@ -225,6 +225,16 @@ const Navbar = () => {
                                 Home
                             </NavLink>
                         </li>
+                        <li>
+                            <NavLink
+                                to="/products"
+                                className={({ isActive }) =>
+                                    isActive ? `${active}` : `${inactive}`
+                                }
+                            >
+                                All Products
+                            </NavLink>
+                        </li>
 
                         {user &&
                             !loading &&
