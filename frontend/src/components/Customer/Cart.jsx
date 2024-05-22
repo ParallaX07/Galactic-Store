@@ -4,6 +4,8 @@ import { ImBin } from "react-icons/im";
 import Swal from "sweetalert2";
 import Loader from "../shared/Loader";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { Link } from "react-router-dom";
+import { MessageContext } from "../../Pages/Root";
 
 const Cart = () => {
     const { userName, user } = useContext(AuthContext);
@@ -13,6 +15,7 @@ const Cart = () => {
     const [inCart, setInCart] = useState([]);
     const [loading, setLoading] = useState(false);
     const axiosSecure = useAxiosSecure();
+    const { notifySuccess, notifyError } = useContext(MessageContext);
 
     const openImage = (imageUrl) => {
         setSelectedImage(imageUrl);
@@ -38,7 +41,7 @@ const Cart = () => {
             });
     }, []);
 
-    if (inCart.length === 0) {
+    if (inCart.length === 0 && !loading) {
         return (
             <section className="lg:mx-auto lg:max-w-6xl mx-3 py-20 transition duration-300">
                 <h2 className="text-3xl font-semibold text-gray-100 mt-4 underline underline-offset-4">
@@ -67,9 +70,18 @@ const Cart = () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 setLoading(true);
-                const filteredCart = inCart.filter(
-                    (product) => product.Product_ID !== productId
-                );
+                axiosSecure.delete(`/cart?productID=${productId}&email=${user?.email}`)
+                    .then(() => {
+                        notifySuccess("Item removed from cart successfully");
+                        setInCart(inCart.filter((product) => product.Product_ID !== productId));
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                        notifyError("Failed to remove item from cart");
+                    })
+                    .finally(() => {
+                        setLoading(false);
+                    });
             }
         });
     };
@@ -122,7 +134,7 @@ const Cart = () => {
                                     className="p-2 block lg:table-cell relative lg:static"
                                     data-label="Name"
                                 >
-                                    {product?.Name}
+                                    <Link to={`/p/${product?.Product_ID}`}>{product?.Name}</Link>
                                 </td>
                                 <td
                                     className="p-2 block lg:table-cell relative lg:static"
@@ -165,11 +177,7 @@ const Cart = () => {
                             >
                                 <h2 className="text-xl text-right font-semibold text-gray-100 mt-4">
                                     Total Price:{" "}
-                                    {inCart.reduce(
-                                        (acc, curr) =>
-                                            acc + curr.ProductTotal,
-                                        0
-                                    )}
+                                    <span className="mx-3">{inCart[0]?.CartTotal}</span>
                                 </h2>
                             </td>
                         </tr>

@@ -104,6 +104,10 @@ const ProductDetails = () => {
                                 Galactic Credits
                             </span>
                         </p>
+                        <p className="text-lg mt-3">
+                            <span className="text-white">In Stock:</span>{" "}
+                            <span className="underline underline-offset-4">{product?.Quantity_inStock}</span>
+                        </p>
                         <div className="lg:mt-4 mt-3">
                             {product?.Description}
                         </div>
@@ -150,7 +154,7 @@ const ProductDetails = () => {
                                     </button>
                                 </div>
                                 <button
-                                    className="submit text-white bg-black  hover:bg-black/30 w-full mt-2"
+                                    className="submit text-white bg-black/80 hover:bg-black/80 w-full mt-2"
                                     onClick={handleCart}
                                 >
                                     Add to Cart

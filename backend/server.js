@@ -100,7 +100,7 @@ app.get("/products/search", (req, res) => {
 app.get("/cart", (req, res) => {
     const email = req.query.email;
     db.query(
-        `SELECT p.Image_Url, p.Name, p.Price, od.Quantity, od.Quantity * p.Price AS ProductTotal, (SELECT SUM(od2.Quantity * p2.Price) FROM OrderDetails od2 JOIN product p2 ON od2.ProductID = p2.Product_ID WHERE od2.OrderID = od.OrderID) AS CartTotal FROM OrderDetails od JOIN product p ON od.ProductID = p.Product_ID JOIN Cart c ON od.OrderID = c.OrderID WHERE c.Status = 'open' AND c.Email = "${email}"`,
+        `SELECT p.Product_ID, p.Image_Url, p.Name, p.Price, od.Quantity, od.Quantity * p.Price AS ProductTotal, (SELECT SUM(od2.Quantity * p2.Price) FROM OrderDetails od2 JOIN product p2 ON od2.ProductID = p2.Product_ID WHERE od2.OrderID = od.OrderID) AS CartTotal FROM OrderDetails od JOIN product p ON od.ProductID = p.Product_ID JOIN Cart c ON od.OrderID = c.OrderID WHERE c.Status = 'open' AND c.Email = "${email}"`,
         (err, result) => {
             if (err) {
                 console.log(err);
@@ -110,7 +110,6 @@ app.get("/cart", (req, res) => {
         }
     );
 });
-
 
 // create new user
 // Handle POST requests to /users
@@ -209,7 +208,7 @@ app.post("/cart", (req, res) => {
       WHERE Product_ID = ?;
     `;
 
-    db.beginTransaction(err => {
+    db.beginTransaction((err) => {
         if (err) {
             console.error(err);
             res.status(500).json({ error: "Internal Server Error" });
@@ -232,15 +231,22 @@ app.post("/cart", (req, res) => {
                     if (err) {
                         console.error(err);
                         db.rollback();
-                        res.status(500).json({ error: "Internal Server Error" });
+                        res.status(500).json({
+                            error: "Internal Server Error",
+                        });
                     } else {
-                        db.commit(err => {
+                        db.commit((err) => {
                             if (err) {
                                 console.error(err);
                                 db.rollback();
-                                res.status(500).json({ error: "Internal Server Error" });
+                                res.status(500).json({
+                                    error: "Internal Server Error",
+                                });
                             } else {
-                                res.json({ message: "Product added to cart successfully" });
+                                res.json({
+                                    message:
+                                        "Product added to cart successfully",
+                                });
                             }
                         });
                     }
@@ -315,7 +321,62 @@ app.delete("/products/:id", (req, res) => {
     });
 });
 
+//delete from cart example axiosSecure.delete(`/cart?productID=${productId}&email=${user?.email}`)
+app.delete("/cart", (req, res) => {
+    const email = req.query.email;
+    const productID = req.query.productID;
 
+    const query = `
+      SELECT OrderID
+      INTO @order_id
+      FROM Cart
+      WHERE Email = ? AND Status = 'open'
+      LIMIT 1;
+
+      UPDATE product
+      SET Quantity_inStock = Quantity_inStock + (
+        SELECT Quantity
+        FROM OrderDetails
+        WHERE OrderID = @order_id AND ProductID = ?
+      )
+      WHERE Product_ID = ?;
+
+      DELETE FROM OrderDetails
+      WHERE OrderID = @order_id AND ProductID = ?;
+
+    `;
+
+    db.beginTransaction((err) => {
+        if (err) {
+            console.error(err);
+            res.status(500).json({ error: "Internal Server Error" });
+        } else {
+            db.query(query, [email, productID, productID, productID], (err, result) => {
+                if (err) {
+                    console.error(err);
+                    db.rollback();
+                    res.status(500).json({
+                        error: "Internal Server Error",
+                    });
+                } else {
+                    db.commit((err) => {
+                        if (err) {
+                            console.error(err);
+                            db.rollback();
+                            res.status(500).json({
+                                error: "Internal Server Error",
+                            });
+                        } else {
+                            res.json({
+                                message: "Product removed from cart successfully",
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+});
 
 /**
  * Starts the server and establishes the database connection.
