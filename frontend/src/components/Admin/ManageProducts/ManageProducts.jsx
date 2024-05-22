@@ -7,6 +7,7 @@ import { ImBin } from "react-icons/im";
 import Swal from "sweetalert2";
 const EditProductModal = lazy(() => import('../EditProductModal'));
 import { MessageContext } from "../../../Pages/Root";
+import { Link } from "react-router-dom";
 
 const ManageProducts = () => {
     const [products, setProducts] = useState([]);
@@ -146,7 +147,7 @@ const ManageProducts = () => {
                     <thead className="hidden lg:table-header-group  rounded-lg">
                         <tr className="text-base font-semibold text-left border-b-2 border-gray-100 text-gray-100">
                             <th
-                                className="p-2"
+                                className="p-2 cursor-pointer"
                             >
                                 Image{" "}
                             </th>
@@ -217,7 +218,7 @@ const ManageProducts = () => {
                                     className="p-2 block lg:table-cell relative lg:static"
                                     data-label="Name"
                                 >
-                                    {product?.Name}
+                                    <Link to={`/p/${product?.Product_ID}`}>{product?.Name}</Link>
                                 </td>
                                 <td
                                     className="p-2 block lg:table-cell relative lg:static"

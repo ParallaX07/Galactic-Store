@@ -5,6 +5,7 @@ import { CiMap } from "react-icons/ci";
 import Loader from "./Loader";
 import { FaCoins } from "react-icons/fa6";
 import { AuthContext } from "../../Auth/AuthProvider";
+import { MessageContext } from "../../Pages/Root";
 
 const ProductDetails = () => {
     const id = useParams().id;
@@ -13,6 +14,7 @@ const ProductDetails = () => {
     const [userType, setUserType] = useState("");
     const { user } = useContext(AuthContext);
     const [quantity, setQuantity] = useState(1);
+    const { notifySuccess, notifyError } = useContext(MessageContext);
 
     const axiosSecure = useAxiosSecure();
 
@@ -48,14 +50,23 @@ const ProductDetails = () => {
 
     const handleCart = () => {
         const orderQuantity = Number(quantity);
-        const order = {
-            Product_ID: product?.Product_ID,
-            Quantity: orderQuantity,
-            Total_Price: product?.Price * orderQuantity,
-            Email_ID: user?.email,
-        };
-        console.table(order);
-    }
+        const Product_ID = product?.Product_ID;
+        const OrderQuantity = orderQuantity;
+        const Email_ID = user?.email;
+
+        setLoading(true);
+        axiosSecure.post(`/cart?productID=${Product_ID}&quantity=${OrderQuantity}&email=${Email_ID}`)
+            .then(() => {
+                notifySuccess("Product added to cart successfully");
+            })
+            .catch((error) => {
+                notifyError("Failed to add product to cart");
+                console.error(error);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    };
 
     return (
         <div className="flex lg:flex-row flex-col lg:h-dvh pt-[80px] glass">
@@ -114,7 +125,9 @@ const ProductDetails = () => {
                                                 quantity > 1 ? quantity - 1 : 1
                                             )
                                         }
-                                    >-</button>
+                                    >
+                                        -
+                                    </button>
 
                                     <input
                                         type="number"
@@ -124,15 +137,22 @@ const ProductDetails = () => {
                                         onChange={(e) =>
                                             setQuantity(e.target.value)
                                         }
-                                        style={{appearance: 'textfield'}}
+                                        style={{ appearance: "textfield" }}
                                     />
                                     {/* increment */}
                                     <button
                                         className="text-white bg-black  hover:bg-black/30 px-2 py-1 rounded-lg"
-                                        onClick={() => setQuantity(quantity + 1)}
-                                    >+</button>
+                                        onClick={() =>
+                                            setQuantity(quantity + 1)
+                                        }
+                                    >
+                                        +
+                                    </button>
                                 </div>
-                                <button className="submit text-white bg-black  hover:bg-black/30 w-full mt-2" onClick={handleCart}>
+                                <button
+                                    className="submit text-white bg-black  hover:bg-black/30 w-full mt-2"
+                                    onClick={handleCart}
+                                >
                                     Add to Cart
                                 </button>
                             </div>

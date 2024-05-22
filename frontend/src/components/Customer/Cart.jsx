@@ -1,5 +1,8 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../../Auth/AuthProvider";
+import { ImBin } from "react-icons/im";
+import Swal from "sweetalert2";
+import Loader from "../shared/Loader";
 
 const Cart = () => {
     const { userName } = useContext(AuthContext);
@@ -7,6 +10,7 @@ const Cart = () => {
     const [isImageOpen, setIsImageOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [inCart, setInCart] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const openImage = (imageUrl) => {
         setSelectedImage(imageUrl);
@@ -16,6 +20,43 @@ const Cart = () => {
     const closeImage = () => {
         setIsImageOpen(false);
     };
+
+    if (inCart.length === 0) {
+        return (
+            <section className="lg:mx-auto lg:max-w-6xl mx-3 py-20 transition duration-300">
+                <h2 className="text-3xl font-semibold text-gray-100 mt-4 underline underline-offset-4">
+                    <span className="bg-gradient-to-r from-tertiary via-secondary to-primary text-transparent bg-clip-text animate-gradient bg-300%">{userName}&apos;s</span> Cart
+                </h2>
+                <h2 className="text-4xl font-semibold text-center text-gray-100 mt-8">
+                    Your cart is empty
+                </h2>
+            </section>
+        );
+    }
+
+    const handleDelete = (productId) => {
+        Swal.fire({
+            title: `Do you want to remove item from cart?`,
+            showDenyButton: true,
+            confirmButtonText: "Yes, delete it",
+            denyButtonText: `No, don't delete`,
+            icon: "question",
+            confirmButtonColor: "#0b090a",
+            background: "#0b090a",
+            denyButtonColor: "#d33",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                setLoading(true);
+                const filteredCart = inCart.filter(
+                    (product) => product.Product_ID !== productId
+                );
+            }
+        });
+    };
+
+    if(loading){
+        <Loader/>
+    }
 
     return (
         <section className=" lg:mx-auto lg:max-w-6xl mx-3 py-20 transition duration-300">
@@ -29,32 +70,27 @@ const Cart = () => {
                             <th
                                 className="p-2"
                             >
-                                Image{" "}
+                                Image
                             </th>
                             <th
-                                className="p-2 cursor-pointer"
+                                className="p-2"
                             >
-                                Name{" "}
+                                Name
                             </th>
                             <th
-                                className="p-2 cursor-pointer"
+                                className="p-2"
                             >
-                                Price{" "}
+                                Unit Price
                             </th>
                             <th
-                                className="p-2 cursor-pointer"
+                                className="p-2"
                             >
-                                Galaxy{" "}
+                                Quantity Ordered
                             </th>
                             <th
-                                className="p-2 cursor-pointer"
+                                className="p-2"
                             >
-                                Planet{" "}
-                            </th>
-                            <th
-                                className="p-2 cursor-pointer"
-                            >
-                                Quantity in Stock{" "}
+                                Total Price
                             </th>
                             <th className="p-2">Actions</th>
                         </tr>
@@ -113,7 +149,14 @@ const Cart = () => {
                                     className="p-2 lg:table-cell relative lg:static block"
                                     data-label="Actions"
                                 >
-                                    
+                                    <button
+                                        className=" py-2 px-3 rounded-xl bg-red-500"
+                                        onClick={() =>
+                                            handleDelete(product?.Product_ID)
+                                        }
+                                    >
+                                        <ImBin />
+                                    </button>
                                 </td>
                             </tr>
                         ))}
