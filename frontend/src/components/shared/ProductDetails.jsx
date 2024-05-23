@@ -6,15 +6,16 @@ import Loader from "./Loader";
 import { FaCoins } from "react-icons/fa6";
 import { AuthContext } from "../../Auth/AuthProvider";
 import { MessageContext } from "../../Pages/Root";
+import ReactStars from "react-rating-stars-component";
 
 const ProductDetails = () => {
     const id = useParams().id;
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [userType, setUserType] = useState("");
-    const { user } = useContext(AuthContext);
+    const { user, userType } = useContext(AuthContext);
     const [quantity, setQuantity] = useState(1);
     const { notifySuccess, notifyError } = useContext(MessageContext);
+    const [userRating, setUserRating] = useState(0);
 
     const axiosSecure = useAxiosSecure();
 
@@ -35,13 +36,6 @@ const ProductDetails = () => {
                 setLoading(false);
             });
 
-        //get UserType
-        axiosSecure
-            .get(`/users?email=${user?.email}&value=${"User_Type"}`)
-            .then((res) => {
-                setUserType(res.data[0].User_Type);
-            })
-            .catch(() => {});
     }, []);
 
     if (loading) {
@@ -76,17 +70,44 @@ const ProductDetails = () => {
             });
     };
 
+    const handleReview = (e) => {
+        e.preventDefault();
+        const review = e.target.review.value;
+        const rating = userRating;
+        const Product_ID = product?.Product_ID;
+        const Email_ID = user?.email;
+
+        setLoading(true);
+        axiosSecure
+            .post("/reviews", {
+                product_ID: Product_ID,
+                Email_ID: Email_ID,
+                reviewDesc: review,
+                rating: rating,
+            })
+            .then(() => {
+                notifySuccess("Review added successfully");
+            })
+            .catch((error) => {
+                notifyError("Failed to add review");
+                console.error(error);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    };
+
     return (
-        <div className="flex lg:flex-row flex-col lg:h-dvh pt-[80px] glass">
-            <div>
-                <div className="flex w-full">
+        <div className=" pt-[80px] glass pb-10">
+            <div className="flex lg:flex-row flex-col lg:min-h-dvh">
+                <div className="flex w-full lg:rounded-br-lg">
                     <img
-                        className="object-cover"
+                        className="object-cover lg:rounded-br-lg"
                         src={product?.Image_Url}
                         alt={product?.Name}
                     />
                 </div>
-                <div className="w-full lg:p-10 p-3 flex justify-center flex-col items-start text-white">
+                <div className="w-full lg:p-10 p-3 flex flex-col justify-center items-start text-white">
                     <h1 className="animate__animated animate__fadeInDown font-black text-4xl lg:text-7xl text-white">
                         {product?.Name}
                     </h1>
@@ -166,7 +187,7 @@ const ProductDetails = () => {
                                         </button>
                                     </div>
                                     <button
-                                        className="submit text-white bg-black/80 hover:bg-black/80 w-full mt-2"
+                                        className="submit text-white bg-black/80 hover:bg-black/80 w-full mt-4"
                                         onClick={handleCart}
                                     >
                                         Add to Cart
@@ -178,23 +199,34 @@ const ProductDetails = () => {
                 </div>
             </div>
             {/* user post reviw box */}
-            <div className="lg:w-1/2 w-full flex justify-center items-center">
-                <div className="lg:p-10 p-3 flex justify-center flex-col items-start text-white">
-                    <h1 className="animate__animated animate__fadeInDown font-black text-4xl lg:text-7xl text-white">
-                        Post a Review
-                    </h1>
-                    <div className="flex lg:items-start  flex-col lg:justify-between gap-3 lg:gap-5 lg:mt-8 mt-3">
-                        <div className="animate__animated animate__fadeInUp">
-                            <textarea
-                                className="w-full h-40 rounded-lg p-3"
-                                placeholder="Write your review here..."
-                            ></textarea>
-                            <button className="submit text-white bg-black/80 hover:bg-black/80 w-full mt-2">
-                                Post Review
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            <div className="animate__animated animate__fadeInUp w-full text-white p-6 rounded-xl shadow-md mt-10 border-2 border-primary glass max-w-5xl lg:mx-auto mx-3">
+                <h2 className="text-2xl font-semibold mb-4">
+                    Share Your Feedback
+                </h2>
+                <form onSubmit={handleReview}>
+                    <ReactStars
+                        count={5}
+                        onChange={setUserRating}
+                        size={24}
+                        isHalf={true}
+                        emptyIcon={<i className="far fa-star"></i>}
+                        halfIcon={<i className="fa fa-star-half-alt"></i>}
+                        fullIcon={<i className="fa fa-star"></i>}
+                        activeColor="#ffd700"
+                    />
+                    <textarea
+                        className="w-full h-24 p-2 border rounded-lg resize-none bg-opacity-35 bg-white text-white"
+                        name="review"
+                        placeholder="Write your review..."
+                        required
+                    />
+                    <button
+                        type="submit"
+                        className="submit text-white bg-black/80 hover:bg-black/80 mt-2"
+                    >
+                        Submit Review
+                    </button>
+                </form>
             </div>
         </div>
     );

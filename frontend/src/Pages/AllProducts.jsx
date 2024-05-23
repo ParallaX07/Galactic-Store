@@ -22,21 +22,22 @@ const AllProducts = () => {
 
     useEffect(() => {
         setLoading(true);
-        axiosSecure
-            .get(
+        Promise.all([
+            axiosSecure.get(
                 `/products?attributes=Product_ID,Name,Price,Galaxy_source,Planet_source,Quantity_inStock,Image_Url&limit=${itemsPerPage}&page=${currentPage}`
-            )
-            .then((response) => {
-                setAllProducts(response.data);
-            })
-            .catch((error) => {
-                console.error(error);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-
-            axiosSecure.get("/productCount").then((res) => setCount(res.data[0].count)).catch((err) => console.log(err));
+            ),
+            axiosSecure.get("/productCount")
+        ])
+        .then(([productsResponse, countResponse]) => {
+            setAllProducts(productsResponse.data);
+            setCount(countResponse.data[0].count);
+        })
+        .catch((error) => {
+            console.error(error);
+        })
+        .finally(() => {
+            setLoading(false);
+        });
     }, [currentPage, itemsPerPage]);
 
     useEffect(() => {
