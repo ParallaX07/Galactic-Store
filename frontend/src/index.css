@@ -18,6 +18,12 @@ body {
     
 }
 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 .group {
     position: relative;
     margin-bottom: 1.5rem;
@@ -123,9 +129,18 @@ body {
 .submit {
     margin-bottom: 1.2rem;
     padding: 10px 20px;
-    background: rgba(0, 0, 0, 0);
+    background: rgba(0, 0, 0, 0.7);
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     border-radius: 10px;
+}
+
+@media (max-width: 1024px) {
+    td[data-label]:before {
+        content: attr(data-label);
+        font-weight: bold;
+        display: block;
+        margin-top: 8px;
+    }
 }

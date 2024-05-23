@@ -44,7 +44,7 @@ const AddProduct = () => {
     }
 
     return (
-        <div className="h-dvh flex justify-center mt-10">
+        <div className="h-dvh flex justify-center mt-10 glass">
             <form
                 className="form lg:px-20 lg:py-14 m-6 p-10 w-full max-w-fit my-auto"
                 onSubmit={(e) => handleAddProduct(e)}

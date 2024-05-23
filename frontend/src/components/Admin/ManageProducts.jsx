@@ -1,12 +1,12 @@
-import { useContext, useEffect, useState } from "react";
+import { Suspense, lazy, useContext, useEffect, useState } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import Loader from "../../components/shared/Loader";
-import "./ManageProducts.css";
+import Loader from "../shared/Loader";
 import { FaEdit } from "react-icons/fa";
 import { ImBin } from "react-icons/im";
 import Swal from "sweetalert2";
-import EditProductModal from "../../components/Admin/EditProductModal";
-import { MessageContext } from "../Root";
+const EditProductModal = lazy(() => import('./EditProductModal'));
+import { MessageContext } from "../../Pages/Root";
+import { Link } from "react-router-dom";
 
 const ManageProducts = () => {
     const [products, setProducts] = useState([]);
@@ -30,6 +30,14 @@ const ManageProducts = () => {
 
     const axiosSecure = useAxiosSecure();
 
+    const [sortField, setSortField] = useState(null);
+    const [sortDirection, setSortDirection] = useState("asc");
+
+    const handleSort = (field) => {
+        setSortField(field);
+        setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    };
+
     useEffect(() => {
         setLoading(true);
         axiosSecure
@@ -47,6 +55,22 @@ const ManageProducts = () => {
                 setLoading(false);
             });
     }, []);
+
+    useEffect(() => {
+        const sortedProducts = [...products];
+        if (sortField) {
+            sortedProducts.sort((a, b) => {
+                if (a[sortField] < b[sortField]) {
+                    return sortDirection === "asc" ? -1 : 1;
+                }
+                if (a[sortField] > b[sortField]) {
+                    return sortDirection === "asc" ? 1 : -1;
+                }
+                return 0;
+            });
+        }
+        setProducts(sortedProducts);
+    }, [sortField, sortDirection]);
 
     const handleEdit = (product) => {
         setCurrentProduct(product);
@@ -113,20 +137,59 @@ const ManageProducts = () => {
     }
 
     return (
-        <section className=" lg:mx-auto lg:max-w-6xl mx-3 py-20 transition duration-300">
-            <h2 className="text-3xl font-semibold text-center dark:text-gray-100 mt-4 underline underline-offset-4">
+        <section className=" px-3 py-20 transition duration-300 glass min-h-dvh">
+            <h2 className="text-3xl font-semibold text-center text-gray-100 mt-4 underline underline-offset-4">
                 Manage Products
             </h2>
-            <div className="overflow-x-auto ">
-                <table className="table-auto glass w-full mt-8  rounded-lg border-2 border-primary dark:border-gray-100 ">
+            <div className="overflow-x-auto  lg:mx-auto lg:max-w-6xl ">
+                <table className="table-auto glass w-full mt-8  rounded-lg border-2 border-gray-100 ">
                     <thead className="hidden lg:table-header-group  rounded-lg">
-                        <tr className="text-base font-semibold text-left border-b-2 border-primary dark:border-gray-100 dark:text-gray-100">
-                            <th className="p-2">Image</th>
-                            <th className="p-2">Name</th>
-                            <th className="p-2">Price</th>
-                            <th className="p-2">Galaxy</th>
-                            <th className="p-2">Planet</th>
-                            <th className="p-2">Quantity in Stock</th>
+                        <tr className="text-base font-semibold text-left border-b-2 border-gray-100 text-gray-100">
+                            <th
+                                className="p-2 cursor-pointer"
+                            >
+                                Image{" "}
+                            </th>
+                            <th
+                                className="p-2 cursor-pointer"
+                                onClick={() => handleSort("Name")}
+                            >
+                                Name{" "}
+                                {sortField === "Name" &&
+                                    (sortDirection === "asc" ? "↑" : "↓")}
+                            </th>
+                            <th
+                                className="p-2 cursor-pointer"
+                                onClick={() => handleSort("Price")}
+                            >
+                                Price{" "}
+                                {sortField === "Price" &&
+                                    (sortDirection === "asc" ? "↑" : "↓")}
+                            </th>
+                            <th
+                                className="p-2 cursor-pointer"
+                                onClick={() => handleSort("Galaxy_source")}
+                            >
+                                Galaxy{" "}
+                                {sortField === "Galaxy_source" &&
+                                    (sortDirection === "asc" ? "↑" : "↓")}
+                            </th>
+                            <th
+                                className="p-2 cursor-pointer"
+                                onClick={() => handleSort("Planet_source")}
+                            >
+                                Planet{" "}
+                                {sortField === "Planet_source" &&
+                                    (sortDirection === "asc" ? "↑" : "↓")}
+                            </th>
+                            <th
+                                className="p-2 cursor-pointer"
+                                onClick={() => handleSort("Quantity_inStock")}
+                            >
+                                Quantity in Stock{" "}
+                                {sortField === "Quantity_inStock" &&
+                                    (sortDirection === "asc" ? "↑" : "↓")}
+                            </th>
                             <th className="p-2">Actions</th>
                         </tr>
                     </thead>
@@ -134,7 +197,7 @@ const ManageProducts = () => {
                         {products.map((product) => (
                             <tr
                                 key={product?.Product_ID}
-                                className="block lg:table-row border-b-2 border-primary dark:border-gray-100 dark:text-gray-100 py-4"
+                                className="block lg:table-row border-b-2 border-gray-100 text-gray-100 py-4"
                             >
                                 <td
                                     className="p-2 block lg:table-cell relative lg:static"
@@ -154,7 +217,7 @@ const ManageProducts = () => {
                                     className="p-2 block lg:table-cell relative lg:static"
                                     data-label="Name"
                                 >
-                                    {product?.Name}
+                                    <Link to={`/p/${product?.Product_ID}`}>{product?.Name}</Link>
                                 </td>
                                 <td
                                     className="p-2 block lg:table-cell relative lg:static"
@@ -176,7 +239,7 @@ const ManageProducts = () => {
                                 </td>
                                 <td
                                     className="p-2 block lg:table-cell relative lg:static"
-                                    data-label="Quantity in Stock"
+                                    data-label="Stock"
                                 >
                                     {product?.Quantity_inStock}
                                 </td>
@@ -204,12 +267,14 @@ const ManageProducts = () => {
                     </tbody>
                 </table>
             </div>
-            <EditProductModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                onSave={handleSave}
-                product={currentProduct}
-            />
+            <Suspense fallback={<Loader/>}>
+                <EditProductModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    onSave={handleSave}
+                    product={currentProduct}
+                />
+            </Suspense>
             {isImageOpen && (
                 <div
                     className="fixed top-0 left-0 w-dvw h-dvh flex items-center justify-center z-50"

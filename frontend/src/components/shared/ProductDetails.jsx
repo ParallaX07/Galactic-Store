@@ -5,6 +5,7 @@ import { CiMap } from "react-icons/ci";
 import Loader from "./Loader";
 import { FaCoins } from "react-icons/fa6";
 import { AuthContext } from "../../Auth/AuthProvider";
+import { MessageContext } from "../../Pages/Root";
 
 const ProductDetails = () => {
     const id = useParams().id;
@@ -12,13 +13,15 @@ const ProductDetails = () => {
     const [loading, setLoading] = useState(false);
     const [userType, setUserType] = useState("");
     const { user } = useContext(AuthContext);
+    const [quantity, setQuantity] = useState(1);
+    const { notifySuccess, notifyError } = useContext(MessageContext);
 
     const axiosSecure = useAxiosSecure();
 
     useEffect(() => {
         setLoading(true);
         axiosSecure
-            .get(`/products/${id}`)
+            .get(`/product/${id}`)
             .then((response) => {
                 setProduct(response.data[0]);
                 console.table(response.data[0]);
@@ -34,17 +37,41 @@ const ProductDetails = () => {
 
         //get UserType
         axiosSecure
-                .get(`/users?email=${user?.email}&value=${"User_Type"}`)
-                .then((res) => {
-                    setUserType(res.data[0].User_Type);
-                })
-                .catch(() => {
-                });
+            .get(`/users?email=${user?.email}&value=${"User_Type"}`)
+            .then((res) => {
+                setUserType(res.data[0].User_Type);
+            })
+            .catch(() => {});
     }, []);
 
     if (loading) {
         return <Loader />;
     }
+
+    const handleCart = () => {
+        const orderQuantity = Number(quantity);
+        const Product_ID = product?.Product_ID;
+        const OrderQuantity = orderQuantity;
+        const Email_ID = user?.email;
+
+        if (orderQuantity > product?.Quantity_inStock) {
+            notifyError("Quantity exceeds the available stock");
+            return;
+        }
+
+        setLoading(true);
+        axiosSecure.post(`/cart?productID=${Product_ID}&quantity=${OrderQuantity}&email=${Email_ID}`)
+            .then(() => {
+                notifySuccess("Product added to cart successfully");
+            })
+            .catch((error) => {
+                notifyError("Failed to add product to cart");
+                console.error(error);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    };
 
     return (
         <div className="flex lg:flex-row flex-col lg:h-dvh pt-[80px] glass">
@@ -82,14 +109,63 @@ const ProductDetails = () => {
                                 Galactic Credits
                             </span>
                         </p>
+                        <p className="text-lg mt-3">
+                            <span className="text-white">In Stock:</span>{" "}
+                            <span className="underline underline-offset-4">{product?.Quantity_inStock}</span>
+                        </p>
                         <div className="lg:mt-4 mt-3">
                             {product?.Description}
                         </div>
-                        {
-                            userType === "Customer" && <button className="submit text-white hover:bg-black hover:bg-opacity-70 w-full mt-2">
-                            Add to Cart
-                        </button>
-                        }
+                        {userType === "Customer" && (
+                            <div className="mt-5">
+                                {/* choose quantity */}
+                                <div className="flex items-center gap-3">
+                                    <label
+                                        htmlFor="quantity"
+                                        className="text-white"
+                                    >
+                                        Quantity:
+                                    </label>
+                                    {/* decrement */}
+                                    <button
+                                        className="text-white bg-black  hover:bg-black/30 px-2 py-1 rounded-lg"
+                                        onClick={() =>
+                                            setQuantity(
+                                                quantity > 1 ? quantity - 1 : 1
+                                            )
+                                        }
+                                    >
+                                        -
+                                    </button>
+
+                                    <input
+                                        type="number"
+                                        className="input text-black text-center w-10 rounded-lg"
+                                        name="quantity"
+                                        value={Number(quantity)}
+                                        onChange={(e) =>
+                                            setQuantity(e.target.value)
+                                        }
+                                        style={{ appearance: "textfield" }}
+                                    />
+                                    {/* increment */}
+                                    <button
+                                        className="text-white bg-black  hover:bg-black/30 px-2 py-1 rounded-lg"
+                                        onClick={() =>
+                                            setQuantity(quantity + 1)
+                                        }
+                                    >
+                                        +
+                                    </button>
+                                </div>
+                                <button
+                                    className="submit text-white bg-black/80 hover:bg-black/80 w-full mt-2"
+                                    onClick={handleCart}
+                                >
+                                    Add to Cart
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
