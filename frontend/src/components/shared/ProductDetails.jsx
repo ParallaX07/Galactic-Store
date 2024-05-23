@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { Suspense, lazy, useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { CiMap } from "react-icons/ci";
@@ -7,9 +7,8 @@ import { FaCoins } from "react-icons/fa6";
 import { AuthContext } from "../../Auth/AuthProvider";
 import { MessageContext } from "../../Pages/Root";
 import ReactStars from "react-rating-stars-component";
-import ReviewCard from "./ReviewCard";
+const ReviewCard = lazy(() => import("./ReviewCard"));
 import { PiStarBold, PiStarFill, PiStarHalfFill } from "react-icons/pi";
-import axios from "axios";
 
 const ProductDetails = () => {
     const id = useParams().id;
@@ -262,9 +261,11 @@ const ProductDetails = () => {
             </div>
             {/* product reviews */}
             <div className="grid grid-cols-1 gap-3 max-w-5xl lg:mx-auto mx-3">
-                {productReviews.map((review, idx) => (
-                    <ReviewCard key={idx} productReview={review} />
-                ))}
+                <Suspense fallback={<p></p>}>
+                    {productReviews.map((review, idx) => (
+                        <ReviewCard key={idx} productReview={review} />
+                    ))}
+                </Suspense>
             </div>
         </div>
     );
