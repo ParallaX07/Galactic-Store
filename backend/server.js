@@ -203,9 +203,25 @@ app.get("/bestSellers", (req, res) => {
 app.get("/reviews/:id", (req, res) => {
     const id = req.params.id;
     db.query(
-        `SELECT u.Profile_image, u.F_Name, u.L_Name, r.reviewDesc, r.rating
+        `SELECT u.Profile_image, u.Email_ID, CONCAT(u.F_Name, " ", u.L_Name) AS Name, r.reviewDesc, r.rating
         FROM review r JOIN user u ON r.Email_ID = u.Email_ID
-        WHERE r.product_ID = ${id}`,
+        WHERE r.product_ID = "${id}"`,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.send(result);
+            }
+        }
+    );
+});
+
+app.get("/rating/:id", (req, res) => {
+    const id = req.params.id;
+    db.query(
+        `SELECT AVG(rating) AS rating, Count(rating) AS count
+        FROM review
+        WHERE product_ID = "${id}"`,
         (err, result) => {
             if (err) {
                 console.log(err);

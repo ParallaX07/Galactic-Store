@@ -7,6 +7,9 @@ import { FaCoins } from "react-icons/fa6";
 import { AuthContext } from "../../Auth/AuthProvider";
 import { MessageContext } from "../../Pages/Root";
 import ReactStars from "react-rating-stars-component";
+import ReviewCard from "./ReviewCard";
+import { PiStarBold, PiStarFill, PiStarHalfFill } from "react-icons/pi";
+import axios from "axios";
 
 const ProductDetails = () => {
     const id = useParams().id;
@@ -16,25 +19,37 @@ const ProductDetails = () => {
     const [quantity, setQuantity] = useState(1);
     const { notifySuccess, notifyError } = useContext(MessageContext);
     const [userRating, setUserRating] = useState(0);
+    const [productReviews, setProductReviews] = useState([]);
+    const [alreadyReviewed, setAlreadyReviewed] = useState(false);
+    const [productRating, setProductRating] = useState(0);
 
     const axiosSecure = useAxiosSecure();
 
     useEffect(() => {
         setLoading(true);
-        axiosSecure
-            .get(`/product/${id}`)
-            .then((response) => {
-                setProduct(response.data[0]);
-                console.table(response.data[0]);
-                setLoading(false);
-            })
-            .catch((error) => {
-                console.error(error);
-                setLoading(false);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
+        Promise.all([
+            axiosSecure.get(`/product/${id}`),
+            axiosSecure.get(`/reviews/${id}`),
+            axiosSecure.get(`/rating/${id}`)
+        ]).then(([productResponse, reviewsResponse, ratingResponse]) => {
+            setProduct(productResponse.data[0]);
+            console.table(productResponse.data[0]);
+        
+            console.log(reviewsResponse.data);
+            setProductReviews(reviewsResponse.data);
+        
+            setProductRating(ratingResponse.data[0]);
+        }).catch((error) => {
+            console.error(error);
+        }).finally(() => {
+            setLoading(false);
+        });
+
+        productReviews.forEach((review) => {
+            if (review.Email_ID === user?.email) {
+                setAlreadyReviewed(true);
+            }
+        });
 
     }, []);
 
@@ -98,8 +113,8 @@ const ProductDetails = () => {
     };
 
     return (
-        <div className=" pt-[80px] glass pb-10">
-            <div className="flex lg:flex-row flex-col lg:min-h-dvh">
+        <div className=" pt-[80px] glass pb-10 flex flex-col gap-5">
+            <div className="flex lg:flex-row flex-col lg:h-dvh">
                 <div className="flex w-full lg:rounded-br-lg">
                     <img
                         className="object-cover lg:rounded-br-lg"
@@ -134,6 +149,20 @@ const ProductDetails = () => {
                                     Galactic Credits
                                 </span>
                             </p>
+                            <div className="mt-3 flex items-center gap-3">
+                                <ReactStars
+                                    count={5}
+                                    size={24}
+                                    value={productRating?.rating || 0}
+                                    isHalf={true}
+                                    edit={false}
+                                    emptyIcon={<PiStarBold />}
+                                    halfIcon={<PiStarHalfFill />}
+                                    fullIcon={<PiStarFill />}
+                                    activeColor="#325B72"
+                                />
+                                <p className="text-sm text-gray-300 font-medium">({productRating.count} ratings)</p>
+                            </div>
                             <p className="text-lg mt-3">
                                 <span className="text-white">In Stock:</span>{" "}
                                 <span className="underline underline-offset-4">
@@ -199,34 +228,43 @@ const ProductDetails = () => {
                 </div>
             </div>
             {/* user post reviw box */}
-            <div className="animate__animated animate__fadeInUp w-full text-white p-6 rounded-xl shadow-md mt-10 border-2 border-primary glass max-w-5xl lg:mx-auto mx-3">
+            <div className="animate__animated animate__fadeInUp w-full text-white p-6 rounded-xl shadow-md mt-10 border-2 border-primary glass lg:max-w-5xl lg:mx-auto mx-3">
                 <h2 className="text-2xl font-semibold mb-4">
                     Share Your Feedback
                 </h2>
-                <form onSubmit={handleReview}>
+                <form onSubmit={handleReview} className={`${alreadyReviewed ? "cursor-not-allowed opacity-30" : ""}`} title={`${alreadyReviewed ? "Already Reviewed" : ""}`}>
                     <ReactStars
                         count={5}
                         onChange={setUserRating}
                         size={24}
                         isHalf={true}
-                        emptyIcon={<i className="far fa-star"></i>}
-                        halfIcon={<i className="fa fa-star-half-alt"></i>}
-                        fullIcon={<i className="fa fa-star"></i>}
+                        emptyIcon={<PiStarBold />}
+                        halfIcon={<PiStarHalfFill />}
+                        fullIcon={<PiStarFill />}
                         activeColor="#ffd700"
+                        edit={!alreadyReviewed}
                     />
                     <textarea
-                        className="w-full h-24 p-2 border rounded-lg resize-none bg-opacity-35 bg-white text-white"
+                        className={`w-full lg:h-24 p-2 border rounded-lg resize-none bg-opacity-35 bg-white text-white ${alreadyReviewed ? "cursor-not-allowed" : ""}`}
                         name="review"
                         placeholder="Write your review..."
                         required
+                        {...(alreadyReviewed ? { disabled: true } : {})}
                     />
                     <button
                         type="submit"
-                        className="submit text-white bg-black/80 hover:bg-black/80 mt-2"
+                        className={`submit text-white bg-black/80 hover:bg-black/80 mt-2 ${alreadyReviewed ? "cursor-not-allowed" : ""}`}
+                        {...(alreadyReviewed ? { disabled: true } : {})}
                     >
                         Submit Review
                     </button>
                 </form>
+            </div>
+            {/* product reviews */}
+            <div className="grid grid-cols-1 gap-3 max-w-5xl lg:mx-auto mx-3">
+                {productReviews.map((review, idx) => (
+                    <ReviewCard key={idx} productReview={review} />
+                ))}
             </div>
         </div>
     );
