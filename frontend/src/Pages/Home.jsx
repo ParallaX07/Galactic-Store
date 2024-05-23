@@ -1,8 +1,7 @@
 import { lazy, useEffect, useState } from "react";
 import useAxiosSecure from "../hooks/useAxiosSecure";
-const ProductCard = lazy(() => import('../components/shared/ProductCard'));
-const LoadingCard = lazy(() => import('../components/shared/LoadingCard'));
-
+const ProductCard = lazy(() => import("../components/shared/ProductCard"));
+const LoadingCard = lazy(() => import("../components/shared/LoadingCard"));
 
 const Home = () => {
     const axiosSecure = useAxiosSecure();
@@ -34,6 +33,9 @@ const Home = () => {
                         Explore our vast collection of intergalactic goods, from
                         cutting-edge technology to rare alien artifacts.
                     </p>
+                    <button className="submit text-white hover:bg-black hover:bg-opacity-40 justify-start flex items-start mt-2">
+                        Browse Collection 
+                    </button>
                 </div>
                 <img
                     src="https://i.ibb.co/sRP1gWS/OIG1.jpg"
@@ -42,17 +44,17 @@ const Home = () => {
                 />
             </div>
             <div className="mt-16 lg:max-w-7xl lg:mx-auto mx-3">
-                <h2 className="text-4xl font-bold text-center underline underline-offset-4">Best Sellers</h2>
+                <h2 className="text-4xl font-bold text-center underline underline-offset-4">
+                    Best Sellers
+                </h2>
                 <div className="flex flex-wrap justify-center gap-5 mt-8">
-                {
-                    loading && (
+                    {loading && (
                         <>
                             <LoadingCard />
                             <LoadingCard />
                             <LoadingCard />
                         </>
-                    )
-                }
+                    )}
                     {bestSellers.map((product) => (
                         <ProductCard
                             key={product.Product_ID}

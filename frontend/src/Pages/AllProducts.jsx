@@ -1,24 +1,30 @@
 import { Suspense, lazy, useEffect, useState } from "react";
 import useAxiosSecure from "../hooks/useAxiosSecure";
-const AllProductCard = lazy(() =>
-    import("../components/shared/ProductCard")
-);
+const AllProductCard = lazy(() => import("../components/shared/ProductCard"));
 const LoadingCard = lazy(() => import("../components/shared/LoadingCard"));
 import SearchBar from "../components/shared/SearchBar";
 import Loader from "../components/shared/Loader";
+import { BiArrowFromLeft, BiArrowFromRight } from "react-icons/bi";
 
 const AllProducts = () => {
     const [allProducts, setAllProducts] = useState([]);
     const [sortedProducts, setSortedProducts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [sortOption, setSortOption] = useState("");
+    const [currentPage, setCurrentPage] = useState(0);
+    const [count, setCount] = useState(0);
     const axiosSecure = useAxiosSecure();
+    const [itemsPerPage] = useState(9);
+
+    const numberOfPages = Math.ceil(count / itemsPerPage);
+
+    const pages = [...Array(numberOfPages).keys()];
 
     useEffect(() => {
         setLoading(true);
         axiosSecure
             .get(
-                "/products?attributes=Product_ID,Name,Price,Galaxy_source,Planet_source,Quantity_inStock,Image_Url"
+                `/products?attributes=Product_ID,Name,Price,Galaxy_source,Planet_source,Quantity_inStock,Image_Url&limit=${itemsPerPage}&page=${currentPage}`
             )
             .then((response) => {
                 setAllProducts(response.data);
@@ -29,10 +35,12 @@ const AllProducts = () => {
             .finally(() => {
                 setLoading(false);
             });
-    }, []);
+
+            axiosSecure.get("/productCount").then((res) => setCount(res.data[0].count)).catch((err) => console.log(err));
+    }, [currentPage, itemsPerPage]);
 
     useEffect(() => {
-        if (sortOption) {
+        if (sortOption && Array.isArray(allProducts)) {
             const sorted = [...allProducts].sort((a, b) => {
                 switch (sortOption) {
                     case "name":
@@ -60,6 +68,7 @@ const AllProducts = () => {
                     setAllProducts={setAllProducts}
                     setLoading={setLoading}
                 />
+
                 <div>
                     <label htmlFor="sort" className="mr-2">
                         Sort by:
@@ -78,19 +87,53 @@ const AllProducts = () => {
                     </select>
                 </div>
             </div>
-            {loading ? (<div className="grid lg:grid-cols-3 grid-cols-1 gap-4 lg:max-w-7xl mx-auto">
-                    <Suspense fallback={<Loader/>}>
+            <div className="flex flex-wrap gap-4 justify-center items-center my-3">
+                <BiArrowFromRight
+                    className=" text-gray-100 text-2xl hover:cursor-pointer"
+                    onClick={() =>
+                        setCurrentPage((prev) => (prev > 0 ? prev - 1 : prev))
+                    }
+                />
+                {pages.map((page) => (
+                    <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`px-2 py-1 rounded-lg ${
+                            page === currentPage
+                                ? "bg-white text-primary"
+                                : " bg-primary text-gray-100"
+                        } border-2 border-white bg-gray-100 transition duration-300 font-bold`}
+                    >
+                        {page + 1}
+                    </button>
+                ))}
+                <BiArrowFromLeft
+                    className=" text-gray-100 text-2xl hover:cursor-pointer"
+                    onClick={() =>
+                        setCurrentPage((prev) =>
+                            prev < numberOfPages - 1 ? prev + 1 : prev
+                        )
+                    }
+                />
+            </div>
+            {loading ? (
+                <div className="grid lg:grid-cols-3 grid-cols-1 gap-4 lg:max-w-7xl mx-auto">
+                    <Suspense fallback={<Loader />}>
                         <LoadingCard />
                         <LoadingCard />
                         <LoadingCard />
                     </Suspense>
-                </div>) : 
-                (<div className="grid lg:grid-cols-3 grid-cols-1 gap-4 lg:max-w-7xl mx-auto">
+                </div>
+            ) : (
+                <div className="grid lg:grid-cols-3 grid-cols-1 gap-4 lg:max-w-7xl mx-auto">
                     {sortedProducts.map((product) => (
-                            <AllProductCard product={product} key={product.Product_ID} />
+                        <AllProductCard
+                            product={product}
+                            key={product.Product_ID}
+                        />
                     ))}
-                </div>)
-            }
+                </div>
+            )}
             {allProducts.length === 0 && !loading && (
                 <div className="flex justify-center items-center h-[70vh]">
                     <h1 className="text-3xl text-white bg-black px-3 py-2 rounded-lg">

@@ -46,14 +46,14 @@ const Cart = () => {
 
     if (inCart.length === 0 && !loading) {
         return (
-            <section className="lg:mx-auto lg:max-w-6xl mx-3 py-20 transition duration-300">
-                <h2 className="text-3xl font-semibold text-gray-100 mt-4 underline underline-offset-4">
+            <section className=" px-3 py-20 transition duration-300 glass min-h-dvh">
+                <h2 className="lg:mx-auto lg:max-w-6xl text-3xl font-semibold text-gray-100 mt-4 underline underline-offset-4">
                     <span className="bg-gradient-to-r from-tertiary via-secondary to-primary text-transparent bg-clip-text animate-gradient bg-300%">
                         {userName}&apos;s
                     </span>{" "}
                     Cart
                 </h2>
-                <h2 className="text-4xl font-semibold text-center text-gray-100 mt-8">
+                <h2 className=" lg:mx-auto lg:max-w-6xl text-4xl font-semibold text-center text-gray-100 mt-8">
                     Your cart is empty
                 </h2>
                 <button className="submit text-white bg-black/80 hover:bg-black/80 flex justify-center mx-auto mt-2">

@@ -8,6 +8,7 @@ import { TiThMenu } from "react-icons/ti";
 import { MessageContext } from "../../Pages/Root";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
+import { FaShoppingCart } from "react-icons/fa";
 
 const Navbar = () => {
     const active =
@@ -44,16 +45,6 @@ const Navbar = () => {
 
     const customerNavItems = (
         <>
-            <li>
-                <NavLink
-                    to="/c/cart"
-                    className={({ isActive }) =>
-                        isActive ? `${active}` : `${inactive}`
-                    }
-                >
-                    Cart
-                </NavLink>
-            </li>
             <li>
                 <NavLink
                     to="/c/order-history"
@@ -311,6 +302,19 @@ const Navbar = () => {
                                 <FaPlus />
                             </NavLink>
                         )}
+                        {userDetails.User_Type === "Customer" && (
+                            <NavLink
+                                to="/c/cart"
+                                className={({ isActive }) =>
+                                    isActive
+                                        ? `text-xl p-1 font-bold text-secondary border-secondary`
+                                        : `text-xl p-1 font-bold`
+                                }
+                                title={`Cart`}
+                            >
+                                <FaShoppingCart />
+                            </NavLink>
+                        )}
                         {loading
                             ? loadingSkeleton
                             : user
@@ -337,6 +341,18 @@ const Navbar = () => {
                                         }
                                     >
                                         Home
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink
+                                        to="/products"
+                                        className={({ isActive }) =>
+                                            isActive
+                                                ? `${active}`
+                                                : `${inactive}`
+                                        }
+                                    >
+                                        All Products
                                     </NavLink>
                                 </li>
                                 {user &&

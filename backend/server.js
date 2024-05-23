@@ -66,10 +66,30 @@ app.get("/product/:id", (req, res) => {
     );
 });
 
-//get products by attributes exaxmple axiosSecure.get(`/products?attributes=Name,Price,Image_Url,Description`)
+//get products by attributes exaxmple axiosSecure
+// .get(
+//     `/products?attributes=Product_ID,Name,Price,Galaxy_source,Planet_source,Quantity_inStock,Image_Url&limit=${itemsPerPage}&page=${currentPage + 1}`
+// )
 app.get("/products", (req, res) => {
     const attributes = req.query.attributes;
-    db.query(`SELECT ${attributes} FROM product`, (err, result) => {
+    const limit = req.query.limit || 9;
+    const page = req.query.page || 0;
+
+    db.query(
+        `SELECT ${attributes} FROM product LIMIT ${limit} OFFSET ${page * limit}`,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.send(result);
+            }
+        }
+    );
+});
+
+// product count
+app.get("/productCount", (req, res) => {
+    db.query(`SELECT COUNT(Product_ID) AS count FROM product`, (err, result) => {
         if (err) {
             console.log(err);
         } else {
@@ -179,6 +199,23 @@ app.get("/bestSellers", (req, res) => {
     );
 });
 
+//get all reviews by id example axiosSecure.get(`/reviews/${productID}`)
+app.get("/reviews/:id", (req, res) => {
+    const id = req.params.id;
+    db.query(
+        `SELECT u.Profile_image, u.F_Name, u.L_Name, r.reviewDesc, r.rating
+        FROM review r JOIN user u ON r.Email_ID = u.Email_ID
+        WHERE r.product_ID = ${id}`,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.send(result);
+            }
+        }
+    );
+});
+
 // create new user
 // Handle POST requests to /users
 app.post("/users", (req, res) => {
@@ -199,6 +236,28 @@ app.post("/users", (req, res) => {
             res.status(500).send("Server error");
         } else {
             res.status(200).send("User added successfully");
+        }
+    });
+});
+
+//post to review
+app.post("/reviews", (req, res) => {
+    const review = req.body;
+    const query =
+        "INSERT INTO review (product_ID, Email_ID, reviewDesc, rating) VALUES (?, ?, ?, ?)";
+    const values = [
+        review.product_ID,
+        review.Email_ID,
+        review.reviewDesc,
+        review.rating,
+    ];
+
+    db.query(query, values, (err, result) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send("Server error");
+        } else {
+            res.status(200).send("Review added successfully");
         }
     });
 });
@@ -462,29 +521,34 @@ app.delete("/cart", (req, res) => {
             console.error(err);
             res.status(500).json({ error: "Internal Server Error" });
         } else {
-            db.query(query, [email, productID, productID, productID], (err, result) => {
-                if (err) {
-                    console.error(err);
-                    db.rollback();
-                    res.status(500).json({
-                        error: "Internal Server Error",
-                    });
-                } else {
-                    db.commit((err) => {
-                        if (err) {
-                            console.error(err);
-                            db.rollback();
-                            res.status(500).json({
-                                error: "Internal Server Error",
-                            });
-                        } else {
-                            res.json({
-                                message: "Product removed from cart successfully",
-                            });
-                        }
-                    });
+            db.query(
+                query,
+                [email, productID, productID, productID],
+                (err, result) => {
+                    if (err) {
+                        console.error(err);
+                        db.rollback();
+                        res.status(500).json({
+                            error: "Internal Server Error",
+                        });
+                    } else {
+                        db.commit((err) => {
+                            if (err) {
+                                console.error(err);
+                                db.rollback();
+                                res.status(500).json({
+                                    error: "Internal Server Error",
+                                });
+                            } else {
+                                res.json({
+                                    message:
+                                        "Product removed from cart successfully",
+                                });
+                            }
+                        });
+                    }
                 }
-            });
+            );
         }
     });
 });
