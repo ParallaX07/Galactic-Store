@@ -21,7 +21,7 @@ const OrderHistory = lazy(() => import("./components/Customer/OrderHistory"));
 const ManageOrders = lazy(() => import("./components/Admin/ManageOrders"));
 const AllProducts = lazy(() => import("./Pages/AllProducts"));
 const AllUsers = lazy(() => import("./components/Admin/AllUsers"));
-const Stats = lazy(() => import("./components/Admin/Stats"));
+const Stats = lazy(() => import("./components/Admin/Stats/Stats"));
 
 const router = createBrowserRouter([
     {

@@ -4,7 +4,7 @@ import Loader from "../shared/Loader";
 import { FaEdit } from "react-icons/fa";
 import { ImBin } from "react-icons/im";
 import Swal from "sweetalert2";
-const EditProductModal = lazy(() => import('./EditProductModal'));
+const EditProductModal = lazy(() => import("./EditProductModal"));
 import { MessageContext } from "../../Pages/Root";
 import { Link } from "react-router-dom";
 
@@ -41,9 +41,7 @@ const ManageProducts = () => {
     useEffect(() => {
         setLoading(true);
         axiosSecure
-            .get(
-                "/products?attributes=Product_ID,Name,Price,Galaxy_source,Planet_source,Quantity_inStock,Image_Url,Description"
-            )
+            .get("/allProducts")
             .then((response) => {
                 setProducts(response.data);
                 setLoading(false);
@@ -145,11 +143,7 @@ const ManageProducts = () => {
                 <table className="table-auto glass w-full mt-8  rounded-lg border-2 border-gray-100 ">
                     <thead className="hidden lg:table-header-group  rounded-lg">
                         <tr className="text-base font-semibold text-left border-b-2 border-gray-100 text-gray-100">
-                            <th
-                                className="p-2 cursor-pointer"
-                            >
-                                Image{" "}
-                            </th>
+                            <th className="p-2 cursor-pointer">Image </th>
                             <th
                                 className="p-2 cursor-pointer"
                                 onClick={() => handleSort("Name")}
@@ -190,6 +184,22 @@ const ManageProducts = () => {
                                 {sortField === "Quantity_inStock" &&
                                     (sortDirection === "asc" ? "↑" : "↓")}
                             </th>
+                            <th
+                                className="p-2 cursor-pointer"
+                                onClick={() => handleSort("TotalSold")}
+                            >
+                                Total Sold{" "}
+                                {sortField === "TotalSold" &&
+                                    (sortDirection === "asc" ? "↑" : "↓")}
+                            </th>
+                            <th
+                                className="p-2 cursor-pointer"
+                                onClick={() => handleSort("TotalRevenue")}
+                            >
+                                Total Revenue{" "}
+                                {sortField === "TotalRevenue" &&
+                                    (sortDirection === "asc" ? "↑" : "↓")}
+                            </th>
                             <th className="p-2">Actions</th>
                         </tr>
                     </thead>
@@ -217,7 +227,9 @@ const ManageProducts = () => {
                                     className="p-2 block lg:table-cell relative lg:static"
                                     data-label="Name"
                                 >
-                                    <Link to={`/p/${product?.Product_ID}`}>{product?.Name}</Link>
+                                    <Link to={`/p/${product?.Product_ID}`}>
+                                        {product?.Name}
+                                    </Link>
                                 </td>
                                 <td
                                     className="p-2 block lg:table-cell relative lg:static"
@@ -238,10 +250,22 @@ const ManageProducts = () => {
                                     {product?.Planet_source}
                                 </td>
                                 <td
-                                    className="p-2 block lg:table-cell relative lg:static"
+                                    className={`p-2 block lg:table-cell relative lg:static ${product?.Quantity_inStock < 10 ? "text-red-500 font-bold" : ""}`}
                                     data-label="Stock"
                                 >
                                     {product?.Quantity_inStock}
+                                </td>
+                                <td
+                                    className={`p-2 block lg:table-cell relative lg:static`}
+                                    data-label="Total Sold"
+                                >
+                                    {product?.TotalSold || 0}
+                                </td>
+                                <td
+                                    className="p-2 block lg:table-cell relative lg:static"
+                                    data-label="Total Revenue"
+                                >
+                                    {product?.TotalRevenue || 0}
                                 </td>
                                 <td
                                     className="p-2 lg:table-cell relative lg:static block"
@@ -267,7 +291,7 @@ const ManageProducts = () => {
                     </tbody>
                 </table>
             </div>
-            <Suspense fallback={<Loader/>}>
+            <Suspense fallback={<Loader />}>
                 <EditProductModal
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}

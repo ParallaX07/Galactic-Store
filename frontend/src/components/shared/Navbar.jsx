@@ -312,7 +312,7 @@ const Navbar = () => {
                                 <FaPlus />
                             </NavLink>
                         )}
-                        {userDetails.User_Type === "Customer" && (
+                        {userDetails.User_Type === "Customer" && user && (
                             <NavLink
                                 to="/c/cart"
                                 className={({ isActive }) =>

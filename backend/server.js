@@ -87,6 +87,44 @@ app.get("/products", (req, res) => {
     );
 });
 
+//get all products, total count of product sold, total revenue from products
+app.get("/allProducts", (req, res) => {
+    db.query(
+        `SELECT p.Product_ID, p.Name, p.Price, p.Planet_source, p.Galaxy_source, p.Quantity_inStock, p.Image_Url, p.Description, SUM(od.Quantity) AS TotalSold, SUM(od.Quantity * p.Price) AS TotalRevenue
+        FROM product p LEFT JOIN OrderDetails od ON p.Product_ID = od.ProductID
+        GROUP BY p.Product_ID ORDER BY p.Quantity_inStock ASC`,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.send(result);
+            }
+        }
+    );
+});
+
+//get count of order statuses and total orders
+app.get("/productOverview", (req, res) => {
+    db.query(
+        `SELECT
+        (SELECT COUNT(*) FROM OrderDetails WHERE Status = 'pending') AS pending,
+        (SELECT COUNT(*) FROM OrderDetails WHERE Status = 'shipped') AS shipped,
+        (SELECT COUNT(*) FROM OrderDetails WHERE Status = 'delivered') AS delivered,
+        (SELECT COUNT(*) FROM OrderDetails) AS totalOrders,
+        (SELECT COUNT(*) FROM product WHERE Quantity_inStock < 10) AS lowStock,
+        (SELECT SUM(Quantity_inStock * Price) AS totalRevenue FROM product) AS totalRevenue`,
+        
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.send(result);
+            }
+        }
+    );
+});
+
+
 // product count
 app.get("/productCount", (req, res) => {
     db.query(`SELECT COUNT(Product_ID) AS count FROM product`, (err, result) => {
@@ -216,8 +254,32 @@ app.get("/reviews/:id", (req, res) => {
     );
 });
 
-//get site stats Total sales revenue, Number of orders placed, Average order value,
+//get site stats Total stats
+// SELECT
+//     (SELECT COUNT(*) FROM product) AS total_products,
+//     (SELECT COUNT(*) FROM `user`) AS total_users,
+//     (SELECT COUNT(DISTINCT OrderID) FROM OrderDetails) AS total_orders,
+//     (SELECT SUM(od.Quantity * p.Price)
+//      FROM OrderDetails od
+//      JOIN product p ON od.ProductID = p.Product_ID) AS total_revenue;
 
+app.get("/totalStats", (req, res) => {
+    db.query(
+        `SELECT
+        (SELECT COUNT(*) FROM product) AS totalProducts,
+        (SELECT COUNT(*) FROM user) AS totalUsers,
+        (SELECT COUNT(DISTINCT OrderID) FROM OrderDetails) AS totalOrders`,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.send(result);
+            }
+        }
+    );
+});
+
+//
 
 app.get("/rating/:id", (req, res) => {
     const id = req.params.id;
