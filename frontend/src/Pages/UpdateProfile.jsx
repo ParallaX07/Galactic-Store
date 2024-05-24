@@ -22,7 +22,7 @@ const UpdateProfile = () => {
             .get(
                 `/users?email=${
                     user?.email
-                }&value=${"F_name, L_name, Profile_image, Contact_Cell, Email_ID"}`
+                }&value=${"F_name, L_name, Profile_image, Contact_Cell, Email_ID, City, Planet, Galaxy"}`
             )
             .then((res) => {
                 setUserDetails(res.data[0]);
@@ -43,11 +43,17 @@ const UpdateProfile = () => {
         const lname = data.get("lname") || userDetails?.L_name;
         const url = data.get("url") || userDetails?.Profile_image;
         const contact = phone || userDetails?.Contact_Cell;
+        const city = data.get("city") || userDetails?.City;
+        const planet = data.get("planet") || userDetails?.Planet;
+        const galaxy = data.get("galaxy") || userDetails?.Galaxy;
         const body = {
             F_name: fname,
             L_name: lname,
             Profile_image: url,
             Contact_cell: contact,
+            City: city,
+            Planet: planet,
+            Galaxy: galaxy,
         };
         axiosSecure
             .put(`/user/${user?.email}`, body)
@@ -61,6 +67,9 @@ const UpdateProfile = () => {
                     L_name: lname,
                     Profile_image: url,
                     Contact_Cell: contact,
+                    City: city,
+                    Planet: planet,
+                    Galaxy: galaxy,
                 });
             })
             .catch(() => {
@@ -100,6 +109,10 @@ const UpdateProfile = () => {
                             <span className="text-accent">Contact:</span>{" "}
                             {userDetails?.Contact_Cell}
                         </p>
+                        <p className="font-bold">
+                            <span className="text-accent">Adress:</span>{" "}
+                            {userDetails?.City + ", " + userDetails?.Planet + ", " + userDetails?.Galaxy}
+                        </p>
                     </div>
                     <div className="xl:mx-auto xl:w-full custom-shadow p-4 xl:max-w-sm 2xl:max-w-md rounded-lg border border-gray-200">
                         <div className="mb-2 flex justify-center"></div>
@@ -112,32 +125,75 @@ const UpdateProfile = () => {
                             onSubmit={handleUpdate}
                         >
                             <div className="space-y-5">
-                                <div>
-                                    <label className="text-base font-medium text-gray-300">
-                                        Update First Name
-                                    </label>
-                                    <div className="mt-2">
-                                        <input
-                                            placeholder={userDetails?.F_name}
-                                            type="text"
-                                            name="fname"
-                                            className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-200 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                                        />
+                                <div className="flex gap-3">
+                                    <div>
+                                        <label className="text-base font-medium text-gray-300">
+                                            Update First Name
+                                        </label>
+                                        <div className="mt-2">
+                                            <input
+                                                placeholder={userDetails?.F_name}
+                                                type="text"
+                                                name="fname"
+                                                className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-200 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="text-base font-medium text-gray-300">
+                                            Update Last Name
+                                        </label>
+                                        <div className="mt-2">
+                                            <input
+                                                placeholder={userDetails?.L_name}
+                                                type="text"
+                                                name="lname"
+                                                className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-200 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="flex gap-3">
+                                    <div>
+                                        <label className="text-base font-medium text-gray-300">
+                                            Update City
+                                        </label>
+                                        <div className="mt-2">
+                                            <input
+                                                placeholder={userDetails?.City}
+                                                type="text"
+                                                name="city"
+                                                className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-200 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="text-base font-medium text-gray-300">
+                                            Update Planet
+                                        </label>
+                                        <div className="mt-2">
+                                            <input
+                                                placeholder={userDetails?.Planet}
+                                                type="text"
+                                                name="planet"
+                                                className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-200 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="text-base font-medium text-gray-300">
-                                        Update Last Name
-                                    </label>
-                                    <div className="mt-2">
-                                        <input
-                                            placeholder={userDetails?.L_name}
-                                            type="text"
-                                            name="lname"
-                                            className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-200 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                                        />
+                                        <label className="text-base font-medium text-gray-300">
+                                            Update Galaxy
+                                        </label>
+                                        <div className="mt-2">
+                                            <input
+                                                placeholder={userDetails?.Galaxy}
+                                                type="text"
+                                                name="galaxy"
+                                                className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-200 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                                            />
+                                        </div>
                                     </div>
-                                </div>
                                 <div>
                                     <label className="text-base font-medium text-gray-300">
                                         Update Contact Cell

@@ -1,2 +1,3 @@
-ALTER TABLE user
-MODIFY COLUMN Profile_image varchar(255) DEFAULT 'https://i.ibb.co/hYbbGyR/6596121-modified.png';
+ALTER TABLE `user`
+ADD COLUMN `Street` varchar(50) DEFAULT NULL AFTER `Profile_image`,
+

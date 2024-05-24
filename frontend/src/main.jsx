@@ -5,6 +5,7 @@ import AuthProvider from "./Auth/AuthProvider";
 import PrivateRoute from "./Auth/PrivateRoute";
 import { lazy, Suspense } from "react";
 import Loader from "./components/shared/Loader";
+import Stats from "./components/Admin/Stats";
 
 //import components
 const SignUpForm = lazy(() => import("./Pages/SignUpForm"));
@@ -104,6 +105,16 @@ const router = createBrowserRouter([
                     <PrivateRoute>
                         <Suspense fallback={<Loader />}>
                             <ManageProducts />
+                        </Suspense>
+                    </PrivateRoute>
+                ),
+            },
+            {
+                path: "/a/stats",
+                element: (
+                    <PrivateRoute>
+                        <Suspense fallback={<Loader />}>
+                            <Stats />
                         </Suspense>
                     </PrivateRoute>
                 ),

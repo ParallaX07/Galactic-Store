@@ -216,6 +216,9 @@ app.get("/reviews/:id", (req, res) => {
     );
 });
 
+//get site stats Total sales revenue, Number of orders placed, Average order value,
+
+
 app.get("/rating/:id", (req, res) => {
     const id = req.params.id;
     db.query(
@@ -423,12 +426,15 @@ app.put("/user/:email", (req, res) => {
     const email = req.params.email;
     const user = req.body;
     const query =
-        "UPDATE user SET Profile_image = ?, F_name = ?, L_name = ?, Contact_cell = ? WHERE Email_ID = ?";
+        "UPDATE user SET Profile_image = ?, F_name = ?, L_name = ?, Contact_cell = ?, City = ?, Planet = ?, Galaxy = ? WHERE Email_ID = ?";
     const values = [
         user.Profile_image,
         user.F_name,
         user.L_name,
         user.Contact_cell,
+        user.City,
+        user.Planet,
+        user.Galaxy,
         email,
     ];
 
