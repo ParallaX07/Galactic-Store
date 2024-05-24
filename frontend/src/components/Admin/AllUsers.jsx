@@ -38,6 +38,7 @@ const AllUsers = () => {
                     <table className="table-auto glass w-full mt-8  rounded-lg border-2 border-gray-100 ">
                         <thead className="hidden lg:table-header-group  rounded-lg">
                             <tr className="text-base font-semibold text-left border-b-2 border-gray-100 text-gray-100">
+                                <th className="p-2">Profile Image</th>
                                 <th className="p-2">Name</th>
                                 <th className="p-2">Email</th>
                                 <th className="p-2">Contact Cell</th>
@@ -52,18 +53,24 @@ const AllUsers = () => {
                                     className="block lg:table-row border-b-2 border-gray-100 text-gray-100 py-4"
                                 >
                                     <td
-                                    className="p-2 block lg:table-cell relative lg:static"
-                                    data-label=""
-                                >
-                                    <img
-                                        src={user?.Profile_image || "https://i.ibb.co/hYbbGyR/6596121-modified.png"}
-                                        alt={user?.Name}
-                                        className="lg:w-20 lg:h-20 object-cover rounded-lg cursor-pointer"
-                                        onClick={() =>
-                                            openImage(user?.Profile_image || "https://i.ibb.co/hYbbGyR/6596121-modified.png")
-                                        }
-                                    />
-                                </td>
+                                        className="p-2 block lg:table-cell relative lg:static"
+                                        data-label=""
+                                    >
+                                        <img
+                                            src={
+                                                user?.Profile_image ||
+                                                "https://i.ibb.co/hYbbGyR/6596121-modified.png"
+                                            }
+                                            alt={user?.Name}
+                                            className="lg:w-20 lg:h-20 object-cover rounded-lg cursor-pointer"
+                                            onClick={() =>
+                                                openImage(
+                                                    user?.Profile_image ||
+                                                        "https://i.ibb.co/hYbbGyR/6596121-modified.png"
+                                                )
+                                            }
+                                        />
+                                    </td>
                                     <td
                                         className="p-2 block lg:table-cell relative lg:static"
                                         data-label="Name"
@@ -84,9 +91,13 @@ const AllUsers = () => {
                                     </td>
                                     <td
                                         className="p-2 block lg:table-cell relative lg:static"
-                                        data-label="Total Price"
+                                        data-label="Address"
                                     >
-                                        {user?.Address}
+                                        {(user?.City || "N/A") +
+                                            ", " +
+                                            (user?.Planet || "N/A") +
+                                            ", " +
+                                            (user?.Galaxy || "N/A")}
                                     </td>
                                     <td
                                         className="p-2 block lg:table-cell relative lg:static"

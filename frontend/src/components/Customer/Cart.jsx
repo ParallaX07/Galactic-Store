@@ -98,50 +98,83 @@ const Cart = () => {
     };
 
     const handlePurchase = () => {
-        Swal.fire({
-            title: `Do you want to confirm purchase?`,
-            html: `<div class="text-start ml-4  text-white border-b-2 p-3">
-            Your order summary: <br />
-            <p class="mt-2 space-y-3">
-                ${
-                    inCart
-                        .map(
-                            (product) =>
-                                `${product.Name} x ${product.Quantity} = ${product.ProductTotal}`
-                        )
-                        .join("<br /><br/>") || ""
-                }
-            </p><br/> 
-        </div>
-        <p class=" w-full mt-3 text-end text-white">Total: ${
-            inCart[0]?.CartTotal
-        }</p>`,
-            showDenyButton: true,
-            confirmButtonText: "Yes, confirm purchase",
-            denyButtonText: `No, don't confirm`,
-            icon: "question",
-            confirmButtonColor: "#0b090a",
-            background: "#0b090a",
-            denyButtonColor: "#d33",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                console.log("clicked");
-                setLoading(true);
-                axiosSecure
-                    .put(`/cart?email=${user?.email}`)
-                    .then(() => {
-                        notifySuccess("Purchase successful");
-                        setInCart([]);
-                    })
-                    .catch((error) => {
-                        console.error(error);
-                        notifyError("Failed to purchase");
-                    })
-                    .finally(() => {
-                        setLoading(false);
+        axiosSecure
+            .get(
+                `/users?email=${
+                    user?.email
+                }&value=${"F_name, L_name, Profile_image, Contact_Cell, Email_ID, City, Planet, Galaxy"}`
+            )
+            .then((res) => {
+                const user = res.data[0];
+                // check if user has city, planet and galaxy
+                if (
+                    !user.City ||
+                    !user.Planet ||
+                    !user.Galaxy ||
+                    !user.Contact_Cell
+                ) {
+                    Swal.fire({
+                        title: "Please update your profile",
+                        text: "You need to update your profile to continue",
+                        icon: "warning",
+                        confirmButtonColor: "#0b090a",
+                        background: "#0b090a",
+                    }).then(() => {
+                        window.location.href = "/profile";
                     });
-            }
-        });
+                    return;
+                }
+                Swal.fire({
+                    title: `Do you want to confirm purchase?`,
+                    html: `<div class="text-start ml-4  text-white border-b-2 p-3">
+                    Your order summary: <br />
+                    <p class="mt-2 space-y-3">
+                        ${
+                            inCart
+                                .map(
+                                    (product) =>
+                                        `${product.Name} x ${product.Quantity} = ${product.ProductTotal}`
+                                )
+                                .join("<br /><br/>") || ""
+                        }
+                    </p><br/> 
+                </div>
+                <p class=" w-full mt-3 text-end text-white">Total: ${
+                    inCart[0]?.CartTotal
+                }</p>`,
+                    showDenyButton: true,
+                    confirmButtonText: "Yes, confirm purchase",
+                    denyButtonText: `No, don't confirm`,
+                    icon: "question",
+                    confirmButtonColor: "#0b090a",
+                    background: "#0b090a",
+                    denyButtonColor: "#d33",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        console.log("clicked");
+                        setLoading(true);
+                        axiosSecure
+                            .put(`/cart?email=${user?.email}`)
+                            .then(() => {
+                                notifySuccess("Purchase successful");
+                                setInCart([]);
+                            })
+                            .catch((error) => {
+                                console.error(error);
+                                notifyError("Failed to purchase");
+                            })
+                            .finally(() => {
+                                setLoading(false);
+                            });
+                    }
+                });
+            })
+            .catch((error) => {
+                notifyError(error.message);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     };
 
     return (
