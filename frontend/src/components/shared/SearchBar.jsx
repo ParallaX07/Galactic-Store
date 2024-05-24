@@ -27,7 +27,6 @@ const SearchBar = ({setAllProducts, setLoading}) => {
         setLoading(true);
         axiosSecure.get(`/products/search?param=${searchParam}`).then((res) => {
             setAllProducts(res.data);
-            console.log(res.data);
         }).catch((error) => {
             console.error(error);
         }).finally(() => {

@@ -46,14 +46,14 @@ const Cart = () => {
 
     if (inCart.length === 0 && !loading) {
         return (
-            <section className="lg:mx-auto lg:max-w-6xl mx-3 py-20 transition duration-300">
-                <h2 className="text-3xl font-semibold text-gray-100 mt-4 underline underline-offset-4">
+            <section className=" px-3 py-20 transition duration-300 glass min-h-dvh">
+                <h2 className="lg:mx-auto lg:max-w-6xl text-3xl font-semibold text-gray-100 mt-4 underline underline-offset-4">
                     <span className="bg-gradient-to-r from-tertiary via-secondary to-primary text-transparent bg-clip-text animate-gradient bg-300%">
                         {userName}&apos;s
                     </span>{" "}
                     Cart
                 </h2>
-                <h2 className="text-4xl font-semibold text-center text-gray-100 mt-8">
+                <h2 className=" lg:mx-auto lg:max-w-6xl text-4xl font-semibold text-center text-gray-100 mt-8">
                     Your cart is empty
                 </h2>
                 <button className="submit text-white bg-black/80 hover:bg-black/80 flex justify-center mx-auto mt-2">
@@ -98,50 +98,86 @@ const Cart = () => {
     };
 
     const handlePurchase = () => {
-        Swal.fire({
-            title: `Do you want to confirm purchase?`,
-            html: `<div class="text-start ml-4  text-white border-b-2 p-3">
-            Your order summary: <br />
-            <p class="mt-2 space-y-3">
-                ${
-                    inCart
-                        .map(
-                            (product) =>
-                                `${product.Name} x ${product.Quantity} = ${product.ProductTotal}`
-                        )
-                        .join("<br /><br/>") || ""
-                }
-            </p><br/> 
-        </div>
-        <p class=" w-full mt-3 text-end text-white">Total: ${
-            inCart[0]?.CartTotal
-        }</p>`,
-            showDenyButton: true,
-            confirmButtonText: "Yes, confirm purchase",
-            denyButtonText: `No, don't confirm`,
-            icon: "question",
-            confirmButtonColor: "#0b090a",
-            background: "#0b090a",
-            denyButtonColor: "#d33",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                console.log("clicked");
-                setLoading(true);
-                axiosSecure
-                    .put(`/cart?email=${user?.email}`)
-                    .then(() => {
-                        notifySuccess("Purchase successful");
-                        setInCart([]);
-                    })
-                    .catch((error) => {
-                        console.error(error);
-                        notifyError("Failed to purchase");
-                    })
-                    .finally(() => {
-                        setLoading(false);
+        axiosSecure
+            .get(
+                `/users?email=${
+                    user?.email
+                }&value=${"F_name, L_name, Profile_image, Contact_Cell, Email_ID, City, Planet, Galaxy"}`
+            )
+            .then((res) => {
+                const userData = res.data[0];
+                // check if userData has city, planet and galaxy
+                if (
+                    !userData.City ||
+                    !userData.Planet ||
+                    !userData.Galaxy ||
+                    !userData.Contact_Cell
+                ) {
+                    Swal.fire({
+                        title: "Please update your profile",
+                        text: "You need to update your profile with your address and contact details to continue",
+                        icon: "warning",
+                        confirmButtonColor: "#0b090a",
+                        background: "#0b090a",
+                    }).then(() => {
+                        window.location.href = "/profile";
                     });
-            }
-        });
+                    return;
+                }
+
+                setLoading(true);
+                Swal.fire({
+                    title: `Do you want to confirm purchase?`,
+                    html: `<div class="text-start ml-4  text-white border-b-2 p-3">
+                    Your order summary: <br />
+                    <p class="mt-2 space-y-3">
+                        ${
+                            inCart
+                                .map(
+                                    (product) =>
+                                        `${product.Name} x ${product.Quantity} = ${product.ProductTotal}`
+                                )
+                                .join("<br /><br/>") || ""
+                        }
+                    </p><br/> 
+                </div>
+                <p class=" w-full mt-3 text-end text-white">Total: ${
+                    inCart[0]?.CartTotal
+                }</p>`,
+                    showDenyButton: true,
+                    confirmButtonText: "Yes, confirm purchase",
+                    denyButtonText: `No, don't confirm`,
+                    icon: "question",
+                    confirmButtonColor: "#0b090a",
+                    background: "#0b090a",
+                    denyButtonColor: "#d33",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        console.log("clicked");
+                        setLoading(true);
+                        axiosSecure
+                            .put(`/cart?email=${user?.email}`)
+                            .then(() => {
+                                notifySuccess("Purchase successful");
+                                setInCart([]);
+                            })
+                            .catch((error) => {
+                                console.error(error);
+                                notifyError("Failed to purchase");
+                            })
+                            .finally(() => {
+                                setLoading(false);
+                            });
+                    }
+                });
+            })
+            .catch((error) => {
+                notifyError(error.message);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+        
     };
 
     return (

@@ -21,6 +21,7 @@ const OrderHistory = lazy(() => import("./components/Customer/OrderHistory"));
 const ManageOrders = lazy(() => import("./components/Admin/ManageOrders"));
 const AllProducts = lazy(() => import("./Pages/AllProducts"));
 const AllUsers = lazy(() => import("./components/Admin/AllUsers"));
+const Stats = lazy(() => import("./components/Admin/Stats/Stats"));
 
 const router = createBrowserRouter([
     {
@@ -104,6 +105,16 @@ const router = createBrowserRouter([
                     <PrivateRoute>
                         <Suspense fallback={<Loader />}>
                             <ManageProducts />
+                        </Suspense>
+                    </PrivateRoute>
+                ),
+            },
+            {
+                path: "/a/stats",
+                element: (
+                    <PrivateRoute>
+                        <Suspense fallback={<Loader />}>
+                            <Stats />
                         </Suspense>
                     </PrivateRoute>
                 ),

@@ -66,10 +66,68 @@ app.get("/product/:id", (req, res) => {
     );
 });
 
-//get products by attributes exaxmple axiosSecure.get(`/products?attributes=Name,Price,Image_Url,Description`)
+//get products by attributes exaxmple axiosSecure
+// .get(
+//     `/products?attributes=Product_ID,Name,Price,Galaxy_source,Planet_source,Quantity_inStock,Image_Url&limit=${itemsPerPage}&page=${currentPage + 1}`
+// )
 app.get("/products", (req, res) => {
     const attributes = req.query.attributes;
-    db.query(`SELECT ${attributes} FROM product`, (err, result) => {
+    const limit = req.query.limit || 9;
+    const page = req.query.page || 0;
+
+    db.query(
+        `SELECT ${attributes} FROM product LIMIT ${limit} OFFSET ${page * limit}`,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.send(result);
+            }
+        }
+    );
+});
+
+//get all products, total count of product sold, total revenue from products
+app.get("/allProducts", (req, res) => {
+    db.query(
+        `SELECT p.Product_ID, p.Name, p.Price, p.Planet_source, p.Galaxy_source, p.Quantity_inStock, p.Image_Url, p.Description, SUM(od.Quantity) AS TotalSold, SUM(od.Quantity * p.Price) AS TotalRevenue
+        FROM product p LEFT JOIN OrderDetails od ON p.Product_ID = od.ProductID
+        GROUP BY p.Product_ID ORDER BY p.Quantity_inStock ASC`,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.send(result);
+            }
+        }
+    );
+});
+
+//get count of order statuses and total orders
+app.get("/productOverview", (req, res) => {
+    db.query(
+        `SELECT
+        (SELECT COUNT(*) FROM OrderDetails WHERE Status = 'pending') AS pending,
+        (SELECT COUNT(*) FROM OrderDetails WHERE Status = 'shipped') AS shipped,
+        (SELECT COUNT(*) FROM OrderDetails WHERE Status = 'delivered') AS delivered,
+        (SELECT COUNT(*) FROM OrderDetails) AS totalOrders,
+        (SELECT COUNT(*) FROM product WHERE Quantity_inStock < 10) AS lowStock,
+        (SELECT SUM(Quantity_inStock * Price) AS totalRevenue FROM product) AS totalRevenue`,
+        
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.send(result);
+            }
+        }
+    );
+});
+
+
+// product count
+app.get("/productCount", (req, res) => {
+    db.query(`SELECT COUNT(Product_ID) AS count FROM product`, (err, result) => {
         if (err) {
             console.log(err);
         } else {
@@ -179,6 +237,85 @@ app.get("/bestSellers", (req, res) => {
     );
 });
 
+//get all reviews by id example axiosSecure.get(`/reviews/${productID}`)
+app.get("/reviews/:id", (req, res) => {
+    const id = req.params.id;
+    db.query(
+        `SELECT u.Profile_image, u.Email_ID, CONCAT(u.F_Name, " ", u.L_Name) AS Name, r.reviewDesc, r.rating, r.product_ID, r.post_date
+        FROM review r JOIN user u ON r.Email_ID = u.Email_ID
+        WHERE r.product_ID = "${id}" ORDER BY r.post_date DESC`,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.send(result);
+            }
+        }
+    );
+});
+
+//get site stats Total stats
+// SELECT
+//     (SELECT COUNT(*) FROM product) AS total_products,
+//     (SELECT COUNT(*) FROM `user`) AS total_users,
+//     (SELECT COUNT(DISTINCT OrderID) FROM OrderDetails) AS total_orders,
+//     (SELECT SUM(od.Quantity * p.Price)
+//      FROM OrderDetails od
+//      JOIN product p ON od.ProductID = p.Product_ID) AS total_revenue;
+
+app.get("/totalStats", (req, res) => {
+    db.query(
+        `SELECT
+        (SELECT COUNT(*) FROM product) AS totalProducts,
+        (SELECT COUNT(*) FROM user) AS totalUsers,
+        (SELECT COUNT(DISTINCT OrderID) FROM OrderDetails) AS totalOrders`,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.send(result);
+            }
+        }
+    );
+});
+
+//
+
+app.get("/rating/:id", (req, res) => {
+    const id = req.params.id;
+    db.query(
+        `SELECT AVG(rating) AS rating, Count(rating) AS count
+        FROM review
+        WHERE product_ID = "${id}"`,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.send(result);
+            }
+        }
+    );
+});
+
+//get highest rated from reviews that have an avg(rating) > 0 example axiosSecure.get(`/highestRated`) 
+app.get("/highestRated", (req, res) => {
+    db.query(
+        `SELECT p.Product_ID, p.Image_Url, p.Name, p.Price, p.Quantity_inStock, p.Galaxy_source, p.Galaxy_source, p.Planet_source, ROUND(AVG(rating), 1) AS AvgRating, COUNT(rating) AS TotalReviews
+        FROM review r JOIN product p ON r.product_ID = p.Product_ID
+        GROUP BY r.product_ID
+        HAVING AvgRating > 0
+        ORDER BY AvgRating DESC
+        LIMIT 5`,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.send(result);
+            }
+        }
+    );
+});
+
 // create new user
 // Handle POST requests to /users
 app.post("/users", (req, res) => {
@@ -199,6 +336,28 @@ app.post("/users", (req, res) => {
             res.status(500).send("Server error");
         } else {
             res.status(200).send("User added successfully");
+        }
+    });
+});
+
+//post to review
+app.post("/reviews", (req, res) => {
+    const review = req.body;
+    const query =
+        "INSERT INTO review (product_ID, Email_ID, reviewDesc, rating) VALUES (?, ?, ?, ?)";
+    const values = [
+        review.product_ID,
+        review.Email_ID,
+        review.reviewDesc,
+        review.rating,
+    ];
+
+    db.query(query, values, (err, result) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send("Server error");
+        } else {
+            res.status(200).send("Review added successfully");
         }
     });
 });
@@ -329,12 +488,15 @@ app.put("/user/:email", (req, res) => {
     const email = req.params.email;
     const user = req.body;
     const query =
-        "UPDATE user SET Profile_image = ?, F_name = ?, L_name = ?, Contact_cell = ? WHERE Email_ID = ?";
+        "UPDATE user SET Profile_image = ?, F_name = ?, L_name = ?, Contact_cell = ?, City = ?, Planet = ?, Galaxy = ? WHERE Email_ID = ?";
     const values = [
         user.Profile_image,
         user.F_name,
         user.L_name,
         user.Contact_cell,
+        user.City,
+        user.Planet,
+        user.Galaxy,
         email,
     ];
 
@@ -462,32 +624,54 @@ app.delete("/cart", (req, res) => {
             console.error(err);
             res.status(500).json({ error: "Internal Server Error" });
         } else {
-            db.query(query, [email, productID, productID, productID], (err, result) => {
-                if (err) {
-                    console.error(err);
-                    db.rollback();
-                    res.status(500).json({
-                        error: "Internal Server Error",
-                    });
-                } else {
-                    db.commit((err) => {
-                        if (err) {
-                            console.error(err);
-                            db.rollback();
-                            res.status(500).json({
-                                error: "Internal Server Error",
-                            });
-                        } else {
-                            res.json({
-                                message: "Product removed from cart successfully",
-                            });
-                        }
-                    });
+            db.query(
+                query,
+                [email, productID, productID, productID],
+                (err, result) => {
+                    if (err) {
+                        console.error(err);
+                        db.rollback();
+                        res.status(500).json({
+                            error: "Internal Server Error",
+                        });
+                    } else {
+                        db.commit((err) => {
+                            if (err) {
+                                console.error(err);
+                                db.rollback();
+                                res.status(500).json({
+                                    error: "Internal Server Error",
+                                });
+                            } else {
+                                res.json({
+                                    message:
+                                        "Product removed from cart successfully",
+                                });
+                            }
+                        });
+                    }
                 }
-            });
+            );
         }
     });
 });
+
+//delete review by id example axiosSecure.delete(`/reviews?productID=${reviewID}&userID=${userID}`)
+app.delete("/reviews", (req, res) => {
+    const productID = req.query.productID;
+    const userID = req.query.userID;
+
+    const query = "DELETE FROM review WHERE product_ID = ? AND Email_ID = ?";
+    db.query(query, [productID, userID], (err, result) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send("Server error");
+        } else {
+            res.status(200).send("Review deleted successfully");
+        }
+    });
+});
+
 
 /**
  * Starts the server and establishes the database connection.
