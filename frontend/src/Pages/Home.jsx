@@ -8,19 +8,22 @@ const Home = () => {
     const axiosSecure = useAxiosSecure();
     const [loading, setLoading] = useState(false);
     const [bestSellers, setBestSellers] = useState([]);
+    const [highestRated, setHighestRated] = useState([]);
 
     useEffect(() => {
         setLoading(true);
-        axiosSecure
-            .get("/bestSellers")
-            .then((res) => {
-                setBestSellers(res.data);
-                setLoading(false);
-            })
-            .catch((err) => {
-                console.log(err);
-                setLoading(false);
-            });
+        Promise.all([
+            axiosSecure.get("/bestSellers"),
+            axiosSecure.get("/highestRated")
+        ]).then(([bestSellersResponse, highestRatedResponse]) => {
+            setBestSellers(bestSellersResponse.data);
+            setHighestRated(highestRatedResponse.data);
+        }).catch((error) => {
+            console.log(error);
+        }).finally(() => {
+            setLoading(false);
+        });
+        
     }, []);
 
     return (
@@ -60,6 +63,28 @@ const Home = () => {
                             </>
                         )}
                         {bestSellers.map((product) => (
+                            <ProductCard
+                                key={product.Product_ID}
+                                product={product}
+                            />
+                        ))}
+                    </Suspense>
+                </div>
+            </div>
+            <div className="mt-16 lg:max-w-7xl lg:mx-auto mx-3">
+                <h2 className="text-4xl font-bold text-center underline underline-offset-4">
+                    Highest Rated
+                </h2>
+                <div className="flex flex-wrap justify-center gap-5 mt-8">
+                    <Suspense fallback={<p></p>}>
+                        {loading && (
+                            <>
+                                <LoadingCard />
+                                <LoadingCard />
+                                <LoadingCard />
+                            </>
+                        )}
+                        {highestRated.map((product) => (
                             <ProductCard
                                 key={product.Product_ID}
                                 product={product}
