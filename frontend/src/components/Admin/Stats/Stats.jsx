@@ -55,7 +55,7 @@ const Stats = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr className="block text-center lg:table-row border-b-2 border-gray-100 text-gray-100 py-4">
+                            <tr className="block pl-2 lg:text-center lg:table-row border-b-2 border-gray-100 text-gray-100 py-4">
                                 <td
                                     className="p-2 block lg:table-cell relative lg:static"
                                     data-label="Total Orders"
@@ -96,7 +96,7 @@ const Stats = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr className="block text-center lg:table-row border-b-2 border-gray-100 text-gray-100 py-4">
+                            <tr className="block pl-2 lg:text-center lg:table-row border-b-2 border-gray-100 text-gray-100 py-4">
                                 <td
                                     className="p-2 block lg:table-cell relative lg:static"
                                     data-label="Total Orders"
