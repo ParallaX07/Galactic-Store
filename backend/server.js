@@ -203,7 +203,7 @@ app.get("/bestSellers", (req, res) => {
 app.get("/reviews/:id", (req, res) => {
     const id = req.params.id;
     db.query(
-        `SELECT u.Profile_image, u.Email_ID, CONCAT(u.F_Name, " ", u.L_Name) AS Name, r.reviewDesc, r.rating
+        `SELECT u.Profile_image, u.Email_ID, CONCAT(u.F_Name, " ", u.L_Name) AS Name, r.reviewDesc, r.rating, r.product_ID, r.post_date
         FROM review r JOIN user u ON r.Email_ID = u.Email_ID
         WHERE r.product_ID = "${id}"`,
         (err, result) => {
@@ -222,6 +222,25 @@ app.get("/rating/:id", (req, res) => {
         `SELECT AVG(rating) AS rating, Count(rating) AS count
         FROM review
         WHERE product_ID = "${id}"`,
+        (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.send(result);
+            }
+        }
+    );
+});
+
+//get highest rated from reviews that have an avg(rating) > 0 example axiosSecure.get(`/highestRated`) 
+app.get("/highestRated", (req, res) => {
+    db.query(
+        `SELECT p.Product_ID, p.Image_Url, p.Name, p.Price, p.Quantity_inStock, p.Galaxy_source, p.Galaxy_source, p.Planet_source, AVG(r.rating) AS AvgRating
+        FROM review r JOIN product p ON r.product_ID = p.Product_ID
+        GROUP BY r.product_ID
+        HAVING AvgRating > 0
+        ORDER BY AvgRating DESC
+        LIMIT 5`,
         (err, result) => {
             if (err) {
                 console.log(err);
@@ -568,6 +587,23 @@ app.delete("/cart", (req, res) => {
         }
     });
 });
+
+//delete review by id example axiosSecure.delete(`/reviews?productID=${reviewID}&userID=${userID}`)
+app.delete("/reviews", (req, res) => {
+    const productID = req.query.productID;
+    const userID = req.query.userID;
+
+    const query = "DELETE FROM review WHERE product_ID = ? AND Email_ID = ?";
+    db.query(query, [productID, userID], (err, result) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send("Server error");
+        } else {
+            res.status(200).send("Review deleted successfully");
+        }
+    });
+});
+
 
 /**
  * Starts the server and establishes the database connection.

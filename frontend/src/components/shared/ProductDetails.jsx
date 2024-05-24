@@ -9,6 +9,8 @@ import { MessageContext } from "../../Pages/Root";
 import ReactStars from "react-rating-stars-component";
 const ReviewCard = lazy(() => import("./ReviewCard"));
 import { PiStarBold, PiStarFill, PiStarHalfFill } from "react-icons/pi";
+import Swal from "sweetalert2";
+import { Tooltip } from "react-tooltip";
 
 const ProductDetails = () => {
     const id = useParams().id;
@@ -32,24 +34,19 @@ const ProductDetails = () => {
             axiosSecure.get(`/rating/${id}`)
         ]).then(([productResponse, reviewsResponse, ratingResponse]) => {
             setProduct(productResponse.data[0]);
-            console.table(productResponse.data[0]);
-        
-            console.log(reviewsResponse.data);
             setProductReviews(reviewsResponse.data);
-        
             setProductRating(ratingResponse.data[0]);
+    
+            reviewsResponse.data.forEach((review) => {
+                if (review?.Email_ID === user?.email) {
+                    setAlreadyReviewed(true);
+                }
+            });
         }).catch((error) => {
             console.error(error);
         }).finally(() => {
             setLoading(false);
         });
-
-        productReviews.forEach((review) => {
-            if (review.Email_ID === user?.email) {
-                setAlreadyReviewed(true);
-            }
-        });
-
     }, []);
 
     if (loading) {
@@ -92,6 +89,13 @@ const ProductDetails = () => {
         const Email_ID = user?.email;
 
         setLoading(true);
+
+        // check if user already reviewed the product
+        if (alreadyReviewed) {
+            notifyError("You have already reviewed this product");
+            setLoading(false);
+            return;
+        }
         axiosSecure
             .post("/reviews", {
                 product_ID: Product_ID,
@@ -99,8 +103,13 @@ const ProductDetails = () => {
                 reviewDesc: review,
                 rating: rating,
             })
-            .then(() => {
-                notifySuccess("Review added successfully");
+            .then((res) => {
+                if (res.status === 200) {
+                    
+                    notifySuccess("Review added successfully");
+                }
+                setAlreadyReviewed(true);
+
             })
             .catch((error) => {
                 notifyError("Failed to add review");
@@ -110,6 +119,42 @@ const ProductDetails = () => {
                 setLoading(false);
             });
     };
+
+    const handleDeleteReview = (product_ID, Email_ID) => {
+        Swal.fire({
+            title: `Do you want to delete the item?`,
+            showDenyButton: true,
+            confirmButtonText: "Yes, delete it",
+            denyButtonText: `No, don't delete`,
+            icon: "question",
+            confirmButtonColor: "#0b090a",
+            background: "#0b090a",
+            denyButtonColor: "#d33",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                setLoading(true);
+                axiosSecure
+                    .delete(`/reviews?productID=${product_ID}&userID=${Email_ID}`)
+                    .then(() => {
+                        notifySuccess("Review deleted successfully");
+                        setProductReviews((prevReviews) =>
+                            prevReviews.filter(
+                                (review) =>
+                                    review.product_ID !== product_ID &&
+                                    review.Email_ID !== Email_ID
+                            )
+                        );
+                    })
+                    .catch((error) => {
+                        notifyError("Failed to delete review");
+                        console.error(error);
+                    })
+                    .finally(() => {
+                        setLoading(false);
+                    });
+            }
+        });
+    }
 
     return (
         <div className=" pt-[80px] glass pb-10 flex flex-col gap-5">
@@ -148,7 +193,7 @@ const ProductDetails = () => {
                                     Galactic Credits
                                 </span>
                             </p>
-                            <div className="mt-3 flex items-center gap-3">
+                            <div className="mt-3 flex items-center gap-3 w-fit rating">
                                 <ReactStars
                                     count={5}
                                     size={24}
@@ -158,7 +203,7 @@ const ProductDetails = () => {
                                     emptyIcon={<PiStarBold />}
                                     halfIcon={<PiStarHalfFill />}
                                     fullIcon={<PiStarFill />}
-                                    activeColor="#325B72"
+                                    activeColor="#62DFE8"
                                 />
                                 <p className="text-sm text-gray-300 font-medium">({productRating.count} ratings)</p>
                             </div>
@@ -263,10 +308,21 @@ const ProductDetails = () => {
             <div className="grid grid-cols-1 gap-3 max-w-5xl lg:mx-auto mx-3">
                 <Suspense fallback={<p></p>}>
                     {productReviews.map((review, idx) => (
-                        <ReviewCard key={idx} productReview={review} />
+                        <ReviewCard key={idx} productReview={review} currentUserEmail={user?.email} handleDeleteReview={handleDeleteReview} />
                     ))}
                 </Suspense>
             </div>
+            <Tooltip
+                    anchorSelect=".rating"
+                    place="top"
+                    style={{
+                        backgroundColor: "#325B72",
+                        color: "rgb(255, 255, 255)",
+                        fontWeight: "700",
+                    }}
+                >
+                    {productRating?.rating || 0} out of 5 stars
+                </Tooltip>
         </div>
     );
 };
