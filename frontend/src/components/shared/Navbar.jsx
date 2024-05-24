@@ -124,6 +124,16 @@ const Navbar = () => {
                                 View User Information
                             </NavLink>
                         </li>
+                        <li>
+                            <NavLink
+                                to="/a/stats"
+                                className={({ isActive }) =>
+                                    isActive ? `${active}` : `${inactive}`
+                                }
+                            >
+                                Store Statistics
+                            </NavLink>
+                        </li>
                     </ul>
                 )}
             </div>

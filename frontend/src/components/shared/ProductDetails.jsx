@@ -16,7 +16,7 @@ const ProductDetails = () => {
     const id = useParams().id;
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(false);
-    const { user, userType } = useContext(AuthContext);
+    const { user, userType} = useContext(AuthContext);
     const [quantity, setQuantity] = useState(1);
     const { notifySuccess, notifyError } = useContext(MessageContext);
     const [userRating, setUserRating] = useState(0);
@@ -99,26 +99,25 @@ const ProductDetails = () => {
             setLoading(false);
             return;
         }
-        axiosSecure
-            .post("/reviews", {
-                product_ID: Product_ID,
-                Email_ID: Email_ID,
-                reviewDesc: review,
-                rating: rating,
-            })
-            .then((res) => {
-                if (res.status === 200) {
-                    notifySuccess("Review added successfully");
-                }
-                setAlreadyReviewed(true);
-            })
-            .catch((error) => {
-                notifyError("Failed to add review");
-                console.error(error);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
+        axiosSecure.post("/reviews", {
+            product_ID: Product_ID,
+            Email_ID: Email_ID,
+            reviewDesc: review,
+            rating: rating,
+        }).then(postResponse => {
+            if (postResponse.status === 200) {
+                notifySuccess("Review added successfully");
+            }
+            setAlreadyReviewed(true);
+            return axiosSecure.get(`/reviews/${id}`);
+        }).then(getResponse => {
+            setProductReviews(getResponse.data);
+        }).catch((error) => {
+            notifyError("Failed to add review");
+            console.error(error);
+        }).finally(() => {
+            setLoading(false);
+        });
     };
 
     const handleDeleteReview = (product_ID, Email_ID) => {
@@ -143,10 +142,10 @@ const ProductDetails = () => {
                         setProductReviews((prevReviews) =>
                             prevReviews.filter(
                                 (review) =>
-                                    review.product_ID !== product_ID &&
                                     review.Email_ID !== Email_ID
                             )
                         );
+                        setAlreadyReviewed(false);
                     })
                     .catch((error) => {
                         notifyError("Failed to delete review");

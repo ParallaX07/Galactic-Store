@@ -33,6 +33,7 @@ const ReviewCard = ({
                                 productReview.Profile_image ||
                                 "https://i.ibb.co/hYbbGyR/6596121-modified.png"
                             }
+                            className="roundefull w-14 h-14 object-cover rounded-full border-neutral-800"
                             loading="lazy"
                         ></img>
                     </div>
@@ -47,17 +48,20 @@ const ReviewCard = ({
                         </span>
                         {/* format post_date 2024-05-24T00:30:25.000Z */}
                         <span className="text-sm text-gray-400">
-                            {new Date(productReview.post_date).toLocaleString(
-                                "en-US",
-                                {
+                            {(() => {
+                                const date = new Date(productReview.post_date);
+                                date.setTime(
+                                    date.getTime() + 6 * 60 * 60 * 1000
+                                ); // Offset by 10 hours
+                                return date.toLocaleString("en-US", {
                                     year: "numeric",
                                     month: "long",
                                     day: "numeric",
                                     hour: "numeric",
                                     minute: "numeric",
                                     hour12: true,
-                                }
-                            )}
+                                });
+                            })()}
                         </span>
                     </p>
                 </div>
