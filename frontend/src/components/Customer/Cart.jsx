@@ -105,17 +105,17 @@ const Cart = () => {
                 }&value=${"F_name, L_name, Profile_image, Contact_Cell, Email_ID, City, Planet, Galaxy"}`
             )
             .then((res) => {
-                const user = res.data[0];
-                // check if user has city, planet and galaxy
+                const userData = res.data[0];
+                // check if userData has city, planet and galaxy
                 if (
-                    !user.City ||
-                    !user.Planet ||
-                    !user.Galaxy ||
-                    !user.Contact_Cell
+                    !userData.City ||
+                    !userData.Planet ||
+                    !userData.Galaxy ||
+                    !userData.Contact_Cell
                 ) {
                     Swal.fire({
                         title: "Please update your profile",
-                        text: "You need to update your profile to continue",
+                        text: "You need to update your profile with your address and contact details to continue",
                         icon: "warning",
                         confirmButtonColor: "#0b090a",
                         background: "#0b090a",
@@ -124,6 +124,8 @@ const Cart = () => {
                     });
                     return;
                 }
+
+                setLoading(true);
                 Swal.fire({
                     title: `Do you want to confirm purchase?`,
                     html: `<div class="text-start ml-4  text-white border-b-2 p-3">
@@ -175,6 +177,7 @@ const Cart = () => {
             .finally(() => {
                 setLoading(false);
             });
+        
     };
 
     return (

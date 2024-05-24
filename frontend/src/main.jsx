@@ -5,7 +5,6 @@ import AuthProvider from "./Auth/AuthProvider";
 import PrivateRoute from "./Auth/PrivateRoute";
 import { lazy, Suspense } from "react";
 import Loader from "./components/shared/Loader";
-import Stats from "./components/Admin/Stats";
 
 //import components
 const SignUpForm = lazy(() => import("./Pages/SignUpForm"));
@@ -22,6 +21,7 @@ const OrderHistory = lazy(() => import("./components/Customer/OrderHistory"));
 const ManageOrders = lazy(() => import("./components/Admin/ManageOrders"));
 const AllProducts = lazy(() => import("./Pages/AllProducts"));
 const AllUsers = lazy(() => import("./components/Admin/AllUsers"));
+const Stats = lazy(() => import("./components/Admin/Stats"));
 
 const router = createBrowserRouter([
     {
