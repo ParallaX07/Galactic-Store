@@ -235,7 +235,7 @@ app.get("/rating/:id", (req, res) => {
 //get highest rated from reviews that have an avg(rating) > 0 example axiosSecure.get(`/highestRated`) 
 app.get("/highestRated", (req, res) => {
     db.query(
-        `SELECT p.Product_ID, p.Image_Url, p.Name, p.Price, p.Quantity_inStock, p.Galaxy_source, p.Galaxy_source, p.Planet_source, AVG(r.rating) AS AvgRating
+        `SELECT p.Product_ID, p.Image_Url, p.Name, p.Price, p.Quantity_inStock, p.Galaxy_source, p.Galaxy_source, p.Planet_source, ROUND(AVG(rating), 1) AS AvgRating, COUNT(rating) AS TotalReviews
         FROM review r JOIN product p ON r.product_ID = p.Product_ID
         GROUP BY r.product_ID
         HAVING AvgRating > 0

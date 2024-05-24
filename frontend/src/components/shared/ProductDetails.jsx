@@ -31,22 +31,25 @@ const ProductDetails = () => {
         Promise.all([
             axiosSecure.get(`/product/${id}`),
             axiosSecure.get(`/reviews/${id}`),
-            axiosSecure.get(`/rating/${id}`)
-        ]).then(([productResponse, reviewsResponse, ratingResponse]) => {
-            setProduct(productResponse.data[0]);
-            setProductReviews(reviewsResponse.data);
-            setProductRating(ratingResponse.data[0]);
-    
-            reviewsResponse.data.forEach((review) => {
-                if (review?.Email_ID === user?.email) {
-                    setAlreadyReviewed(true);
-                }
+            axiosSecure.get(`/rating/${id}`),
+        ])
+            .then(([productResponse, reviewsResponse, ratingResponse]) => {
+                setProduct(productResponse.data[0]);
+                setProductReviews(reviewsResponse.data);
+                setProductRating(ratingResponse.data[0]);
+
+                reviewsResponse.data.forEach((review) => {
+                    if (review?.Email_ID === user?.email) {
+                        setAlreadyReviewed(true);
+                    }
+                });
+            })
+            .catch((error) => {
+                console.error(error);
+            })
+            .finally(() => {
+                setLoading(false);
             });
-        }).catch((error) => {
-            console.error(error);
-        }).finally(() => {
-            setLoading(false);
-        });
     }, []);
 
     if (loading) {
@@ -105,11 +108,9 @@ const ProductDetails = () => {
             })
             .then((res) => {
                 if (res.status === 200) {
-                    
                     notifySuccess("Review added successfully");
                 }
                 setAlreadyReviewed(true);
-
             })
             .catch((error) => {
                 notifyError("Failed to add review");
@@ -134,7 +135,9 @@ const ProductDetails = () => {
             if (result.isConfirmed) {
                 setLoading(true);
                 axiosSecure
-                    .delete(`/reviews?productID=${product_ID}&userID=${Email_ID}`)
+                    .delete(
+                        `/reviews?productID=${product_ID}&userID=${Email_ID}`
+                    )
                     .then(() => {
                         notifySuccess("Review deleted successfully");
                         setProductReviews((prevReviews) =>
@@ -154,7 +157,7 @@ const ProductDetails = () => {
                     });
             }
         });
-    }
+    };
 
     return (
         <div className=" pt-[80px] glass pb-10 flex flex-col gap-5">
@@ -205,7 +208,9 @@ const ProductDetails = () => {
                                     fullIcon={<PiStarFill />}
                                     activeColor="#62DFE8"
                                 />
-                                <p className="text-sm text-gray-300 font-medium">({productRating.count} ratings)</p>
+                                <p className="text-sm text-gray-300 font-medium">
+                                    ({productRating.count} ratings)
+                                </p>
                             </div>
                             <p className="text-lg mt-3">
                                 <span className="text-white">In Stock:</span>{" "}
@@ -276,7 +281,13 @@ const ProductDetails = () => {
                 <h2 className="text-2xl font-semibold mb-4">
                     Share Your Feedback
                 </h2>
-                <form onSubmit={handleReview} className={`${alreadyReviewed ? "cursor-not-allowed opacity-30" : ""}`} title={`${alreadyReviewed ? "Already Reviewed" : ""}`}>
+                <form
+                    onSubmit={handleReview}
+                    className={`${
+                        alreadyReviewed ? "cursor-not-allowed opacity-30" : ""
+                    }`}
+                    title={`${alreadyReviewed ? "Already Reviewed" : ""}`}
+                >
                     <ReactStars
                         count={5}
                         onChange={setUserRating}
@@ -289,7 +300,9 @@ const ProductDetails = () => {
                         edit={!alreadyReviewed}
                     />
                     <textarea
-                        className={`w-full lg:h-24 p-2 border rounded-lg resize-none bg-opacity-35 bg-white text-white ${alreadyReviewed ? "cursor-not-allowed" : ""}`}
+                        className={`w-full lg:h-24 p-2 border rounded-lg resize-none bg-opacity-35 bg-white text-white ${
+                            alreadyReviewed ? "cursor-not-allowed" : ""
+                        }`}
                         name="review"
                         placeholder="Write your review..."
                         required
@@ -297,7 +310,9 @@ const ProductDetails = () => {
                     />
                     <button
                         type="submit"
-                        className={`submit text-white bg-black/80 hover:bg-black/80 mt-2 ${alreadyReviewed ? "cursor-not-allowed" : ""}`}
+                        className={`submit text-white bg-black/80 hover:bg-black/80 mt-2 ${
+                            alreadyReviewed ? "cursor-not-allowed" : ""
+                        }`}
                         {...(alreadyReviewed ? { disabled: true } : {})}
                     >
                         Submit Review
@@ -308,21 +323,26 @@ const ProductDetails = () => {
             <div className="grid grid-cols-1 gap-3 max-w-5xl lg:mx-auto mx-3">
                 <Suspense fallback={<p></p>}>
                     {productReviews.map((review, idx) => (
-                        <ReviewCard key={idx} productReview={review} currentUserEmail={user?.email} handleDeleteReview={handleDeleteReview} />
+                        <ReviewCard
+                            key={idx}
+                            productReview={review}
+                            currentUserEmail={user?.email}
+                            handleDeleteReview={handleDeleteReview}
+                        />
                     ))}
                 </Suspense>
             </div>
             <Tooltip
-                    anchorSelect=".rating"
-                    place="top"
-                    style={{
-                        backgroundColor: "#325B72",
-                        color: "rgb(255, 255, 255)",
-                        fontWeight: "700",
-                    }}
-                >
-                    {productRating?.rating || 0} out of 5 stars
-                </Tooltip>
+                anchorSelect=".rating"
+                place="top"
+                style={{
+                    backgroundColor: "#325B72",
+                    color: "rgb(255, 255, 255)",
+                    fontWeight: "700",
+                }}
+            >
+                {productRating?.rating || 0} / 5 stars
+            </Tooltip>
         </div>
     );
 };
