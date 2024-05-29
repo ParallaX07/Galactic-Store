@@ -7,12 +7,14 @@ import Swal from "sweetalert2";
 const EditProductModal = lazy(() => import("./EditProductModal"));
 import { MessageContext } from "../../Pages/Root";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../Auth/AuthProvider";
 
 const ManageProducts = () => {
     const [products, setProducts] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [isLoading, setisLoading] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentProduct, setCurrentProduct] = useState(null);
+    const { userType, logout, user, loading } = useContext(AuthContext);
 
     const [isImageOpen, setIsImageOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
@@ -33,24 +35,35 @@ const ManageProducts = () => {
     const [sortField, setSortField] = useState(null);
     const [sortDirection, setSortDirection] = useState("asc");
 
+    const [superUser, setSuperUser] = useState(true);
+
     const handleSort = (field) => {
         setSortField(field);
         setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     };
 
     useEffect(() => {
-        setLoading(true);
+        if(userType !== "Admin" && user && !loading) {
+            notifyError("You are not authorized to view this page");
+            logout();
+        }
+
+        if (user?.email === "viewadmin@gmail.com"){
+            setSuperUser(false);
+        }
+
+        setisLoading(true);
         axiosSecure
             .get("/allProducts")
             .then((response) => {
                 setProducts(response.data);
-                setLoading(false);
+                setisLoading(false);
             })
             .catch((error) => {
                 console.error(error);
             })
             .finally(() => {
-                setLoading(false);
+                setisLoading(false);
             });
     }, []);
 
@@ -78,7 +91,7 @@ const ManageProducts = () => {
 
     const handleSave = (updatedProduct) => {
         console.table(updatedProduct);
-        setLoading(true);
+        setisLoading(true);
         axiosSecure
             .put(`/products/${updatedProduct.Product_ID}`, updatedProduct)
             .then(() => {
@@ -95,7 +108,7 @@ const ManageProducts = () => {
                 notifyError(error.message);
             })
             .finally(() => {
-                setLoading(false);
+                setisLoading(false);
                 setIsModalOpen(false);
             });
     };
@@ -112,7 +125,7 @@ const ManageProducts = () => {
             denyButtonColor: "#d33",
         }).then((result) => {
             if (result.isConfirmed) {
-                setLoading(true);
+                setisLoading(true);
                 axiosSecure
                     .delete(`/products/${productId}`)
                     .then(() => {
@@ -125,12 +138,12 @@ const ManageProducts = () => {
                     .catch((error) => {
                         notifyError(error.message);
                     })
-                    .finally(() => setLoading(false));
+                    .finally(() => setisLoading(false));
             }
         });
     };
 
-    if (loading) {
+    if (isLoading) {
         return <Loader />;
     }
 
@@ -272,16 +285,20 @@ const ManageProducts = () => {
                                     data-label="Actions"
                                 >
                                     <button
-                                        className="mr-3 glass rounded-xl py-2 px-3"
+                                        className={`mr-3 glass rounded-xl py-2 px-3 ${!superUser ? "cursor-not-allowed opacity-20" : ""}`}
                                         onClick={() => handleEdit(product)}
+                                        //disable if not superuser
+                                        disabled={!superUser}
                                     >
                                         <FaEdit />
                                     </button>
                                     <button
-                                        className=" py-2 px-3 rounded-xl bg-red-500"
+                                        className={` py-2 px-3 rounded-xl bg-red-500 ${!superUser ? "cursor-not-allowed opacity-20" : ""}`}
                                         onClick={() =>
                                             handleDelete(product?.Product_ID)
                                         }
+                                        //disable if not superuser
+                                        disabled={!superUser}
                                     >
                                         <ImBin />
                                     </button>

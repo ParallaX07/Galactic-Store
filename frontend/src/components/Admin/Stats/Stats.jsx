@@ -1,17 +1,25 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import TotalStatsChart from "./TotalStatsChart";
 import Loader from "../../shared/Loader";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { Link } from "react-router-dom";
 import { FaCoins } from "react-icons/fa6";
+import { AuthContext } from "../../../Auth/AuthProvider";
+import { MessageContext } from "../../../Pages/Root";
 
 const Stats = () => {
-    const [loading, setLoading] = useState(false);
+    const [isLoading, setisLoading] = useState(false);
     const axiosSecure = useAxiosSecure();
     const [productOverview, setProductOverview] = useState({});
+    const { userType, logout, user, loading } = useContext(AuthContext);
+    const { notifyError } = useContext(MessageContext);
 
     useEffect(() => {
-        setLoading(true);
+        if(userType !== "Admin" && user && !loading) {
+            notifyError("You are not authorized to view this page");
+            logout();
+        }
+        setisLoading(true);
         axiosSecure
             .get("/productOverview")
             .then((res) => {
@@ -22,11 +30,11 @@ const Stats = () => {
                 console.log(err);
             })
             .finally(() => {
-                setLoading(false);
+                setisLoading(false);
             });
     }, []);
 
-    if (loading) {
+    if (isLoading) {
         return <Loader />;
     }
 
@@ -36,7 +44,7 @@ const Stats = () => {
                 Admin Dashboard
             </h2>
             <div className="flex flex-col items-center">
-                <TotalStatsChart setLoading={setLoading} />
+                <TotalStatsChart setisLoading={setisLoading} />
             </div>
 
             {/* simple table with orders overview */}

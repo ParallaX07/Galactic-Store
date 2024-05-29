@@ -43,7 +43,7 @@ const EditProductModal = ({ product, isOpen, onClose, onSave }) => {
     if (!isOpen) return null;
 
     return (
-        <div className='fixed inset-0 flex pt-[120px]  justify-center z-50 bg-black bg-opacity-50 mx-3'>
+        <div className='fixed inset-0 flex pt-[120px] justify-center z-50 bg-black bg-opacity-50 mx-3'>
             <div className=" max-h-fit">
                 <div className="glass  p-6 rounded-lg shadow-lg w-full max-w-md mx-auto ">
                     <button className="absolute top-2 right-2 text-2xl text-red-600" onClick={onClose}>

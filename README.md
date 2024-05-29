@@ -1,90 +1,85 @@
-## Project Setup and Dependencies
+## Galactic Store: Intergalactic Marketplace 
 
-### Frontend Dependencies
+**Explore the Galaxy with a Universe of Products!**
 
-To set up the frontend dependencies, follow these steps:
+The Galactic Store is a university project designed to showcase the capabilities of MySQL through a user-friendly frontend. It allows customers to browse a cosmic collection of products, while admins can manage the store's inventory and operations.
 
-1. **Install Node Modules**: Run the following command in your project directory to install necessary Node modules:
+### Features
 
-```bash
-npm install
-```
+**For Customers:**
 
-2. **React Router**: Install React Router dependencies:
+* **Browse Products:** Explore a vast selection of intergalactic goods with advanced search and filtering options.
+* **Cart Management:** Add your favorite items to your cart for easy checkout.
+* **Review & Rate:** Leave reviews and ratings to help fellow space explorers make informed decisions.
+* **Order History & Profile Management:** Keep track of your past purchases and update your profile information with ease.
 
-```bash
-npm install react-router-dom localforage match-sorter sort-by
-```
+**For Admins:**
 
-3. **Tailwind CSS**: Install Tailwind CSS and its dependencies:
+* **Product Management:** Add, update, or remove products from the catalog, including detailed descriptions and images.
+* **Site Statistics & Sales Data:** Access insightful reports on user activity, sales performance, and inventory levels.
+* **Order Management:** Process and update the status of customer orders efficiently.
+* **Real-time Store Overview:** Get a comprehensive view of active users, pending orders, and stock levels at a glance.
 
-```bash
-npm install -D tailwindcss postcss autoprefixer
-npx tailwindcss init -p
-```
+### Technologies Used
 
-    Then add the following configuration to your `tailwind.config.js` file:
+* **Frontend:** React.js with Tailwind CSS
+* **Frontend Hosting:** Firebase
+* **Backend:** Self-hosted MySQL Server
+* **Backend Hosting:** Vercel
+* **Authentication:** Firebase
 
-```js
-/** @type {import('tailwindcss').Config} */
-export default {
-    content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
-    theme: {
-        extend: {},
-    },
-    plugins: [],
-};
-```
+### Demo & Login Credentials
 
-    Finally, add the Tailwind directives to your `./src/index.css` file:
+* **Website:** https://galactic-store.web.app/
+* **Admin View (Limited Access):**
+    * Email: viewadmin@gmail.com
+    * Password: Admin@pass1
+* **Customer View:**
+    * Email: john.doe@gmail.com
+    * Password: Test1234
 
-```css
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-```
+### Database Tables
 
-4. **React Toastify**: Install React Toastify:
+* **User:** Stores user information.
+    * Email_ID (Primary Key)
+    * User_Type (Customer or Admin)
+    * F_Name
+    * L_Name
+    * Contact_Cell
+    * Profile_Image (URL)
+* **Product:** Stores product information.
+    * Product_ID (Primary Key)
+    * Name
+    * Description
+    * Price
+    * Galaxy_Source
+    * Planet_Source
+    * Quantity_inStock
+    * Image_Url (URL)
+* **Cart:** Stores cart information.
+    * Email (Primary Key) (Foreign Key to User)
+    * OrderID (Primary Key)
+    * Status (Open/Closed)
+* **OrderDetails:** Stores order details.
+    * OrderID (Primary Key) (Foreign Key to Cart)
+    * ProductID (Primary Key) (Foreign Key to Product)
+    * Email (Foreign Key to User)
+    * Quantity
+    * Status (Pending/Shipped/Delivered)
+* **Review:** Stores customer reviews.
+    * product_ID (Primary Key) (Foreign Key to Product)
+    * Email_ID (Primary Key) (Foreign Key to User)
+    * reviewDesc
+    * rating
+    * Post_date
 
-```bash
-npm install react-hot-toast
-```
+### DBML Visualization
+![DBML](https://i.ibb.co/S7m81hc/Galactic-Store.png)
 
-5. **React Icons**: Install React Icons:
-```bash
-npm i react-icons
-```
+### Known Limitations (Future Improvements)
 
-6. **Install Axios**: Install Axios for making HTTP requests:
-```bash
-npm i axios
-```
+* **Security:** API requests are currently unencrypted. Implementing encryption (e.g., HTTPS) is crucial for protecting user data.
+* **User Management:** Admin and customer portals are not fully separated. Additionally, advanced user management features like role-based access control can be implemented for enhanced security.
+* **Database Optimization:** Queries might benefit from optimization to reduce space complexity and improve performance.
 
-### Backend Dependencies
-
-To set up the backend dependencies, follow these steps:
-
-1. **Go to Backend Folder**: Navigate to the backend folder in your project.
-
-2. **Install Node Modules**: Run the following command to install necessary Node modules:
-
-```bash
-npm install nodemon express cors mysql
-```
-
-### Running the Project
-
-After setting up dependencies, you can run the project by following these steps:
-
-1. **Frontend**: In the frontend directory, run the following command:
-
-```bash
-npm run dev
-```
-
-2. **Backend**: In the backend directory, run the following command:
-```bash
-npm start
-```
-
-Ensure both frontend and backend servers are running concurrently for the full functionality of the project.
+This project demonstrates the foundational aspects of building an e-commerce platform with a MySQL database. Future development can focus on implementing the mentioned improvements and expanding functionalities  based on project goals.

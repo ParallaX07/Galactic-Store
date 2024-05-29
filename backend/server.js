@@ -10,7 +10,9 @@ const bodyParser = require("body-parser");
 require("dotenv").config();
 
 const app = express();
-app.use(cors());
+app.use(cors(
+    origin = [process.env.SERVER_ORIGIN]
+));
 app.use(express.json());
 app.use(bodyParser.json());
 
@@ -23,6 +25,14 @@ const db = mysql.createConnection({
     port: process.env.DB_PORT,
     multipleStatements: true,
 });
+
+// // XAMPP connection
+// const db = mysql.createConnection({
+//     host: "localhost",
+//     user: "root",
+//     password: "",
+//     database: "galacticstore",
+// });
 
 const port = process.env.PORT || 8801;
 
@@ -254,21 +264,13 @@ app.get("/reviews/:id", (req, res) => {
     );
 });
 
-//get site stats Total stats
-// SELECT
-//     (SELECT COUNT(*) FROM product) AS total_products,
-//     (SELECT COUNT(*) FROM `user`) AS total_users,
-//     (SELECT COUNT(DISTINCT OrderID) FROM OrderDetails) AS total_orders,
-//     (SELECT SUM(od.Quantity * p.Price)
-//      FROM OrderDetails od
-//      JOIN product p ON od.ProductID = p.Product_ID) AS total_revenue;
 
 app.get("/totalStats", (req, res) => {
     db.query(
         `SELECT
         (SELECT COUNT(*) FROM product) AS totalProducts,
         (SELECT COUNT(*) FROM user) AS totalUsers,
-        (SELECT COUNT(DISTINCT OrderID) FROM OrderDetails) AS totalOrders`,
+        (SELECT COUNT(OrderID) FROM OrderDetails) AS totalOrders`,
         (err, result) => {
             if (err) {
                 console.log(err);
