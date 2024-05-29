@@ -6,15 +6,6 @@ const TotalStatsChart = () => {
     const axiosSecure = useAxiosSecure();
     const [totalStats, setTotalStats] = useState({});
 
-    // [
-    //     {
-    //     "totalProducts": 16,
-    //     "totalUsers": 8,
-    //     "totalOrders": 3,
-    //     "totalRevenue": 19400
-    //     }
-    //     ]
-
     const chartRef = useRef(null);
 
     useEffect(() => {
@@ -43,13 +34,13 @@ const TotalStatsChart = () => {
                         totalStats?.totalOrders,
                     ],
                     backgroundColor: [
-                        "rgba(255, 99, 132, 0.2)",
-                        "rgba(255, 159, 64, 0.2)",
-                        "rgba(255, 205, 86, 0.2)",
-                        "rgba(75, 192, 192, 0.2)",
-                        "rgba(54, 162, 235, 0.2)",
-                        "rgba(153, 102, 255, 0.2)",
-                        "rgba(201, 203, 207, 0.2)",
+                        "rgba(255, 99, 132, 0.5)",
+                        "rgba(255, 159, 64, 0.5)",
+                        "rgba(255, 205, 86, 0.5)",
+                        "rgba(75, 192, 192, 0.5)",
+                        "rgba(54, 162, 235, 0.5)",
+                        "rgba(153, 102, 255, 0.5)",
+                        "rgba(201, 203, 207, 0.5)",
                     ],
                     borderColor: [
                         "rgb(255, 99, 132)",

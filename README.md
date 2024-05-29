@@ -73,6 +73,9 @@ The Galactic Store is a university project designed to showcase the capabilities
     * rating
     * Post_date
 
+### DBML Visualization
+![DBML](https://i.ibb.co/S7m81hc/Galactic-Store.png)
+
 ### Known Limitations (Future Improvements)
 
 * **Security:** API requests are currently unencrypted. Implementing encryption (e.g., HTTPS) is crucial for protecting user data.

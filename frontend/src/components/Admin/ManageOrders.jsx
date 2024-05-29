@@ -6,15 +6,22 @@ import OrderTable from "../shared/OrderTable";
 import { MessageContext } from "../../Pages/Root";
 
 const ManageOrders = () => {
-    const { user, userType } = useContext(AuthContext);
+    const { user, userType, logout, loading } = useContext(AuthContext);
     const [orderHistory, setOrderHistory] = useState([]);
     const { notifySuccess, notifyError } = useContext(MessageContext);
-    const [loading, setLoading] = useState(false);
+    const [isLoading, setisLoading] = useState(false);
 
     const axiosSecure = useAxiosSecure();
 
     useEffect(() => {
-        setLoading(true);
+        if(userType !== "Admin" && user && !loading) {
+            notifyError("You are not authorized to view this page");
+            logout();
+        }
+    }, []);
+
+    useEffect(() => {
+        setisLoading(true);
         axiosSecure
             .get(`/allOrderHistory`)
             .then((response) => {
@@ -24,7 +31,7 @@ const ManageOrders = () => {
                 console.error(error);
             })
             .finally(() => {
-                setLoading(false);
+                setisLoading(false);
             });
     }, [user]);
 
@@ -45,7 +52,7 @@ const ManageOrders = () => {
             });
     };
 
-    if (loading) {
+    if (isLoading) {
         return <Loader />;
     }
 

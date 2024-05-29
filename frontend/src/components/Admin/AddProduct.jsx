@@ -1,12 +1,26 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MessageContext } from "../../Pages/Root";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import Loader from "../shared/Loader";
+import { AuthContext } from "../../Auth/AuthProvider";
 
 const AddProduct = () => {
     const { notifyError, notifySuccess } = useContext(MessageContext);
-    const [loading, setLoading] = useState(false);
+    const [isLoading, setisLoading] = useState(false);
     const axiosSecure = useAxiosSecure();
+    const { userType, logout, user, loading } = useContext(AuthContext);
+    const [superUser, setSuperUser] = useState(true);
+
+    useEffect(() => {
+        if(userType !== "Admin" && user && !loading) {
+            notifyError("You are not authorized to view this page");
+            logout();
+        }
+
+        if (user?.email === "viewadmin@gmail.com"){
+            setSuperUser(false);
+        }
+    }, []);
 
     const handleAddProduct = (e) => {
         e.preventDefault();
@@ -19,7 +33,7 @@ const AddProduct = () => {
         const image = formData.get("image");
         const description = formData.get("description");
 
-        setLoading(true);
+        setisLoading(true);
         axiosSecure.post("/products", {
             Name: name,
             Price: price,
@@ -30,16 +44,16 @@ const AddProduct = () => {
             Description: description,
         }).then(() => {
             notifySuccess("Product added successfully");
-            setLoading(false);
+            setisLoading(false);
             e.target.reset();
         }).catch((error) => {
             notifyError(error.message);
         }).finally(() => {
-            setLoading(false);
+            setisLoading(false);
         });
     }
 
-    if (loading) {
+    if (isLoading) {
         return <Loader/>;
     }
 
@@ -127,7 +141,9 @@ const AddProduct = () => {
                     <label className="label-email">Description</label>
                 </div>
                 {/* sign up button */}
-                <button type="submit" className="submit text-white hover:bg-black hover:bg-opacity-40">Add Product</button>
+                <button type="submit" className={`submit text-white hover:bg-black hover:bg-opacity-40 ${!superUser ? "cursor-not-allowed opacity-20" : ""}`}
+                    disabled={!superUser}
+                >Add Product</button>
             </form>
         </div>
     );

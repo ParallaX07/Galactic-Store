@@ -1,24 +1,32 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { AuthContext } from "../../Auth/AuthProvider";
+import { MessageContext } from "../../Pages/Root";
 
 const AllUsers = () => {
     const axiosSecure = useAxiosSecure();
-    const [loading, setLoading] = useState(false);
+    const [isLoading, setisLoading] = useState(false);
     const [users, setUsers] = useState([]);
     const [isImageOpen, setIsImageOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
+    const { userType, logout, loading, user } = useContext(AuthContext);
+    const { notifyError } = useContext(MessageContext);
 
     useEffect(() => {
-        setLoading(true);
+        if(userType !== "Admin" && user && !loading) {
+            notifyError("You are not authorized to view this page");
+            logout();
+        }
+        setisLoading(true);
         axiosSecure
             .get("/allUsers")
             .then((res) => {
                 setUsers(res.data);
-                setLoading(false);
+                setisLoading(false);
             })
             .catch((err) => {
                 console.log(err);
-                setLoading(false);
+                setisLoading(false);
             });
     }, []);
 
@@ -33,7 +41,7 @@ const AllUsers = () => {
 
     return (
         <section className="px-3 pb-10 py-20 transition duration-300 glass min-h-dvh">
-            {!loading && (
+            {!isLoading && (
                 <div className="overflow-x-auto  lg:mx-auto lg:max-w-6xl ">
                     <table className="table-auto glass w-full mt-8  rounded-lg border-2 border-gray-100 ">
                         <thead className="hidden lg:table-header-group  rounded-lg">
