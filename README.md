@@ -4,6 +4,21 @@
 
 The Galactic Store is a university project designed to showcase the capabilities of MySQL through a user-friendly frontend. It allows customers to browse a cosmic collection of products, while admins can manage the store's inventory and operations.
 
+### Table of Contents
+- [Features](#features)
+    - [For Customers](#for-customers)
+    - [For Admins](#for-admins)
+- [Technologies Used](#technologies-used)
+- [Demo & Login Credentials](#demo--login-credentials)
+- [Database Tables](#database-tables)
+- [DBML Visualization](#dbml-visualization)
+- [Known Limitations (Future Improvements)](#known-limitations-future-improvements)
+- [Running Locally with XAMPP](#running-locally-with-xampp)
+    - [Prerequisites](#prerequisites)
+    - [Backend Setup](#backend-setup)
+    - [Frontend Setup](#frontend-setup)
+
+
 ### Features
 
 **For Customers:**
@@ -83,3 +98,62 @@ The Galactic Store is a university project designed to showcase the capabilities
 * **Database Optimization:** Queries might benefit from optimization to reduce space complexity and improve performance.
 
 This project demonstrates the foundational aspects of building an e-commerce platform with a MySQL database. Future development can focus on implementing the mentioned improvements and expanding functionalities  based on project goals.
+
+Here are the detailed instructions for running the Galactic Store application locally using XAMPP:
+
+### Running Locally with XAMPP
+
+#### Prerequisites
+- Install [XAMPP](https://www.apachefriends.org/download.html) on your local machine.
+- Install [Node.js](https://nodejs.org/en/download/) (LTS version recommended).
+
+#### Backend Setup
+1. Start the Apache and MySQL servers in XAMPP.
+2. Import the `galacticStore.sql` file into your MySQL database using the XAMPP phpMyAdmin interface.
+3. Navigate to the `backend` directory in your project.
+4. Create a `.env` file in the `backend` directory with the following content:
+```
+DB_HOST=localhost
+DB_USER=root
+DB_PASS=
+DB_NAME=galacticstore
+DB_PORT=3306
+```
+5. Open `server.js` and comment out the first connection block, then uncomment the XAMPP connection block:
+```javascript
+// Create connection to database
+// const db = mysql.createConnection({
+//   host: process.env.DB_HOST,
+//   user: process.env.DB_USER,
+//   password: process.env.DB_PASS,
+//   database: process.env.DB_NAME,
+//   port: process.env.DB_PORT,
+//   multipleStatements: true,
+// });
+
+// XAMPP connection
+const db = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "galacticstore",
+});
+```
+6. Run `npm install` to install the backend dependencies.
+7. Start the backend server with `nodemon server.js`.
+
+#### Frontend Setup
+1. Navigate to the `frontend` directory in your project.
+2. Open `src/hooks/axiosSecure.jsx` and comment out the first `baseURL`, then uncomment the XAMPP `baseURL`:
+```javascript
+const axiosSecure = axios.create({
+  // baseURL: 'https://backend-navy-delta.vercel.app',
+  baseURL: 'http://localhost:8801',
+});
+```
+3. Run `npm install` to install the frontend dependencies.
+4. Start the frontend development server with `npm run dev`.
+
+The application should now be running locally on `http://localhost:5173`, with the backend connected to the XAMPP MySQL database on `http://localhost:8801`.
+
+Note: If you encounter any issues, make sure that the Apache and MySQL servers are running in XAMPP, and that the `galacticStore` database has been imported correctly.
