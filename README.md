@@ -8,6 +8,7 @@ The Galactic Store is a university project designed to showcase the capabilities
 - [Features](#features)
     - [For Customers](#for-customers)
     - [For Admins](#for-admins)
+ - [Demo](#demo)
 - [Technologies Used](#technologies-used)
 - [Demo & Login Credentials](#demo--login-credentials)
 - [Database Tables](#database-tables)
@@ -34,6 +35,15 @@ The Galactic Store is a university project designed to showcase the capabilities
 * **Site Statistics & Sales Data:** Access insightful reports on user activity, sales performance, and inventory levels.
 * **Order Management:** Process and update the status of customer orders efficiently.
 * **Real-time Store Overview:** Get a comprehensive view of active users, pending orders, and stock levels at a glance.
+
+### Demo
+
+https://github.com/user-attachments/assets/11916a3f-e38a-406a-a185-efa4bdd9240f
+#### Customer View
+
+https://github.com/user-attachments/assets/cfc2135c-63d6-4e68-a33c-677db5712a46
+#### Admin View
+
 
 ### Technologies Used
 
